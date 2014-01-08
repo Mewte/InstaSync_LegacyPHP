@@ -13,7 +13,7 @@
     }
 ?>
 <?php 
-    header('Access-Control-Allow-Origin: http://instasynch.com:38000'); 
+    header('Access-Control-Allow-Origin: *'); 
     $roomname = str_replace("/", "", $_GET["filename"]);
     $visits = 0;
     $about = "";
