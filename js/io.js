@@ -452,8 +452,9 @@ function loadUserlist(userlist) {
             }
         }
         addUser(user, css, false);
-        sortUserlist();
+        
     }
+    sortUserlist();
 }
 function secondsToTime(num) 
 {
