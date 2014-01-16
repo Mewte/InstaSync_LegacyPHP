@@ -1,5 +1,5 @@
 <?php
-    require("c:/wamp/www/includes/connect.php");
+    require(dirname(__FILE__) . "/../includes/connect.php");
     mysql_select_db("bibbytube", $connection);
     if (isset($_POST["room"])) // get specific information about this room
     {

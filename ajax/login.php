@@ -1,6 +1,5 @@
 <?php
-    //TODO: Add limit to login requests per IP
-    require "c:/wamp/www/includes/connect.php";
+    require dirname(__FILE__) . "/../includes/connect.php";
     if (isset($_POST["username"], $_POST["password"])) //check if trying to login
     {
         mysql_select_db("bibbytube", $connection);

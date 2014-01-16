@@ -1,6 +1,6 @@
 <?php
-    require "c:/wamp/www/includes/connect.php";
-    require "c:/wamp/www/includes/email.php";
+    require dirname(__FILE__) . "/../includes/connect.php";
+    require dirname(__FILE__) . "/../includes/email.php";
     if (isset($_POST["email"], $_POST["username"]))
     {
         mysql_select_db("bibbytube", $connection);
@@ -21,7 +21,7 @@
                 $token = generateDoubleToken();
                 $time = time();
                 mysql_query("insert into resets (token, username, time, ip) values('{$token}', '{$username}', {$time}, '{$_SERVER["REMOTE_ADDR"]}')");
-                email($email, "DoNotReply@instasynch.com", "", "InstaSynch Password Recovery", "Please click the link below to reset your InstaSynch account password for {$username}: http://instasynch.com/settings/reset.php?token={$token}");
+                //email($email, "DoNotReply@instasynch.com", "", "InstaSynch Password Recovery", "Please click the link below to reset your InstaSynch account password for {$username}: http://instasynch.com/settings/reset.php?token={$token}");
                 $output["error"] = "An email with a reset link has been sent. If you don't recieve an email shortly, check your spam folder. Also whitelist 'DoNotReply@instasynch.com'.";
             }
         }

@@ -1,5 +1,5 @@
 <?php
-    include 'c:/wamp/www/includes/connect.php';
+    include dirname(__FILE__) . "/../includes/connect.php";
     mysql_select_db("bibbytube", $connection);
     if (!isset($_GET["token"]))
     {
@@ -25,11 +25,11 @@
         <script type="text/javascript" src="/js/request.js"></script>  
         <script src="/js/jquery-ui.js"></script>  
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-        <?php include("c:/wamp/www/includes/analytics.php"); ?>
+        <?php include(dirname(__FILE__) . "/../includes/analytics.php"); ?>
     </head>
     <body>   
         <div class="container"> 
-            <?php include "../includes/truetop.php" ?>
+            <?php require dirname(__FILE__) . "/../includes/truetop.php"; ?>
             <div>
                 <div class="ui-widget-content ui-corner-all" style="height: 130px; width: 720px; margin: 50px auto 0px auto">
                     <p style="padding: 5px;">

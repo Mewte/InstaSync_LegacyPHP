@@ -1,5 +1,5 @@
 <?php
-    require("c:/wamp/www/includes/connect.php");
+    require(dirname(__FILE__) . "/../includes/connect.php");
     if (isset($_POST["users"], $_POST["thumbnail"], $_POST["title"], $_POST["roomname"]))
     {
         $title = mysql_real_escape_string($_POST["title"]);

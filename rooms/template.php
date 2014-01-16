@@ -1,3 +1,3 @@
 <?php
-    require_once 'c:/wamp/www/includes/template.php';
+    require_once dirname(__FILE__) . '/../includes/template.php';
 ?>

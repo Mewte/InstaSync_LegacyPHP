@@ -3,10 +3,6 @@
             </div>
             <div id="footer" class="push">               
                 <div class="footer">
-<!--                    <div style="float: left; width: 115px; text-align: center; font-size: 14px;">
-                        <span><a href="/tos.html">Terms Of Service</a></span>
-                        <span><a href="/privacy.html">Privacy Policy</a></span>
-                    </div>-->
                     <span style="position: absolute; left: 0px; margin: 8px">InstaSynch &copy;2013</span>        
                     <div style="position: absolute; right: 0px; width: 72px;">
                         <div style="float:right; margin-left: 2px;">

@@ -5,7 +5,7 @@
         echo "Domain mismatch.";
 	exit();
     }	
-    include 'c:/wamp/www/includes/connect.php';
+    require 'includes/connect.php';
     mysql_select_db("bibbytube", $connection);
     $title = "InstaSynch - Watch videos with friends!";
     $description = "Watch synchronized videos with friends and strangers!";
