@@ -1,5 +1,5 @@
 <?php
-    require "c:/wamp/www/includes/connect.php";
+    require dirname(__FILE__) . "/../includes/connect.php";
     $output = "";
     $output["success"] = false; //just assume all outputs are false unless I set true
     if (isset($_POST["current"], $_POST["newpass"]))

@@ -97,7 +97,11 @@ var $codes = {
     "bear" : '<img src="http://i.imgur.com/JVbAzkh.gif" width="35" height="58">',
     "ded" : '<img src="http://i.imgur.com/3Nzl3gQ.gif" width="50" height="63">',
     "nice" : '<img src="http://i.imgur.com/UsUdb.png" width="60" height="60">',
-    "doge" : '<img src="http://i.imgur.com/93FIGRJ.gif" width="60" height="60">'
+    "doge" : '<img src="http://i.imgur.com/93FIGRJ.gif" width="60" height="60">',
+    "feels" : '<img src="http://i.imgur.com/3d9rVYL.gif" width="55" height="60">',
+    "mewte" : '<img src="http://i.imgur.com/v18DJOL.gif" width="60" height="45">',
+    "boogie": '<img width="60" height="60" src="http://i.imgur.com/oQoGTQB.gif"></img>',
+    "disco": '<img width="46" height="60" src="http://i.imgur.com/yD1wjfM.gif"></img>'
 };
 
 

@@ -1,5 +1,5 @@
 <?php
-    require "c:/wamp/www/includes/connect.php";
+    require dirname(__FILE__) . "/../includes/connect.php";
     if (isset($_COOKIE["username"], $_COOKIE["sessionid"])) //check if valid
     {
         mysql_select_db("bibbytube", $connection);

@@ -1,5 +1,5 @@
 <?php
-    include 'c:/wamp/www/includes/connect.php';
+    include dirname(__FILE__) . "/../includes/connect.php";
     mysql_select_db("bibbytube", $connection);
 ?>
 <!DOCTYPE html> 
@@ -19,7 +19,7 @@
         <script type="text/javascript" src="/js/request.js"></script>  
         <script src="/js/jquery-ui.js"></script>  
         
-        <?php include("c:/wamp/www/includes/analytics.php"); ?>
+        <?php require(dirname(__FILE__) . "/../includes/analytics.php"); ?>
         <script type="text/javascript">
             $(document).ready(function()
             {
@@ -114,7 +114,7 @@
     </head>
     <body>   
         <div class="container"> 
-            <?php include "../includes/truetop.php" ?>
+            <?php require dirname(__FILE__) . "/../includes/truetop.php" ?>
             <div>
                 <div id="tabs" style="min-width:580px; max-width: 1000px; margin: 50px auto 0px auto">
                     <ul>
@@ -199,7 +199,7 @@
                     </div>
                 </div>
             </div>
-            <?php include "../includes/footer.php"; ?>    
+            <?php include dirname(__FILE__) . "/../includes/footer.php"; ?>    
         </div>
     </body>
 </html>

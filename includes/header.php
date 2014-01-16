@@ -12,5 +12,5 @@
         <script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="/js/jquery.cookie.js"></script>      
         <script type="text/javascript" src="/js/request.js?ver=0.9.04"></script>          
-        <?php include("c:/wamp/www/includes/analytics.php"); ?>
+        <?php include(dirname(__FILE__) . "/analytics.php"); ?>
     </head>

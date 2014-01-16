@@ -2,7 +2,7 @@
 /*
  * THIS FILE PARSES INFO IT RECIEVES AND RETURNS A JSON OBJECT OF THAT USER
 */
-   require 'c:/wamp/www/includes/connect.php';
+   require dirname(__FILE__) . "/../includes/connect.php";
    function roomExist($name, $connection)
    {
        mysql_select_db("bibbytube", $connection);

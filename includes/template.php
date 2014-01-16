@@ -21,7 +21,7 @@
     $nsfw = 0;
     $listing = "";
     
-    require 'c:/wamp/www/includes/connect.php';
+    require dirname(__FILE__) . "/connect.php";
     mysql_select_db("bibbytube", $connection);
     //GET AND INCRIMENT VISITORS
     $roomname = mysql_real_escape_string($roomname);
@@ -81,12 +81,11 @@
                 echo '<script type="text/javascript" src="/js/emotes.js"></script>';
             }
         ?>
-        <?php include("c:/wamp/www/includes/analytics.php") ?>
+        <?php include(dirname(__FILE__) . "/analytics.php") ?>
     </head>
     <body>
         <div class="container">
             <?php include dirname(__FILE__) . "/truetop.php" ?>
-            <?php //include $_SERVER["DOCUMENT_ROOT"]."advertise/includes/banner.php" ?>
             <?php 
                 if ($nsfw == 0 && $listing == 'public')
                 {

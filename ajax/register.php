@@ -7,7 +7,7 @@
 //}
 ?>
 <?php
-    include 'c:/wamp/www/includes/connect.php';
+    include dirname(__FILE__) . "/../includes/connect.php";
     
     if (isset($_POST["username"],$_POST["password"],$_POST["email"]))
     {
