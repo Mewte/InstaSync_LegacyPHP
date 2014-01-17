@@ -10,9 +10,7 @@
         <meta name="description" content="Customize your InstaSynch user account settings."/>
         <meta name="keywords" content="YouTube, SynchTube, watch, videos, friends, Social, bibbytube, bibby tube, babby, babbytube, bibby, InstaSynch"/>
         <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link type="text/css" href="/styles/style.css" rel="stylesheet">
-        <link type="text/css" href="/styles/main.css" rel="stylesheet">
-        <link href="/styles/clickable-dropdown/main.css" rel="stylesheet">        
+        <link type="text/css" href="/styles/style.css" rel="stylesheet">      
         <link REL="SHORTCUT ICON" HREF="/favicon.ico">   
         <script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="/js/jquery.cookie.js"></script>      
