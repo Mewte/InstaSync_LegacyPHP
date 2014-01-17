@@ -8,4 +8,5 @@
     include($location . "style.css");
     include($location . "main.css");
     include($location . "clickable-dropdown/main.css");
+    include($location . "friends.css");
 ?>
