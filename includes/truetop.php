@@ -1,6 +1,8 @@
             <div id="truetop">
-                <div class="room-top" id="top">  
-                    <a href="/"><img src="/images/logoNoBG.png" height="55" width="172"></a>
+                <div class="room-top" id="top">
+					<a href="/" onclick="global.requestPartialPage('index'); return false;">
+						<img style="cursor: pointer;" src="/images/logoNoBG.png" height="55" width="172">
+					</a>
                     <div id="loginfrm">
                         <div class="hide" id="login">
                             <input maxlength="16" name="username" type="text" placeholder="Username" id="loginUsername"/>
@@ -20,7 +22,7 @@
                             <span class="formmsg"></span>
                             <button onclick="register()" class="formsubmit">Register</button>
                         </div>                    
-                        <div class="hide" id="loggedInAs" style=" color: white; float: right; padding-top: 5px;">
+                        <div class="hide" id="loggedInAs" style=" color: white; float: right; padding-top: 5px; margin-right: 185px;">
                             <div class="click-nav">
                                     <ul class="no-js">
                                             <li>
@@ -37,7 +39,9 @@
                         </div>
                         <span id="loginerror" style="color:red; display: none;"></span>
                     </div>  
+                    <?php include dirname(__FILE__) . "/friendsList.php" ?>
                 </div>  
+                
                 <script type="text/javascript">
                     $(document).ready(function()
                     {
@@ -55,7 +59,7 @@
                                 }
                             }
                         }); 
-                        checkLogin(function(loggedin, username, avatar, bio)
+                        checkLogin(function(loggedin, username, avatar, bio, socialEnabled)
                         {
                             if (loggedin === true)
                             {
@@ -73,13 +77,17 @@
                                     $('.clicker').toggleClass('active');
                                     e.stopPropagation();
                                 });
-                                $(document).click(function() {
+                                $(document).click(function() { //hide user drop down menu
                                     if ($('.click-nav .js ul').is(':visible')) {
                                             $('.click-nav .js ul', this).slideUp();
                                             $('.clicker').removeClass('active');
                                     }
                                 });
-                                }
+								if (socialEnabled == true)
+								{
+									global.loadFriendService();
+								}
+							}
                             else
                             {
                                 $("#login").removeClass("hide");

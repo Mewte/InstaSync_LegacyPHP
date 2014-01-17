@@ -25,7 +25,7 @@
                 $("textarea").html("");
                 $("#listing").attr("checked", false);
             
-                checkLogin(function(loggedin, username, avatar, bio)
+                checkLogin(function(loggedin, username, avatar, bio, social)
                 {
                     if (loggedin === true)
                     {
@@ -37,8 +37,16 @@
                         {
                             if (listing === "public")
                             {
-                                $("#listing").prop("checked", "true");
+                                $("#listing").prop("checked", true);
                             }
+							if (social == true)
+							{
+								$("#social").prop("checked", true);
+							}
+							else
+							{
+								$("#social").prop("checked", false);
+							}
                             $("#roomDescription").html(description);
                             $("#roomInfo").html(info);
                         });
@@ -62,7 +70,7 @@
                 });
                 $("#changeUserinfo").click(function()
                 {
-                    setUserInfo($("#avatar").val(), $("#userinfo").val(), function(error)
+                    setUserInfo($("#avatar").val(), $("#userinfo").val(), $("#social").is(':checked') ? "true" : "false", function(error)
                     {
                         $("#changeUserinfoMsg").html(error)
                     });
@@ -145,6 +153,10 @@
                             </div>
                             <div class="section">
                                 <h3>User Info</h3>
+                                <div class="option">
+                                    <span>Social Features:</span>
+                                    <input title="Enable friends list." id="social" type="checkbox"/>
+                                </div>								
                                 <div class="option">
                                     <span>Avatar:</span>
                                     <input title="Only IMGUR URL links are accepted for images. You can upload images to imgur at http://imgur.com." id="avatar" type="text"/>

@@ -45,7 +45,7 @@ function login()
         }
     });
 }
-function checkLogin(callback)//transfer checklogin to checklogin 2 (Uses a callback instead)
+function checkLogin(callback)
 {
     if ($.cookie("username") === undefined || $.cookie("sessionid") === undefined) //missing cookies, automatically not logged in
     {
@@ -56,7 +56,7 @@ function checkLogin(callback)//transfer checklogin to checklogin 2 (Uses a callb
         $.get("/ajax/checklogin.php").done(function(data)
         {
             var result = JSON.parse(data);
-            callback(result.loggedin, result.username, result.avatar, result.bio);
+            callback(result.loggedin, result.username, result.avatar, result.bio, result.social);
         });
     }
 }
@@ -76,9 +76,9 @@ function getUserInfo(username, callback)
         callback(result.avatar, result.bio, result.error);
     });
 }
-function setUserInfo(avatar, bio, callback)
+function setUserInfo(avatar, bio, social, callback)
 {
-    $.post("/ajax/userinfo.php", {avatar: avatar, bio: bio}).done(function(data)
+    $.post("/ajax/userinfo.php", {avatar: avatar, bio: bio, social: social}).done(function(data)
     {
         var result = JSON.parse(data); 
         callback(result.error);
