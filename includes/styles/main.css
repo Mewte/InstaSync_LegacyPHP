@@ -143,7 +143,7 @@ body, html {
     padding:5px;
 }
 #footer {
-      bottom: 0px;
+      bottom: 40px;
       background-color: rgb(25,25,25);
       position: absolute;
       width: 100%;
@@ -161,6 +161,9 @@ body, html {
 #footer, .push {
     height: 42px;
     margin-top: 10px;
+}
+.push {
+    height: 82px;
 }
 .footer .footerNav
 {
