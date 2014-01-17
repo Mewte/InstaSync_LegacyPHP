@@ -52,9 +52,7 @@
     <head>
         <title><?php echo "InstaSynch: " . $roomname."'s room!"?></title>
         <meta name="description" content="<?php echo htmlspecialchars($description) ?>"/>        
-        <link type="text/css" href="/styles/style.css?ver=0.9.7" rel="stylesheet">
-        <link type="text/css" href="/styles/main.css?ver=0.9.7" rel="stylesheet">  
-        <link href="/styles/clickable-dropdown/main.css" rel="stylesheet">         
+        <link type="text/css" href="/styles/style.css" rel="stylesheet">        
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
         <link REL="SHORTCUT ICON" HREF="/favicon.ico">  
         <script type="text/javascript">
