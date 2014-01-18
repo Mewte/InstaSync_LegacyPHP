@@ -37,7 +37,9 @@
                         </div>
                         <span id="loginerror" style="color:red; display: none;"></span>
                     </div>  
+                    <?php include dirname(__FILE__) . "/friendsList.php" ?>
                 </div>  
+                
                 <script type="text/javascript">
                     $(document).ready(function()
                     {

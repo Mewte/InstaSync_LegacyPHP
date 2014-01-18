@@ -7,10 +7,10 @@
             });
             $(document).scroll(function(e) {
                 // b is the fixed div
-                $('.friendsList').css({'left': $(".footer").offset().left + 790});
+                $('.friendsList').css({'top': $(document).scrollTop()});
             });
             $(window).resize(function()
             {
-                $('.friendsList').css({'left': $(".footer").offset().left + 790});
+                //$('.friendsList').css({'left': $(".footer").offset().left + 790});
             });
         </script>

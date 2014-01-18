@@ -2,10 +2,12 @@
 {
       height: 36px;
       width: 200px;
-      bottom: 0px;
+      top: 0px;
+      left: 50%;
+      margin-left: -100px;
       background-color: rgba(25,25,25,0.8);
       background-color: red;
-      position: fixed;
+      position: absolute;
       margin-bottom: 4px;
       z-index: 1;
 }

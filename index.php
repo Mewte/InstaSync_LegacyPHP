@@ -14,7 +14,6 @@
 <html>
     <?php include "includes/header.php" ?>
     <body style="background-image: url('/images/test.jpg');"> 
-        <?php include "includes/friendsList.php" ?>
         <div class="container"> 
             <?php include "includes/truetop.php" ?>   
             <div id="bn" align="center" style="margin-top: 5px; margin-bottom: 5px;">
