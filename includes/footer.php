@@ -29,6 +29,10 @@
                     </ul>
                 </div>
             </div>
+            <div id="friendBar" style="height: 42px; position: fixed; width: 200px; right: 10px; bottom: 45px;">
+                <div>
+                </div>
+            </div>
 <?php
     include dirname(__FILE__) . "/statCounter.php";
     include dirname(__FILE__) . "/noiframe.php";

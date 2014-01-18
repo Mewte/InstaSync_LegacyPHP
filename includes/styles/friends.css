@@ -1,0 +1,8 @@
+#friendBar
+{
+      bottom: 0px;
+      background-color: rgba(25,25,25,0.8);
+      position: fixed;
+      text-align: right;   
+      margin-bottom: 4px;
+}
