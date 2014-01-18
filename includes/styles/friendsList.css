@@ -1,8 +1,11 @@
-#friendBar
+.friendsList
 {
+      height: 36px;
+      width: 200px;
       bottom: 0px;
       background-color: rgba(25,25,25,0.8);
+      background-color: red;
       position: fixed;
-      text-align: right;   
       margin-bottom: 4px;
+      z-index: 1;
 }
