@@ -1,7 +1,12 @@
         <div class="friendsList">
-            <img class="friends-list-icon" src="/images/social/friends_icon.png" height="26" width="26"/>
-            <div class="friend-count">4 Online</div>
-            <img class="friends-list-expand-icon" src="/images/social/expand.png" height="22" width="22"/>
+            <div class="friendsList-expand">
+                <img class="friends-list-icon" src="/images/social/friends_icon.png" height="26" width="26"/>
+                <div class="friend-count">4 Online</div>
+                <img class="friends-list-expand-icon" src="/images/social/expand.png" height="22" width="22"/>
+            </div>
+            <div class="friendsList-list">
+                
+            </div>
         </div>
         <script type="text/javascript">
             $(document).ready(function()
