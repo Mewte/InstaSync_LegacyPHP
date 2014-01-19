@@ -3,41 +3,39 @@
       background-color: rgb(25,25,25);
       position: absolute;
       width: 100%;
-      text-align: right;   
+      text-align: right;
+      margin-bottom: 4px;
 }
 #footer .footer{
     margin: auto;
     width: 1000px;
-    height: 32px;
+    height:100%;
     color: white;
-    padding: 4px;
+    padding: 2px;
+    position: relative;
 }
 #footer, .push {
     height: 42px;
     margin-top: 10px;
 }
-.footer .left{
-    width: 720px; 
-    position: relative;
-    float: left;
-}
-.footer .left .footerNav{
-    list-style: none; 
+.footer .footerNav
+{
+    list-style: none;
     width: 325px; height:
-    25px; margin: 
+    25px; margin:
     0px auto;
 }
-.footer .left .footerNav li
+.footer .footerNav li
 {
     float: left;
     margin: 5px 10px 5px 10px;
 }
-.footer .left .footerNav li a
+.footer .footerNav li a
 {
     color: rgb(200,200,200);
     text-decoration: underline;
 }
-.footer .left .footerNav li a:hover
+.footer .footerNav li a:hover
 {
     color: rgb(255,255,255);
 }

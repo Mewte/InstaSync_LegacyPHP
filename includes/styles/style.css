@@ -151,6 +151,7 @@ a:hover {
     margin: 0 auto;
     overflow: visible;
     width: 1000px;
+    position: relative;
 }
 #pl-header {
     color: #666666;

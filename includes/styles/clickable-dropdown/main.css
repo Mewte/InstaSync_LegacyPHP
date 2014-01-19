@@ -16,7 +16,7 @@
 	text-decoration:none;
 }
 .click-nav {
-	width:200px;
+	min-width: 125px;
 }
 .click-nav ul {
 	font-weight:100;

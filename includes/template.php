@@ -117,7 +117,8 @@
                                     <li>1. To add videos, copy the video URL and put it in the input box.</li>
                                     <li>2. To control the player, Use the Take Lead button and use the slider and buttons that appear.</li>
                                     <li>4. Want to invite others to your room? Copy and paste the URL address in the address bar.</li>
-                                    <li>4. Check out the <a href="/help.php" target="_blank">Help</a> page for more information.</li>
+                                    <li>5 If you'd like to make your room private (It wont appear on the front page) then visit the <a href="/settings/#tabs-2" target="_blank">room settings page</a> and uncheck "Public".</li>
+                                    <li>6. Check out the <a href="/help.php" target="_blank">Help</a> page for more information.</li>
                                  </ul>
                             </div>
                         </div>                                                    

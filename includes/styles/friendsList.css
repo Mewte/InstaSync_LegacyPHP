@@ -1,13 +1,28 @@
-.friendsList
-{
-      height: 36px;
-      width: 200px;
-      top: 0px;
-      left: 50%;
+.friendsList{
+      height: 32px;
+      width: 150px;
+      top: 10px;
+      left: 950px;
       margin-left: -100px;
-      background-color: rgba(25,25,25,0.8);
-      background-color: red;
       position: absolute;
-      margin-bottom: 4px;
       z-index: 1;
+      background-color: rgba(34,132,181,0.9);
+      color:#FFF;
+      cursor: pointer;
+}
+.friendsList:hover{
+    background-color: rgba(25,111,154,0.9);
+}
+.friendsList .friend-count{
+    display: inline-block;
+    margin: 8px 0px 0px 2px;
+}
+.friendsList .friends-list-icon{
+    float: left;
+    margin: 2px;
+}
+.friendsList .friends-list-expand-icon
+{
+    float: right;
+    margin: 4px 10px 2px 2px;
 }
