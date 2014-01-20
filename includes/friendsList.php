@@ -8,33 +8,18 @@
                 <li>
                     <div class="category">
                         (<span id="friends-list-received-count">0</span>) Received
-                        <img class="category-image" src="/images/social/plus.png" height="16" width="16" />
+                        <img class="category-expand" src="/images/social/plus.png" height="16" width="16" />
                     </div>
                     <ul class="category-list">
                         <li>
-                            <div class="username">EEEEEEEEEEEEEEEE</div>
-                        </li>
-                        <li>
-                            <div class="username">Senpai</div>
-                        </li>
-                        <li>
-                            <div class="username">Senpai</div>
-                        </li>
-                        <li>
-                            <div class="username">Senpai</div>
-                        </li>
-                        <li>
-                            <div class="username">Senpai</div>
-                        </li>
-                        <li>
-                            <div class="username">Senpai</div>
-                        </li>                        
+                            <div class="username">EEEEEEEEEEEEEEEE<img class="expand" src="/images/social/expand.png" height="16" width="16" /></div>               
+                        </li>                     
                     </ul>
                 </li>
                 <li>
                     <div class="category">
                         (<span id="friends-list-sent-count">0</span>) Sent
-                        <img class="category-image" src="/images/social/plus.png" height="16" width="16" />
+                        <img class="category-expand" src="/images/social/plus.png" height="16" width="16" />
                     </div>
                     <ul class="category-list">
                         
@@ -43,7 +28,7 @@
                 <li>
                     <div class="category">
                         (<span id="friends-list-online-count">0</span>) Online
-                        <img class="category-image" src="/images/social/plus.png" height="16" width="16" />
+                        <img class="category-expand" src="/images/social/plus.png" height="16" width="16" />
                     </div>
                     <ul class="category-list">
                         
@@ -52,7 +37,7 @@
                 <li>
                     <div class="category">
                         (<span id="friends-list-offline-count">0</span>) Offline
-                        <img class="category-image" src="/images/social/plus.png" height="16" width="16" />
+                        <img class="category-expand" src="/images/social/plus.png" height="16" width="16" />
                     </div>
                     <ul class="category-list">
 

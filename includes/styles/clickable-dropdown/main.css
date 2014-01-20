@@ -31,9 +31,6 @@
 	left:0;
 	right:0;
         border-top: none;
-        border-style: solid;
-        border-color: black;
-        border-width: 1px;
         z-index: 5;
 }
 .click-nav ul .clicker {

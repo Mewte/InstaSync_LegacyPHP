@@ -46,7 +46,7 @@
 .friendsList .friendsList-list .category:hover{
     background-color: rgb(19,65,87);
 }
-.friendsList .friendsList-list .category .category-image{
+.friendsList .friendsList-list .category .category-expand{
     float: right;
 }
 .friendsList .friendsList-list .category-list{
@@ -64,7 +64,10 @@
     overflow: hidden;
     color: rgb(20,20,20);
     font-size: 12px;
-
+}
+.friendsList .friendsList-list .category-list li .expand{
+    float: right;
+    margin: -2px 4px -4px 0px;
 }
 .friendsList .friendsList-list .category-list li:hover{
     background-color: rgb(39,135,182);
