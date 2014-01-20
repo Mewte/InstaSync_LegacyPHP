@@ -3,17 +3,17 @@
       top: 10px;
       left: 950px;
       margin-left: -100px;
-      position: absolute;    
+      position: absolute;   
+      z-index: 5;
 }
 .friendsList .friendsList-expand{
       height: 32px;
-      z-index: 1;
-      background-color: rgba(34,132,181,0.9);
+      background-color: rgba(34,132,181,1);
       color:#FFF;
       cursor: pointer;
 }
 .friendsList .friendsList-expand:hover{
-    background-color: rgba(25,111,154,0.9);
+    background-color: rgba(25,111,154,1);
 }
 .friendsList .friendsList-expand .friend-count{
     display: inline-block;
@@ -27,4 +27,27 @@
 {
     float: right;
     margin: 4px 10px 2px 2px;
+}
+.friendsList .friendsList-list{
+    
+}
+.friendsList .friendsList-list .category{
+    text-align: left;
+    color: white;
+    font-size: 14px;
+    background-color: rgb(32, 109, 147);
+    border-style: solid;
+    border-color: rgba(34,34,34,1);
+    border-width: 1px;
+    padding: 4px;
+    cursor: pointer;
+}
+.friendsList .friendsList-list .category:hover{
+    background-color: rgb(19,65,87);
+}
+.friendsList .friendsList-list .category .category-image{
+    float: right;
+}
+.friendsList .friendsList-list ul li{
+    
 }

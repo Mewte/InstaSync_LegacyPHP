@@ -5,20 +5,33 @@
                 <img class="friends-list-expand-icon" src="/images/social/expand.png" height="22" width="22"/>
             </div>
             <div class="friendsList-list">
-                
+                <div class="category">
+                    (<span id="friends-list-received-count">0</span>) Received
+                    <img class="category-image" src="/images/social/plus.png" height="16" width="16" />
+                </div>
+                <ul class="received">
+                    <li></lI>
+                </ul>
+                <div class="category">
+                    (<span id="friends-list-sent-count">0</span>) Sent
+                    <img class="category-image" src="/images/social/plus.png" height="16" width="16" />
+                </div>
+                <ul class="sent">  
+                </ul>
+                <div class="category">
+                    (<span id="friends-list-online-count">0</span>) Online
+                    <img class="category-image" src="/images/social/plus.png" height="16" width="16" />
+                </div>
+                <ul class="online">       
+                </ul>
+                <div class="category">
+                    (<span id="friends-list-offline-count">0</span>) Offline
+                    <img class="category-image" src="/images/social/plus.png" height="16" width="16" />
+                </div>
+                <ul class="offline">
+                    
+                </ul>
             </div>
         </div>
-        <script type="text/javascript">
-            $(document).ready(function()
-            {
-                
-            });
-            $(document).scroll(function(e) {
-                // b is the fixed div
-                $('.friendsList').css({'top': $(document).scrollTop() + 10});
-            });
-            $(window).resize(function()
-            {
-                //$('.friendsList').css({'left': $(".footer").offset().left + 790});
-            });
+        <script type="text/javascript" src="/js/friends.js">
         </script>
