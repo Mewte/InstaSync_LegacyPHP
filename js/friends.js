@@ -2,10 +2,7 @@
 $(document).ready(function()
 {
     //Bind actions to dom elements (testing a new object oriented DOM element idea)
-    $(".friendsList-list .category")[0].toggleList = function(){ 
-        alert('hey');
-    };
-    $(".friendsList-list .category").click(function()
+    $(".friendsList-list .category").data("this", function()
     {
         this.toggleList();
         //$(this).parent().children("ul").show();
