@@ -36,11 +36,12 @@
     color: white;
     font-size: 14px;
     background-color: rgb(32, 109, 147);
-    border-style: solid;
-    border-color: rgba(34,34,34,1);
-    border-width: 1px;
     padding: 4px;
     cursor: pointer;
+}
+.friendsList .friendsList-list .category, .friendsList .friendsList-list .category-list li{
+    border-top: 1px solid rgb(34,34,34);
+    border-bottom: 1px solid rgb(34,34,34);
 }
 .friendsList .friendsList-list .category:hover{
     background-color: rgb(19,65,87);
@@ -48,6 +49,21 @@
 .friendsList .friendsList-list .category .category-image{
     float: right;
 }
-.friendsList .friendsList-list ul li{
-    
+.friendsList .friendsList-list .category-list{
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: visible;
+}
+.friendsList .friendsList-list .category-list li{
+    height: 22px;
+    color: white;
+    background-color: rgb(72,168,215);
+}
+.friendsList .friendsList-list .category-list li .username{
+    height: 22px;
+    color: white;
+    background-color: rgb(72,168,215);
+}
+.friendsList .friendsList-list .category-list li:hover{
+    background-color: rgb(72,168,215);
 }
