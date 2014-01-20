@@ -1,7 +1,7 @@
 .friendsList{
-      width: 150px;
+      width: 180px;
       top: 10px;
-      left: 950px;
+      left: 920px;
       margin-left: -100px;
       position: absolute;   
       z-index: 5;
@@ -36,7 +36,7 @@
     color: white;
     font-size: 14px;
     background-color: rgb(32, 109, 147);
-    padding: 4px;
+    padding: 4px 4px 4px 30px;
     cursor: pointer;
 }
 .friendsList .friendsList-list .category, .friendsList .friendsList-list .category-list li{
@@ -50,20 +50,22 @@
     float: right;
 }
 .friendsList .friendsList-list .category-list{
-    max-height: 500px;
+    max-height: 100px;
     overflow-y: auto;
     overflow-x: visible;
 }
 .friendsList .friendsList-list .category-list li{
-    height: 22px;
-    color: white;
     background-color: rgb(72,168,215);
+    cursor: pointer;
 }
 .friendsList .friendsList-list .category-list li .username{
-    height: 22px;
     color: white;
-    background-color: rgb(72,168,215);
+    margin: 8px 0px 8px 4px;
+    overflow: hidden;
+    color: rgb(20,20,20);
+    font-size: 12px;
+
 }
 .friendsList .friendsList-list .category-list li:hover{
-    background-color: rgb(72,168,215);
+    background-color: rgb(39,135,182);
 }

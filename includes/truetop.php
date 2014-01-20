@@ -20,7 +20,7 @@
                             <span class="formmsg"></span>
                             <button onclick="register()" class="formsubmit">Register</button>
                         </div>                    
-                        <div class="hide" id="loggedInAs" style=" color: white; float: right; padding-top: 5px; margin-right: 155px;">
+                        <div class="hide" id="loggedInAs" style=" color: white; float: right; padding-top: 5px; margin-right: 185px;">
                             <div class="click-nav">
                                     <ul class="no-js">
                                             <li>
