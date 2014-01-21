@@ -18,6 +18,7 @@ $(document).ready(function()
             }});
     });
     thisFriendsListUI.addFriend(1, "Mewte", "online");
+    thisFriendsListUI.addFriend(2, "Senpai", "online");
 });
 $(document).scroll(function(e) {
     $('.friendsList').css({'top': $(document).scrollTop() + 10});
@@ -34,7 +35,7 @@ function contextMenu(element)
         {
             $(menuItems).append($("<li/>", {
                 "html": options[i].item,
-                //"click": options[i].action
+                "click": options[i].action
             }));
         }
         $(domElement).append(menuItems);
@@ -42,9 +43,9 @@ function contextMenu(element)
     };
     this.show = function(x, y)
     {
-        $(domElement).css("left", x - 20);
-        $(domElement).css("top",y - 20);
         $(domElement).show();
+        $(domElement).css("left", x - ($(domElement).width() / 2));
+        $(domElement).css("top",y - ($(domElement).height() / 2));
     };
     this.hide = function()
     {
@@ -62,38 +63,42 @@ function friendsListUI(domElement, friendsListSocket)
                         var clickMenuItems = [];
                         if (status === "online")
                         {
-                        }
-                        else
-                        {
-                            
+                            clickMenuItems.push({
+                                item: "Sent Message",
+                                action: function()
+                                {         
+
+                                }
+                            });
                         }
                         clickMenuItems.push({
                                 item: "Remove Friend",
                                 action: function()
                                 {         
-                                    if (confirm("Are you sure you wish to remove " + username))
-                                    friendsListSocket.emit("remove-friend", {id: id});
+                                    if (confirm("Are you sure you wish to remove " + username + "?"))
+                                    {
+                                        friendsListSocket.emit("remove-friend", {id: id});
+                                    }
                                 }
                             });
                         clickMenu.create(clickMenuItems);
-                        clickMenu.show(e.clientX - 20, e.clientY - 20);
+                        clickMenu.show(e.clientX, e.clientY);
                     }
         }).append($("<div/>",
             {
                 "class":"username",
-                "id":id,
+                "id":"friendsList-FriendID:" + id,
                 "html": username
-            }).append("<img>",{"src": "/images/social/expand.png", "height": "16", "width": "16"}));
+            }).append($("<img>",{"class": "expand","src": "/images/social/expand.png", "height": "16", "width": "16"})));
         if (status == "online"){
             $("#friends-list-online-list").append(friend);
-            $("#friends-list-online-count").html($("#friends-list-online-count").html() + 1);
+            $("#friends-list-online-count").html(parseInt($("#friends-list-online-count").html(), 10) + 1);
         }
         else
         {
             $("#friends-list-offline-list").append(friend);
-            $("#friends-list-offline-count").html($("#friends-list-offline-count").html() + 1);
+            $("#friends-list-offline-count").html(parseInt($("#friends-list-offline-count").html(), 10) + 1);
         }
-
     };
     this.removeFriend = function(id, username){
         
@@ -126,6 +131,7 @@ function friendsListUI(domElement, friendsListSocket)
     {
         $(ui).empty();
     };
+    
 }
 function friendsList(){
     var server = window.location.hostname + ":37999";

@@ -33,6 +33,9 @@
                     </div>
                     <ul id="friends-list-offline-list" class="category-list"></ul>
                 </li>
+                <li>
+                    Add
+                </li>
             </ul>
             <div class="context-menu"></div>
         </div>

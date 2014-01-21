@@ -9,6 +9,7 @@
         <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link type="text/css" href="/styles/style.css" rel="stylesheet">   
         <link REL="SHORTCUT ICON" HREF="/favicon.ico">   
+        <script type="text/javascript" src="/js/socket.io.js"></script>
         <script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="/js/jquery.cookie.js"></script>      
         <script type="text/javascript" src="/js/request.js?ver=0.9.04"></script>          
