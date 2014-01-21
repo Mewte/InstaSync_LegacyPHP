@@ -18,7 +18,8 @@ $(document).ready(function()
             }});
     });
     thisFriendsListUI.addFriend(1, "Mewte", "online");
-    thisFriendsListUI.addFriend(2, "Senpai", "online");
+    thisFriendsListUI.addFriend(2, "Senpai", "offline");
+    
 });
 $(document).scroll(function(e) {
     $('.friendsList').css({'top': $(document).scrollTop() + 10});
@@ -97,6 +98,7 @@ function friendsListUI(domElement, friendsListSocket)
         if (status == "online"){
             $("#friends-list-online-list").append(friend);
             $("#friends-list-online-count").html(parseInt($("#friends-list-online-count").html(), 10) + 1);
+            $($(ui).find(".friend-count .count")[0]).html(parseInt($($(ui).find(".friend-count .count")[0]).html(), 10) + 1);
         }
         else
         {
@@ -104,8 +106,8 @@ function friendsListUI(domElement, friendsListSocket)
             $("#friends-list-offline-count").html(parseInt($("#friends-list-offline-count").html(), 10) + 1);
         }
     };
-    this.removeFriend = function(id, username){
-        
+    this.removeFriend = function(id){
+        $(ui).find("")
     };
     this.addSentRequest = function(id, username)
     {
@@ -133,7 +135,7 @@ function friendsListUI(domElement, friendsListSocket)
     };
     this.clear = function(id)
     {
-        $(ui).empty();
+        $(ui).find(".category-list").empty();
     };
     
 }
