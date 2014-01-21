@@ -75,6 +75,7 @@
 .friendsList .context-menu{
     position: fixed;
     display: none;
+    box-shadow: 4px 4px rgba(0,0,0,0.2);
 }
 .friendsList .context-menu ul{
     background-color: white;

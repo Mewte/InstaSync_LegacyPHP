@@ -43,7 +43,7 @@ function contextMenu(element)
     };
     this.show = function(x, y)
     {
-        $(domElement).show();
+        $(domElement).fadeIn();
         $(domElement).css("left", x - ($(domElement).width() / 2));
         $(domElement).css("top",y - ($(domElement).height() / 2));
     };
@@ -51,6 +51,10 @@ function contextMenu(element)
     {
         $(domElement).hide();
     };
+    $(domElement).click(function()
+    {
+        $(this).fadeOut();
+    });
 }
 function friendsListUI(domElement, friendsListSocket)
 {
