@@ -23,8 +23,7 @@
     float: left;
     margin: 2px;
 }
-.friendsList .friendsList-expand .friends-list-expand-icon
-{
+.friendsList .friendsList-expand .friends-list-expand-icon{
     float: right;
     margin: 4px 10px 2px 2px;
 }
@@ -53,6 +52,7 @@
     max-height: 100px;
     overflow-y: auto;
     overflow-x: visible;
+    display: none;
 }
 .friendsList .friendsList-list .category-list li{
     background-color: rgb(72,168,215);
@@ -71,4 +71,19 @@
 }
 .friendsList .friendsList-list .category-list li:hover{
     background-color: rgb(39,135,182);
+}
+.friendsList .context-menu{
+    position: fixed;
+    display: none;
+}
+.friendsList .context-menu ul{
+    background-color: white;
+}
+.friendsList .context-menu ul li{
+    cursor: pointer;
+    padding: 8px 10px;
+    font-size: 12px;
+}
+.friendsList .context-menu ul li:hover {
+    background-color: rgb(204,232,244);
 }

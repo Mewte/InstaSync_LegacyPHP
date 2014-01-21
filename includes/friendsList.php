@@ -10,40 +10,31 @@
                         (<span id="friends-list-received-count">0</span>) Received
                         <img class="category-expand" src="/images/social/plus.png" height="16" width="16" />
                     </div>
-                    <ul class="category-list">
-                        <li>
-                            <div class="username">EEEEEEEEEEEEEEEE<img class="expand" src="/images/social/expand.png" height="16" width="16" /></div>               
-                        </li>                     
-                    </ul>
+                    <ul id="friends-list-received-list" class="category-list"></ul>
                 </li>
                 <li>
                     <div class="category">
                         (<span id="friends-list-sent-count">0</span>) Sent
                         <img class="category-expand" src="/images/social/plus.png" height="16" width="16" />
                     </div>
-                    <ul class="category-list">
-                        
-                    </ul>
+                    <ul id="friends-list-sent-list" class="category-list"></ul>
                 </li>
                 <li>
                     <div class="category">
                         (<span id="friends-list-online-count">0</span>) Online
                         <img class="category-expand" src="/images/social/plus.png" height="16" width="16" />
                     </div>
-                    <ul class="category-list">
-                        
-                    </ul>
+                    <ul id="friends-list-online-list" class="category-list"></ul>
                 </li>
                 <li>
                     <div class="category">
                         (<span id="friends-list-offline-count">0</span>) Offline
                         <img class="category-expand" src="/images/social/plus.png" height="16" width="16" />
                     </div>
-                    <ul class="category-list">
-
-                    </ul>
+                    <ul id="friends-list-offline-list" class="category-list"></ul>
                 </li>
             </ul>
+            <div class="context-menu"></div>
         </div>
         <script type="text/javascript" src="/js/friends.js">
         </script>
