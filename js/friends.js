@@ -1,11 +1,18 @@
-
 $(document).ready(function()
 {
-    //Bind actions to dom elements (testing a new object oriented DOM element idea)
-    $(".friendsList-list .category").data("this", function()
+    $(".friendsList-expand").click(function()
     {
-        this.toggleList();
-        //$(this).parent().children("ul").show();
+        $(this).parent().children('.friendsList-list').slideToggle();
+    });
+    $(".friendsList-list .category").click("toggle", function()
+    {        
+        var categoryImageObject = $(this).children(".category-expand");
+        $(this).parent().children(".category-list").slideToggle({"complete": function()
+            {
+                var categoryImage = $(this).parent().children('.category-list').css("display") === "none" ? "plus" : "minus";
+                categoryImageObject.attr("src", "/images/social/" + categoryImage + ".png");
+            }});
+        //determine which image to show (+) or (-)
     });
     
 });
