@@ -1,3 +1,4 @@
+var test;
 (function(){
 $(document).ready(function()
 {
@@ -17,7 +18,9 @@ $(document).ready(function()
                 categoryImageObject.attr("src", "/images/social/" + categoryImage + ".png");
             }});
     });
+    test = thisFriendsListUI;
     thisFriendsListUI.addFriend(1, "Mewte", "online");
+    thisFriendsListUI.addFriend(1, "Mewte2", "online");
     thisFriendsListUI.addFriend(2, "Senpai", "offline");
     
 });
@@ -63,6 +66,8 @@ function friendsListUI(domElement, friendsListSocket)
     var clickMenu = new contextMenu($(".context-menu"));
     this.addFriend = function(id, username, status){
         var friend = $("<li/>", {
+            "id":"friendsList-FriendID-" + id,
+            "data":{status: status},
             "click":function(e) //online, show send message & remove friend
                     {
                         var clickMenuItems = [];
@@ -77,27 +82,27 @@ function friendsListUI(domElement, friendsListSocket)
                             });
                         }
                         clickMenuItems.push({
-                                item: "Remove Friend",
-                                action: function()
-                                {         
-                                    if (confirm("Are you sure you wish to remove " + username + "?"))
-                                    {
-                                        friendsListSocket.emit("remove-friend", {id: id});
-                                    }
+                            item: "Remove Friend",
+                            action: function()
+                            {         
+                                if (confirm("Are you sure you wish to remove " + username + "?"))
+                                {
+                                    friendsListSocket.emit("remove-friend", {id: id});
                                 }
-                            });
+                            }
+                        });
                         clickMenu.create(clickMenuItems);
                         clickMenu.show(e.clientX, e.clientY);
                     }
         }).append($("<div/>",
             {
-                "class":"username",
-                "id":"friendsList-FriendID:" + id,
+                "class":"username",                
                 "html": username
             }).append($("<img>",{"class": "expand","src": "/images/social/expand.png", "height": "16", "width": "16"})));
         if (status == "online"){
             $("#friends-list-online-list").append(friend);
             $("#friends-list-online-count").html(parseInt($("#friends-list-online-count").html(), 10) + 1);
+            //todo: give friend count online an ID isntead
             $($(ui).find(".friend-count .count")[0]).html(parseInt($($(ui).find(".friend-count .count")[0]).html(), 10) + 1);
         }
         else
@@ -107,7 +112,20 @@ function friendsListUI(domElement, friendsListSocket)
         }
     };
     this.removeFriend = function(id){
-        $(ui).find("")
+        var friend = $("#friendsList-FriendID-" + id);
+        //decrement counter (li, ul, li, backdown to category-list
+        var status = $(friend).data('status');
+        if (status == "online")
+        {
+            $($(ui).find(".friend-count .count")[0]).html(parseInt($($(ui).find(".friend-count .count")[0]).html(), 10) - 1);
+            $("#friends-list-online-count").html(parseInt($("#friends-list-online-count").html(), 10) - 1);
+        }
+        else
+        {
+            $("#friends-list-offline-count").html(parseInt($("#friends-list-offline-count").html(), 10) - 1);
+        }
+        $(friend).remove();
+        
     };
     this.addSentRequest = function(id, username)
     {
@@ -125,19 +143,21 @@ function friendsListUI(domElement, friendsListSocket)
     {
         
     };
-    this.online = function(id)
+    this.online = function(id, username)
     {
-        
+        this.removeFriend(id);
+        this.addFriend(id, username, "online");
     };
-    this.offline = function(id)
+    this.offline = function(id, username)
     {
-        
+        this.removeFriend(id);
+        this.addFriend(id, username, "offline");
     };
     this.clear = function(id)
     {
         $(ui).find(".category-list").empty();
     };
-    
+    //TODO: Add online/offline count addition/subtracting processing here
 }
 function friendsList(){
     var server = window.location.hostname + ":37999";
