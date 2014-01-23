@@ -147,12 +147,13 @@ function friendsListUI(domElement, friendsListSocket)
                     "class":"username",                
                     "html": username
                 }).append($("<img>",{"class": "expand","src": "/images/social/expand.png", "height": "16", "width": "16"})));
-        $("#friends-list-sent-list").append("hi");
-        $("#friends-list-sent-list").html(parseInt($("#friends-list-sent-list-count").html(), 10) + 1);
+        $("#friends-list-sent-list").append(friend);
+        $("#friends-list-sent-count").html(parseInt($("#friends-list-sent-count").html(), 10) + 1);
     };
-    this.removeSentRequest = function(id, username)
+    this.removeSentRequest = function(id)
     {
-        
+        $("#friendsList-FriendID-" + id).remove();
+        $("#friends-list-sent-count").html(parseInt($("#friends-list-sent-count").html(), 10) - 1);
     };
     this.addReceivedRequest = function(id, username)
     {
