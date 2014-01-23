@@ -19,9 +19,7 @@ $(document).ready(function()
             }});
     });
     test = thisFriendsListUI;
-    thisFriendsListUI.addFriend(1, "Mewte", "online");
-    thisFriendsListUI.addFriend(1, "Mewte2", "online");
-    thisFriendsListUI.addFriend(2, "Senpai", "offline");
+    thisFriendsListUI.addSentRequest(5, "Bob");
     
 });
 $(document).scroll(function(e) {
@@ -129,7 +127,28 @@ function friendsListUI(domElement, friendsListSocket)
     };
     this.addSentRequest = function(id, username)
     {
-        
+        var friend = $("<li/>", {
+            "id":"friendsList-FriendID-" + id,
+            "click":function(e) //online, show send message & remove friend
+                    {
+                        var clickMenuItems = [];
+                        clickMenuItems.push({
+                            item: "Cancel Request",
+                            action: function()
+                            {         
+                                friendsListSocket.emit("remove-friend", {id: id});
+                            }
+                        });
+                        clickMenu.create(clickMenuItems);
+                        clickMenu.show(e.clientX, e.clientY);
+                    }
+            }).append($("<div/>",
+                {
+                    "class":"username",                
+                    "html": username
+                }).append($("<img>",{"class": "expand","src": "/images/social/expand.png", "height": "16", "width": "16"})));
+        $("#friends-list-sent-list").append("hi");
+        $("#friends-list-sent-list").html(parseInt($("#friends-list-sent-list-count").html(), 10) + 1);
     };
     this.removeSentRequest = function(id, username)
     {
@@ -156,6 +175,9 @@ function friendsListUI(domElement, friendsListSocket)
     this.clear = function(id)
     {
         $(ui).find(".category-list").empty();
+        //make all values 0
+        
+        
     };
     //TODO: Add online/offline count addition/subtracting processing here
 }
