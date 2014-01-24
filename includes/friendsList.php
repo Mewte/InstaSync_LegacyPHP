@@ -34,7 +34,9 @@
                     <ul id="friends-list-offline-list" class="category-list"></ul>
                 </li>
                 <li>
-                    Add
+                    <div class="add-friend">
+                        <img src="images/social/add-friend.png" />
+                    </div>
                 </li>
             </ul>
             <div class="context-menu"></div>

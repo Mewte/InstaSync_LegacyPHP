@@ -84,7 +84,7 @@ function friendsListUI(domElement, friendsListSocket)
                             {         
                                 if (confirm("Are you sure you wish to remove " + username + "?"))
                                 {
-                                    friendsListSocket.emit("remove-friend", {id: id});
+                                    friendsListSocket.sendCmd("remove-friend", {id: id});
                                 }
                             }
                         });
@@ -135,7 +135,7 @@ function friendsListUI(domElement, friendsListSocket)
                             item: "Cancel Request",
                             action: function()
                             {         
-                                friendsListSocket.emit("cancel-request", {id: id});
+                                friendsListSocket.sendCmd("cancel-request", {id: id});
                             }
                         });
                         clickMenu.create(clickMenuItems);
@@ -165,14 +165,14 @@ function friendsListUI(domElement, friendsListSocket)
                             item: "Accept Request",
                             action: function()
                             {         
-                                friendsListSocket.emit("accept-friend", {id: id});
+                                friendsListSocket.sendCmd("accept-friend", {id: id});
                             }
                         });
                         clickMenuItems.push({
                             item: "Decline Request",
                             action: function()
                             {         
-                                friendsListSocket.emit("decline-friend", {id: id});
+                                friendsListSocket.sendCmd("decline-friend", {id: id});
                             }
                         });                        
                         clickMenu.create(clickMenuItems);
@@ -227,6 +227,10 @@ function friendsList(){
     };
     this.connect = function () {
         socket.socket.connect();
+    };
+    this.sendCmd = function(command, data)
+    {
+        socket.emit(command, data);
     };
     socket.on('connecting', function () {
     });
