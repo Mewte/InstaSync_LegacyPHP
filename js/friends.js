@@ -1,9 +1,11 @@
-var test;
 (function(){
+var friendsListSocket = null;
+var thisFriendsListUI = null;
 $(document).ready(function()
 {
-    var friendsListSocket = new friendsList();
-    var thisFriendsListUI = new friendsListUI($(".friendsList"), friendsListSocket);
+    friendsListSocket = new friendsList();
+    friendsListSocket.connect();
+    thisFriendsListUI = new friendsListUI($(".friendsList"), friendsListSocket);
     $(".friendsList-expand").click(function(e)
     {
         $(this).parent().children('.friendsList-list').slideToggle();
@@ -18,9 +20,6 @@ $(document).ready(function()
                 categoryImageObject.attr("src", "/images/social/" + categoryImage + ".png");
             }});
     });
-    test = thisFriendsListUI;
-    thisFriendsListUI.addSentRequest(5, "Bob");
-    
 });
 $(document).scroll(function(e) {
     $('.friendsList').css({'top': $(document).scrollTop() + 10});
@@ -136,7 +135,7 @@ function friendsListUI(domElement, friendsListSocket)
                             item: "Cancel Request",
                             action: function()
                             {         
-                                friendsListSocket.emit("remove-friend", {id: id});
+                                friendsListSocket.emit("cancel-request", {id: id});
                             }
                         });
                         clickMenu.create(clickMenuItems);
@@ -157,11 +156,40 @@ function friendsListUI(domElement, friendsListSocket)
     };
     this.addReceivedRequest = function(id, username)
     {
-        
+        var friend = $("<li/>", {
+            "id":"friendsList-FriendID-" + id,
+            "click":function(e) //online, show send message & remove friend
+                    {
+                        var clickMenuItems = [];
+                        clickMenuItems.push({
+                            item: "Accept Request",
+                            action: function()
+                            {         
+                                friendsListSocket.emit("accept-friend", {id: id});
+                            }
+                        });
+                        clickMenuItems.push({
+                            item: "Decline Request",
+                            action: function()
+                            {         
+                                friendsListSocket.emit("decline-friend", {id: id});
+                            }
+                        });                        
+                        clickMenu.create(clickMenuItems);
+                        clickMenu.show(e.clientX, e.clientY);
+                    }
+            }).append($("<div/>",
+                {
+                    "class":"username",                
+                    "html": username
+                }).append($("<img>",{"class": "expand","src": "/images/social/expand.png", "height": "16", "width": "16"})));
+        $("#friends-list-received-list").append(friend);
+        $("#friends-list-received-count").html(parseInt($("#friends-list-received-count").html(), 10) + 1);        
     };
     this.removeReceivedRequest = function(id, username)
     {
-        
+        $("#friendsList-FriendID-" + id).remove();
+        $("#friends-list-received-count").html(parseInt($("#friends-list-received-count").html(), 10) - 1);
     };
     this.online = function(id, username)
     {
@@ -203,18 +231,21 @@ function friendsList(){
     socket.on('connecting', function () {
     });
     socket.on('connect', function () {
-        socket.emit('join', {username: username, sessionid: sessionid});
+        socket.emit('join', {username: $['cookie']('username'), sessionid: $['cookie']('sessionid')}); //Requires jquery.cookie.js
     });
     socket.on('success', function (data){
-        var online = 0;
         for(var friend in data.friendslist) 
         {
-            if (data.friendslist[friend].status == "online")
-            {
-                online++;
-            }
+            thisFriendsListUI.addFriend(data.friendslist[friend].id, data.friendslist[friend].username, data.friendslist[friend].status);
         }
-        alert(online + " friends online.");
+        for(var sentRequest in data.friendRequests.sent) 
+        {
+            thisFriendsListUI.addSentRequest(data.friendRequests.sent[sentRequest].id, data.friendRequests.sent[sentRequest].username);
+        }   
+        for(var receivedRequest in data.friendRequests.received) 
+        {
+            thisFriendsListUI.addReceivedRequest(data.friendRequests.received[receivedRequest].id, data.friendRequests.received[receivedRequest].username);
+        }
     });   
     socket.on('whisper', function (data){
         
@@ -225,30 +256,30 @@ function friendsList(){
         
     });       
     socket.on('online', function (data){
-        
+        thisFriendsListUI.online(data.id, data.username);
     });
     socket.on('offline', function (data){
-        
+        thisFriendsListUI.offline(data.id, data.username);
     });
     socket.on('pending-sent', function (data){
-        
+        thisFriendsListUI.addSentRequest(data.id, data.username);
     });   
     socket.on('pending-received', function (data){
-        
+        thisFriendsListUI.addReceivedRequest(data.id, data.username);
     }); 
     socket.on('remove-pending-sent', function (data){
-        
+        thisFriendsListUI.removeSentRequest(data.id);
     });
     socket.on('remove-pending-received', function (data){
-        
+        thisFriendsListUI.removeReceivedRequest(data.id);
     });            
     socket.on('add-friend', function(data)
     {
-        
+        thisFriendsListUI.addFriend(data.id, data.username, data.status);
     });  
     socket.on('remove-friend', function(data)
     {
-       
+        thisFriendsListUI.removeFriend(data.id);
     });                
 }    
 })();
