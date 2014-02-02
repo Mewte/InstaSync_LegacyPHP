@@ -124,8 +124,7 @@ function friendsListUI(domElement, friendsListSocket)
         $(friend).remove();
         
     };
-    this.addSentRequest = function(id, username)
-    {
+    this.addSentRequest = function(id, username){
         var friend = $("<li/>", {
             "id":"friendsList-FriendID-" + id,
             "click":function(e) //online, show send message & remove friend
@@ -149,13 +148,11 @@ function friendsListUI(domElement, friendsListSocket)
         $("#friends-list-sent-list").append(friend);
         $("#friends-list-sent-count").html(parseInt($("#friends-list-sent-count").html(), 10) + 1);
     };
-    this.removeSentRequest = function(id)
-    {
+    this.removeSentRequest = function(id){
         $("#friendsList-FriendID-" + id).remove();
         $("#friends-list-sent-count").html(parseInt($("#friends-list-sent-count").html(), 10) - 1);
     };
-    this.addReceivedRequest = function(id, username)
-    {
+    this.addReceivedRequest = function(id, username){
         var friend = $("<li/>", {
             "id":"friendsList-FriendID-" + id,
             "click":function(e) //online, show send message & remove friend
@@ -186,49 +183,39 @@ function friendsListUI(domElement, friendsListSocket)
         $("#friends-list-received-list").append(friend);
         $("#friends-list-received-count").html(parseInt($("#friends-list-received-count").html(), 10) + 1);        
     };
-    this.removeReceivedRequest = function(id, username)
-    {
+    this.removeReceivedRequest = function(id, username){
         $("#friendsList-FriendID-" + id).remove();
         $("#friends-list-received-count").html(parseInt($("#friends-list-received-count").html(), 10) - 1);
     };
-    this.online = function(id, username)
-    {
+    this.online = function(id, username){
         this.removeFriend(id);
         this.addFriend(id, username, "online");
         //todo: add status message
     };
-    this.offline = function(id, username)
-    {
+    this.offline = function(id, username){
         this.removeFriend(id);
         this.addFriend(id, username, "offline");
         //todo: add status message
     };
-    this.openWhisper = function(id, username)
-    {
+    this.openWhisper = function(id, username){
         
     };
-    function createWhisperWindow(id, username)
-    {
+    function createWhisperWindow(id, username){
         return domElement;
     }
-    this.closeWhisper = function(id)
-    {
+    this.closeWhisper = function(id){
     
     };
-    this.addWhisper = function(id, username, message)
-    {
+    this.addWhisper = function(id, username, message){
         
     };
-    this.addWhisperTab = function()
-    {
+    this.addWhisperTab = function(){
         
     };
-    this.removeWhisperTab = function()
-    {
+    this.removeWhisperTab = function(){
         
     };
-    this.clear = function(id)
-    {
+    this.clear = function(id){
         $(ui).find(".category-list").empty();
         //make all values 0
         
