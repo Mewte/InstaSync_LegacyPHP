@@ -206,19 +206,27 @@ function friendsListUI(domElement, friendsListSocket)
     this.openWhisper = function(id, username)
     {
         
-    }
-    function createWhisper(id, username)
+    };
+    function createWhisperWindow(id, username)
     {
         return domElement;
     }
     this.closeWhisper = function(id)
     {
-        
-    }
+    
+    };
     this.addWhisper = function(id, username, message)
     {
         
-    }
+    };
+    this.addWhisperTab = function()
+    {
+        
+    };
+    this.removeWhisperTab = function()
+    {
+        
+    };
     this.clear = function(id)
     {
         $(ui).find(".category-list").empty();

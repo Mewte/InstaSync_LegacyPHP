@@ -47,6 +47,11 @@
                 </li>
             </ul>
             <div class="context-menu"></div>
+            <div class="whisper-container">
+                <div class="whisper-window" id="friends-list-whisper-userID-32">
+                
+                </div>
+            </div>
         </div>
         <script type="text/javascript" src="/js/friends.js">
         </script>
