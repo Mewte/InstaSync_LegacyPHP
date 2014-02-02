@@ -195,12 +195,30 @@ function friendsListUI(domElement, friendsListSocket)
     {
         this.removeFriend(id);
         this.addFriend(id, username, "online");
+        //todo: add status message
     };
     this.offline = function(id, username)
     {
         this.removeFriend(id);
         this.addFriend(id, username, "offline");
+        //todo: add status message
     };
+    this.openWhisper = function(id, username)
+    {
+        
+    }
+    function createWhisper(id, username)
+    {
+        return domElement;
+    }
+    this.closeWhisper = function(id)
+    {
+        
+    }
+    this.addWhisper = function(id, username, message)
+    {
+        
+    }
     this.clear = function(id)
     {
         $(ui).find(".category-list").empty();

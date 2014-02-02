@@ -21,6 +21,13 @@
                 </li>
                 <li>
                     <div class="category">
+                        (<span id="friends-list-chatwindow">0</span>) Chat Windows
+                        <img class="category-expand" src="/images/social/plus.png" height="16" width="16" />
+                    </div>
+                    <ul id="friends-list-chatwindow" class="category-list"></ul>
+                </li>                
+                <li>
+                    <div class="category">
                         (<span id="friends-list-online-count">0</span>) Online
                         <img class="category-expand" src="/images/social/plus.png" height="16" width="16" />
                     </div>
