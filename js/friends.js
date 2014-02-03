@@ -3,6 +3,8 @@ var friendsListSocket = null;
 var thisFriendsListUI = null;
 $(document).ready(function()
 {
+    $("#friends-list-whisper-userID-32").resizable({minHeight: 180, minWidth: 180});
+    $("#friends-list-whisper-userID-32").draggable({handle: $("#draghandle")});
     friendsListSocket = new friendsList();
     friendsListSocket.connect();
     thisFriendsListUI = new friendsListUI($(".friendsList"), friendsListSocket);
@@ -61,6 +63,7 @@ function friendsListUI(domElement, friendsListSocket)
 {
     var ui = domElement;
     var clickMenu = new contextMenu($(".context-menu"));
+    var thisUI = this; //for callback functions
     this.addFriend = function(id, username, status){
         var friend = $("<li/>", {
             "id":"friendsList-FriendID-" + id,
@@ -71,10 +74,10 @@ function friendsListUI(domElement, friendsListSocket)
                         if (status === "online")
                         {
                             clickMenuItems.push({
-                                item: "Sent Message",
+                                item: "Send Message",
                                 action: function()
                                 {         
-
+                                    thisUI.openWhisper(id, username);
                                 }
                             });
                         }
@@ -198,7 +201,11 @@ function friendsListUI(domElement, friendsListSocket)
         //todo: add status message
     };
     this.openWhisper = function(id, username){
-        
+        if ($("#friends-list-whisper-userID-"+id).length == 0)
+        {
+            $chatWindow = createWhisperWindow(id, username);
+        }
+        $("#friends-list-whisper-userID-"+id).show();
     };
     function createWhisperWindow(id, username){
         return domElement;

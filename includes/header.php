@@ -8,10 +8,12 @@
         <meta property="og:image" content="http://instasynch.com/images/fbcoverphoto.gif"/>
         <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link type="text/css" href="/styles/style.css" rel="stylesheet">   
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
         <link REL="SHORTCUT ICON" HREF="/favicon.ico">   
         <script type="text/javascript" src="/js/socket.io.js"></script>
         <script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="/js/jquery.cookie.js"></script>      
-        <script type="text/javascript" src="/js/request.js?ver=0.9.04"></script>          
+        <script type="text/javascript" src="/js/request.js?ver=0.9.04"></script>       
+        <script src="/js/jquery-ui.js"></script>
         <?php include(dirname(__FILE__) . "/analytics.php"); ?>
     </head>
