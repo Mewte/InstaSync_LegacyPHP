@@ -96,7 +96,13 @@
     height: 300px;
     background-color: white;
 }
-.friendsList .whisper-container .whisper-window .whisper-window-title{
+.friendsList .whisper-container .whisper-window .whisper-window-title-bar{
     height: 26px;
     background-color: red;
+}
+.friendsList .whisper-container .whisper-window .whisper-window-title-bar .window-title{
+    text-align: center;
+}
+.friendsList .whisper-container .whisper-window .whisper-window-title-bar .anchor{
+    float: right;
 }

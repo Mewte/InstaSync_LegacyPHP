@@ -58,8 +58,10 @@
             <div class="context-menu"></div>
             <div class="whisper-container">
                 <div class="whisper-window" id="friends-list-whisper-userID-32">
-                    <div class="whisper-window-title">
-                        <div style="height: 16px; width: 16px; background-color: blue;" id="draghandle"></div>
+                    <div class="whisper-window-title-bar">
+                        <div style="height: 16px; width: 16px; background-color: blue;" class="anchor" id="draghandle"></div>
+                        <div class="window-title">Messaging Mewte</div>
+                        
                     </div>
                     <div class="whisper-window-content">
                         

@@ -3,11 +3,15 @@ var friendsListSocket = null;
 var thisFriendsListUI = null;
 $(document).ready(function()
 {
-    $("#friends-list-whisper-userID-32").resizable({minHeight: 180, minWidth: 180});
-    $("#friends-list-whisper-userID-32").draggable({handle: $("#draghandle")});
+    $("#friends-list-whisper-userID-32").resizable({minHeight: 180, minWidth: 240, maxWidth: 360, maxHeight: 360});
+    $("#friends-list-whisper-userID-32").draggable({handle: $("#draghandle"), containment: "document"});
     friendsListSocket = new friendsList();
     friendsListSocket.connect();
     thisFriendsListUI = new friendsListUI($(".friendsList"), friendsListSocket);
+    setExpandClickEvents();
+});
+function setExpandClickEvents()
+{
     $(".friendsList-expand").click(function(e)
     {
         $(this).parent().children('.friendsList-list').slideToggle();
@@ -22,7 +26,7 @@ $(document).ready(function()
                 categoryImageObject.attr("src", "/images/social/" + categoryImage + ".png");
             }});
     });
-});
+}
 $(document).scroll(function(e) {
     $('.friendsList').css({'top': $(document).scrollTop() + 10});
 });
