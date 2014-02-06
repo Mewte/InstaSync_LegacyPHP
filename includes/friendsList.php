@@ -60,11 +60,14 @@
                 <div class="whisper-window" id="friends-list-whisper-userID-32">
                     <div class="whisper-window-title-bar">
                         <div style="height: 16px; width: 16px; background-color: blue;" class="anchor" id="draghandle"></div>
-                        <div class="window-title">Messaging Mewte</div>
-                        
+                        <div class="window-title">Messaging Mewte</div>                        
                     </div>
-                    <div class="whisper-window-content">
-                        
+                    <div class="whisper-window-content" style="">
+                        <div class="whisper-box" style="background-color: green">
+                                <span class="username">Mew:</span>
+                                <span class="whisper">HEY!</span>                            
+                        </div>
+                        <input type="text" />
                     </div>
                 </div>
             </div>

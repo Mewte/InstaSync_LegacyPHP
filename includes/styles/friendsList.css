@@ -99,6 +99,7 @@
 .friendsList .whisper-container .whisper-window .whisper-window-title-bar{
     height: 26px;
     background-color: red;
+    cursor: pointer;
 }
 .friendsList .whisper-container .whisper-window .whisper-window-title-bar .window-title{
     text-align: center;
