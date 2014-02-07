@@ -63,9 +63,11 @@
                         <div class="window-title">Messaging Mewte</div>                        
                     </div>
                     <div class="whisper-window-content" style="">
-                        <div class="whisper-box" style="background-color: green">
+                        <div class="whisper-box">
+                            <div class="whisper">
                                 <span class="username">Mew:</span>
-                                <span class="whisper">HEY!</span>                            
+                                <span class="whisper">HEY!</span>
+                            </div>
                         </div>
                         <input type="text" />
                     </div>

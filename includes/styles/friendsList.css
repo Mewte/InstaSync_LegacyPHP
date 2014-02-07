@@ -94,7 +94,6 @@
 .friendsList .whisper-container .whisper-window{
     width: 300px;
     height: 300px;
-    background-color: white;
 }
 .friendsList .whisper-container .whisper-window .whisper-window-title-bar{
     height: 26px;
@@ -106,4 +105,21 @@
 }
 .friendsList .whisper-container .whisper-window .whisper-window-title-bar .anchor{
     float: right;
+}
+.friendsList .whisper-container .whisper-window .whisper-window-content{
+    height: calc(100% - 26px);
+}
+.friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box{
+    height: calc(100% - 30px);
+
+    background: rgba(73,155,234,1);
+background: -moz-linear-gradient(left, rgba(73,155,234,1) 0%, rgba(32,124,229,0.9) 100%);
+background: -webkit-gradient(left top, right top, color-stop(0%, rgba(73,155,234,1)), color-stop(100%, rgba(32,124,229,0.9)));
+background: -webkit-linear-gradient(left, rgba(73,155,234,1) 0%, rgba(32,124,229,0.9) 100%);
+background: -o-linear-gradient(left, rgba(73,155,234,1) 0%, rgba(32,124,229,0.9) 100%);
+background: -ms-linear-gradient(left, rgba(73,155,234,1) 0%, rgba(32,124,229,0.9) 100%);
+background: linear-gradient(to right, rgba(73,155,234,1) 0%, rgba(32,124,229,0.9) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#499bea', endColorstr='#207ce5', GradientType=1 );
+
+
 }
