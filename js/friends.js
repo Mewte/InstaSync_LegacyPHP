@@ -1,8 +1,7 @@
 (function(){
 var friendsListSocket = null;
 var thisFriendsListUI = null;
-$(document).ready(function()
-{
+$(document).ready(function(){
     $("#friends-list-whisper-userID-32").resizable({minHeight: 180, minWidth: 240, maxWidth: 360, maxHeight: 360});
     $("#friends-list-whisper-userID-32").draggable({handle: $("#friends-list-whisper-userID-32 .whisper-window-title-bar"), containment: "document"});
     friendsListSocket = new friendsList();
@@ -10,8 +9,7 @@ $(document).ready(function()
     thisFriendsListUI = new friendsListUI($(".friendsList"), friendsListSocket);
     setExpandClickEvents();
 });
-function setExpandClickEvents()
-{
+function setExpandClickEvents(){
     $(".friendsList-expand").click(function(e)
     {
         $(this).parent().children('.friendsList-list').slideToggle();
@@ -30,8 +28,7 @@ function setExpandClickEvents()
 $(document).scroll(function(e) {
     $('.friendsList').css({'top': $(document).scrollTop() + 10});
 });
-function contextMenu(element)
-{
+function contextMenu(element){
     var domElement = element;
     this.create = function(options)
     {
@@ -67,6 +64,7 @@ function friendsListUI(domElement, friendsListSocket)
 {
     var ui = domElement;
     var clickMenu = new contextMenu($(".context-menu"));
+    var wwm = new whisperWindowManager();
     var thisUI = this; //for callback functions
     this.addFriend = function(id, username, status){
         var friend = $("<li/>", {
@@ -204,6 +202,22 @@ function friendsListUI(domElement, friendsListSocket)
         this.addFriend(id, username, "offline");
         //todo: add status message
     };
+    this.addWhisperTab = function(){
+        
+    };    
+    this.removeWhisperTab = function(){
+        
+    };
+    this.clear = function(id){
+        $(ui).find(".category-list").empty();
+        //make all values 0
+        
+        
+    };
+    //TODO: Add online/offline count addition/subtracting processing here
+}
+function whisperWindowManager()
+{
     this.openWhisper = function(id, username){
         if ($("#friends-list-whisper-userID-"+id).length == 0)
         {
@@ -220,19 +234,6 @@ function friendsListUI(domElement, friendsListSocket)
     this.addWhisper = function(id, username, message){
         
     };
-    this.addWhisperTab = function(){
-        
-    };
-    this.removeWhisperTab = function(){
-        
-    };
-    this.clear = function(id){
-        $(ui).find(".category-list").empty();
-        //make all values 0
-        
-        
-    };
-    //TODO: Add online/offline count addition/subtracting processing here
 }
 function friendsList(){
     var server = window.location.hostname + ":37999";
