@@ -2,7 +2,7 @@
 var friendsListSocket = null;
 var thisFriendsListUI = null;
 $(document).ready(function(){
-    $("#friends-list-whisper-userID-32").resizable({minHeight: 180, minWidth: 240, maxWidth: 360, maxHeight: 360});
+    $("#friends-list-whisper-userID-32").resizable({minHeight: 180, minWidth: 240, maxWidth: 360, maxHeight: 360, handle: $("#friends-list-whisper-userID-32 .whisper-window-title-bar")});
     $("#friends-list-whisper-userID-32").draggable({handle: $("#friends-list-whisper-userID-32 .whisper-window-title-bar"), containment: "document"});
     friendsListSocket = new friendsList();
     friendsListSocket.connect();
@@ -225,7 +225,12 @@ function whisperWindowManager()
         }
         $("#friends-list-whisper-userID-"+id).show();
     };
+    this.moveWhisperWindow = function(id, x, y)
+    {
+        
+    };
     function createWhisperWindow(id, username){
+        
         return domElement;
     }
     this.closeWhisper = function(id){
