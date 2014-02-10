@@ -38,7 +38,7 @@ $(function () {
             {
                 if ($('#loginUsername')['is'](':focus')) 
                 {
-                    //login();
+                    //login(); handled in truetop.php now?
                 } 
                 else 
                 {

@@ -66,10 +66,10 @@
                         <div class="whisper-box" >
                             <div class="whisper">
                                 <span class="username">Mew:</span>
-                                <span class="whisper">HEY!</span>
+                                <span class="message">HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! HEY! </span>
                             </div>
                         </div>
-                        <input id="send-whisper" placeholder="Send Message.." type="text" />
+                        <input id="send-whisper" class="send-whisper" placeholder="Send Message.." type="text" maxlength="240"/>
                     </div>
                 </div>
             </div>

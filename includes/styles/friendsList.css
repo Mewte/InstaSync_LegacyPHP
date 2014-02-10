@@ -102,6 +102,8 @@
 }
 .friendsList .whisper-container .whisper-window .whisper-window-title-bar .window-title{
     text-align: center;
+    padding: 7px;
+    font-size: 12px;
 }
 .friendsList .whisper-container .whisper-window .whisper-window-title-bar .close{
     float: right;
@@ -116,8 +118,22 @@
     height: calc(100% - 30px);
     background-color: rgb(40, 113, 150);
 }
+.friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .whisper{
+    padding: 4px;
+    font-size: 14px;
+}
+.friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .username{
+    color: rgb(244,244,244);
+    font-weight: bold;
+}
+.friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .message{
+    padding: 4px;
+    font-size: 14px;
+    color: rgb(244,244,244);
+}
 #send-whisper{
     width: 100%;
     border-width: 0px;
     background-color: rgb(39,135,182);
+    color: rgb(244,244,244);
 }

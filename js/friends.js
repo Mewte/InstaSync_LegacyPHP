@@ -2,8 +2,11 @@
 var friendsListSocket = null;
 var thisFriendsListUI = null;
 $(document).ready(function(){
-    $("#friends-list-whisper-userID-32").resizable({minHeight: 180, minWidth: 240, maxWidth: 360, maxHeight: 360, handle: $("#friends-list-whisper-userID-32 .whisper-window-title-bar")});
+    $("#friends-list-whisper-userID-32").resizable({minHeight: 180, minWidth: 240, maxWidth: 360, maxHeight: 360, handles: "se"});
     $("#friends-list-whisper-userID-32").draggable({handle: $("#friends-list-whisper-userID-32 .whisper-window-title-bar"), containment: "document"});
+    $( "#friends-list-whisper-userID-32" ).keypress(function(e) {
+        console.log( "Handler for .keypress() called." );
+    });
     friendsListSocket = new friendsList();
     friendsListSocket.connect();
     thisFriendsListUI = new friendsListUI($(".friendsList"), friendsListSocket);
