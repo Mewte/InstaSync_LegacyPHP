@@ -97,7 +97,9 @@
 }
 .friendsList .whisper-container .whisper-window .whisper-window-title-bar{
     height: 26px;
-    background-color: red;
+    background-color: rgb(34, 132, 181);
+    font-weight: bold;
+    color: rgb(34,34,34);
     cursor: move;
 }
 .friendsList .whisper-container .whisper-window .whisper-window-title-bar .window-title{
@@ -114,26 +116,29 @@
 .friendsList .whisper-container .whisper-window .whisper-window-content{
     height: calc(100% + 4px);
 }
+.friendsList .whisper-container .whisper-window .whisper-window-content .send-whisper{
+    width: 100%;
+    border-width: 0px;
+    background-color: rgb(39,135,182);
+    color: rgb(244,244,244);
+    padding: 4px 0px 4px 0px;
+}
 .friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box{
     height: calc(100% - 30px);
-    background-color: rgb(40, 113, 150);
+    background-color: rgb(70,162,206);
+    overflow: auto;
 }
 .friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .whisper{
     padding: 4px;
     font-size: 14px;
 }
 .friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .username{
-    color: rgb(244,244,244);
+    color: rgb(54,54,54);
     font-weight: bold;
 }
 .friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .message{
     padding: 4px;
     font-size: 14px;
-    color: rgb(244,244,244);
-}
-#send-whisper{
-    width: 100%;
-    border-width: 0px;
-    background-color: rgb(39,135,182);
-    color: rgb(244,244,244);
+    color: rgb(34,34,34);
+    font-weight: bold;
 }
