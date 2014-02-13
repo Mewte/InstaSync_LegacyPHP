@@ -10,4 +10,5 @@
     include($location . "footer.css");
     include($location . "clickable-dropdown/main.css");
     include($location . "friendsList.css");
+    include($location . "perfect-scrollbar/perfect-scrollbar-0.4.8.min.css");
 ?>

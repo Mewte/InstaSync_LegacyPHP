@@ -1,4 +1,5 @@
-        <div class="friendsList">
+    <script type="text/javascript" src="/js/perfect-scrollbar-0.4.8.with-mousewheel.min.js"></script>
+    <div class="friendsList">
             <div class="friendsList-expand">
                 <img class="friends-list-icon" src="/images/social/friends_icon.png" height="26" width="26"/>
                 <div class="friend-count"><span class="count">0</span> Online</div>

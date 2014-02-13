@@ -126,7 +126,8 @@
 .friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box{
     height: calc(100% - 30px);
     background-color: rgb(70,162,206);
-    overflow: auto;
+    overflow: hidden;
+    position: relative; /* require for perfect-scroll bar */
 }
 .friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .whisper{
     padding: 4px;
