@@ -248,6 +248,7 @@ function whisperWindowManager()
 function friendsList(){
     var server = window.location.hostname + ":37999";
     var socket = null;
+    var me = null; //this users info (i.e. username)
     socket = io.connect(server, 
     {
         reconnect: true,
@@ -273,6 +274,7 @@ function friendsList(){
         socket.emit('join', {username: $['cookie']('username'), sessionid: $['cookie']('sessionid')}); //Requires jquery.cookie.js
     });
     socket.on('success', function (data){
+        me = data.me;
         for(var friend in data.friendslist) 
         {
             thisFriendsListUI.addFriend(data.friendslist[friend].id, data.friendslist[friend].username, data.friendslist[friend].status);
