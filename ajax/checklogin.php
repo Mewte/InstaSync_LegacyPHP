@@ -15,7 +15,7 @@
             $output["loggedin"] = true;
             $output["username"] = $user["username"];
             $output["avatar"] = "http://i.imgur.com/" . $user["avatar"] . ".jpg";
-            $output["bio"] = $user["bio"];
+            $output["bio"] = htmlspecialchars($user["bio"]);
         }
         else
         {
