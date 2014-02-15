@@ -10,9 +10,10 @@
                 $output = "";
                 $username = mysql_real_escape_string($_COOKIE["username"]);
                 $sessionid = mysql_real_escape_string($_COOKIE["sessionid"]);        
-                $current = mysql_real_escape_string($_POST["current"]);
-                $new = mysql_real_escape_string($_POST["newpass"]);                
-                $query = "update users set hashpw = '". sha1($new) ."' where username = '{$username}' and cookie = '{$sessionid}' and hashpw = '". sha1($current) ."' limit 1";
+				$current = hashpw($_POST["current"]);
+                $new = hashpw($_POST["newpass"]);                
+                $query = "update users set hashpw = '". $new ."' where username = '{$username}' and cookie = '{$sessionid}' and hashpw = '". $current ."' limit 1";
+
                 mysql_query($query);
                 if (mysql_affected_rows() === 1)
                 {
