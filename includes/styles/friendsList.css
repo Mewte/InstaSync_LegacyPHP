@@ -132,10 +132,16 @@
 }
 .friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .whisper{
     padding: 14px;
-    margin: 4px;
     font-size: 14px;
-    background-color: rgba(100,100,100,0.2);
     border-radius: 8px;
+}
+.friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .you{
+    margin: 4px 4px 4px 10%;
+    background-color: rgba(100,100,100,0.2);
+}
+.friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .them{
+    margin: 4px 10% 4px 4px;
+    background-color: rgba(100,100,100,0.4);
 }
 .friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .username{
     color: rgb(54,54,54);

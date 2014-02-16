@@ -8,20 +8,20 @@
                     </div>
                     <div class="whisper-window-content" style="">
                         <div class="whisper-box" >
-                            <div class="whisper">
+                            <div class="whisper you">
                                 <span class="username">Mew:</span>
                                 <span class="message">
                                 What is InstaSynch?
 InstaSynch (Inspired by SynchTube) is a place that allows users to watch synchronized videos with each other and chat in real time, fully synchronized!
                                 </span>
                             </div>
-                            <div class="whisper">
+                            <div class="whisper them">
                                 <span class="username">Mew:</span>
                                 <span class="message">
                                     When you register, you also create a room in your name. To access this room, log in and click My Room from the settings drop down menu (accessed by clicking on your name in the top right corner.)
                                 </span>
                             </div>
-                            <div class="whisper">
+                            <div class="whisper you">
                                 <span class="username">Mew:</span>
                                 <span class="message">
                                     Simply visit any room you'd like and you can begin chatting as an unregistered user. If you'd like to have all the features (adding videos, voting, and profile) you must register. 
@@ -60,13 +60,10 @@ InstaSynch (Inspired by SynchTube) is a place that allows users to watch synchro
                 </li>
                 <li>
                     <div class="category">
-                        (<span id="friends-list-chatwindow">0</span>) Chat Windows
-                        <img class="category-expand" src="/images/social/plus.png" height="16" width="16" />
-                        <!--
-                            Notifications stuff here
-                        -->                        
+                        (<span id="friends-list-chatwindow-count">0</span>) Chat Windows
+                        <img class="category-expand" src="/images/social/plus.png" height="16" width="16" />                       
                     </div>
-                    <ul id="friends-list-chatwindow" class="category-list"></ul>
+                    <ul id="friends-list-chatwindows-list" class="category-list"></ul>
                 </li>                
                 <li>
                     <div class="category">
@@ -84,7 +81,7 @@ InstaSynch (Inspired by SynchTube) is a place that allows users to watch synchro
                 </li>
                 <li>
                     <div class="add-friend">
-                        <img src="images/social/add-friend.png" />
+                        <img src="/images/social/add-friend.png" />
                     </div>
                 </li>
             </ul>

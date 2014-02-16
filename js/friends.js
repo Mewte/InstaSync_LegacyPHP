@@ -9,10 +9,12 @@ $(document).ready(function(){
     $( "#friends-list-whisper-userID-32" ).keypress(function(e) {
         console.log( "Handler for .keypress() called." );
     });
+    $( "#friends-list-whisper-userID-32 .close" ).click(function(){$("#friends-list-whisper-userID-32").fadeOut()});
     friendsListSocket = new friendsList();
     friendsListSocket.connect();
     thisFriendsListUI = new friendsListUI($(".friendsList"), friendsListSocket);
     setExpandClickEvents();
+    thisFriendsListUI.addWhisperTab(14, "Tidus");
 });
 function setExpandClickEvents(){
     $(".friendsList-expand").click(function(e)
@@ -83,8 +85,9 @@ function friendsListUI(domElement, friendsListSocket)
                             clickMenuItems.push({
                                 item: "Send Message",
                                 action: function()
-                                {         
-                                    thisUI.openWhisper(id, username);
+                                {
+                                    thisUI.addWhisperTab(id, username);
+                                    wwm.openWhisper(id, username);
                                 }
                             });
                         }
@@ -207,11 +210,41 @@ function friendsListUI(domElement, friendsListSocket)
         this.addFriend(id, username, "offline");
         //todo: add status message
     };
-    this.addWhisperTab = function(){
-        
-    };    
-    this.removeWhisperTab = function(){
-        
+    this.addWhisperTab = function(id, username){
+        var friend = $("<li/>", {
+            "id":"friendsList-whispertab-FriendID-" + id,
+            "click":function(e)
+                    {
+                        var clickMenuItems = [];
+                        clickMenuItems.push({
+                            item: "Open Window",
+                            action: function()
+                            {         
+
+                            }
+                        });
+                        clickMenuItems.push({
+                            item: "Close Window",
+                            action: function()
+                            {
+                                wwm.closeWhisper(id);
+                                thisUI.removeWhisperTab(id);
+                            }
+                        });                        
+                        clickMenu.create(clickMenuItems);
+                        clickMenu.show(e.clientX, e.clientY);
+                    }
+        }).append($("<div/>",
+            {
+                "class":"username",                
+                "html": username
+            }).append($("<img>",{"class": "expand","src": "/images/social/expand.png", "height": "16", "width": "16"}))); 
+        $("#friends-list-chatwindows-list").append(friend);
+        $("#friends-list-chatwindow-count").html(parseInt($("#friends-list-chatwindow-count").html(), 10) + 1);
+    };
+    this.removeWhisperTab = function(id){
+        $("#friendsList-whispertab-FriendID-" + id).remove();
+        $("#friends-list-chatwindow-count").html(parseInt($("#friends-list-chatwindow-count").html(), 10) - 1);
     };
     this.clear = function(id){
         $(ui).find(".category-list").empty();
@@ -219,7 +252,6 @@ function friendsListUI(domElement, friendsListSocket)
         
         
     };
-    //TODO: Add online/offline count addition/subtracting processing here
 }
 function whisperWindowManager()
 {
@@ -229,9 +261,9 @@ function whisperWindowManager()
             var chatWindow = createWhisperWindow(id, username);
 			$(".whisper-container").append(chatWindow);
         }
-		//move to mouse location
+	//move to mouse location
 		
-		//show
+	//show
         $("#friends-list-whisper-userID-"+id).show();
     };
     this.moveWhisperWindow = function(id, x, y)
