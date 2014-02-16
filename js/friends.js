@@ -226,8 +226,12 @@ function whisperWindowManager()
     this.openWhisper = function(id, username){
         if ($("#friends-list-whisper-userID-"+id).length == 0)
         {
-            $chatWindow = createWhisperWindow(id, username);
+            var chatWindow = createWhisperWindow(id, username);
+			$(".whisper-container").append(chatWindow);
         }
+		//move to mouse location
+		
+		//show
         $("#friends-list-whisper-userID-"+id).show();
     };
     this.moveWhisperWindow = function(id, x, y)
