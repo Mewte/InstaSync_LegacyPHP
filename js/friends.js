@@ -71,7 +71,6 @@ function friendsListUI(domElement, friendsListSocket)
 {
     var ui = domElement;
     var clickMenu = new contextMenu($(".context-menu"));
-    var wwm = new whisperWindowManager();
     var thisUI = this; //for callback functions
     this.addFriend = function(id, username, status){
         var friend = $("<li/>", {
@@ -86,8 +85,8 @@ function friendsListUI(domElement, friendsListSocket)
                                 item: "Send Message",
                                 action: function()
                                 {
-                                    thisUI.addWhisperTab(id, username);
-                                    wwm.openWhisper(id, username);
+                                    addWhisperTab(id, username);
+                                    openWhisper(id, username);
                                 }
                             });
                         }
@@ -220,15 +219,16 @@ function friendsListUI(domElement, friendsListSocket)
                             item: "Open Window",
                             action: function()
                             {         
-
+								openWhisper(id, username);
+								moveWhisperWindow(id, e.pageX, e.pageY);
                             }
                         });
                         clickMenuItems.push({
                             item: "Close Window",
                             action: function()
                             {
-                                wwm.closeWhisper(id);
-                                thisUI.removeWhisperTab(id);
+                                closeWhisper(id);
+                                removeWhisperTab(id);
                             }
                         });                        
                         clickMenu.create(clickMenuItems);
@@ -252,34 +252,57 @@ function friendsListUI(domElement, friendsListSocket)
         
         
     };
-}
-function whisperWindowManager()
-{
-    this.openWhisper = function(id, username){
-        if ($("#friends-list-whisper-userID-"+id).length == 0)
-        {
-            var chatWindow = createWhisperWindow(id, username);
-			$(".whisper-container").append(chatWindow);
-        }
-	//move to mouse location
+	
+	function openWhisper(id, username){
+		if ($("#friends-list-whisper-userID-"+id).length == 0)
+		{
+			$(".whisper-container").append(createWhisperWindow(id, username));
+			//Bind events to new message window
+		}
+		//move to mouse location
+
+		//show
+		$("#friends-list-whisper-userID-"+id).show();
+	}
+	function moveWhisperWindow(id, x, y)
+	{
+
+	};
+	function addWhisper(id, username, message){
+
+	}
+	function createWhisperWindow(id, username){
+		//**** Entire Container
+		var whisperWindow = $("<div/>", {
+			"class":"whisper-window",
+			"id":"friends-list-whisper-userID-"+id
+		});
+		//****
+		//**** TITLE BAR
+		var titleBar = $("<div/>",
+		{
+			"class":"whisper-window-title-bar"
+		}).append($("<div/>",{"class":"close"})).append($("<div/>",{"class":"window-title", "html":"Messaing " + username}));
+		//****
+		//**** WHISPER WINDOW CONTENT
+		var whisperWindowContent = $("<div/>", {
+			"class":"whisper-window-content"
+		}).append($("<div/>", {"class":"whisper-box"}))
+				.append($("<input/>",{
+				"class":"send-whisper",
+				"placeholder":"Send Message...",
+				"type":"text",
+				"maxlength":"240"}));
+
+		//****
 		
-	//show
-        $("#friends-list-whisper-userID-"+id).show();
-    };
-    this.moveWhisperWindow = function(id, x, y)
-    {
-        
-    };
-    function createWhisperWindow(id, username){
-        
-        return domElement;
-    }
-    this.closeWhisper = function(id){
-    
-    };
-    this.addWhisper = function(id, username, message){
-        
-    };
+		whisperWindow.append(titleBar);
+		whisperWindow.append(whisperWindowContent)
+		return whisperWindow;
+	}
+	function closeWhisper(id){
+
+	}	
 }
 function friendsList(){
     var server = window.location.hostname + ":37999";

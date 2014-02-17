@@ -6,27 +6,12 @@
                         <div class="close"></div>
                         <div class="window-title">Messaging Mewte</div>                        
                     </div>
-                    <div class="whisper-window-content" style="">
+                    <div class="whisper-window-content">
                         <div class="whisper-box" >
                             <div class="whisper you">
                                 <span class="username">Mew:</span>
-                                <span class="message">
-                                What is InstaSynch?
-InstaSynch (Inspired by SynchTube) is a place that allows users to watch synchronized videos with each other and chat in real time, fully synchronized!
-                                </span>
-                            </div>
-                            <div class="whisper them">
-                                <span class="username">Mew:</span>
-                                <span class="message">
-                                    When you register, you also create a room in your name. To access this room, log in and click My Room from the settings drop down menu (accessed by clicking on your name in the top right corner.)
-                                </span>
-                            </div>
-                            <div class="whisper you">
-                                <span class="username">Mew:</span>
-                                <span class="message">
-                                    Simply visit any room you'd like and you can begin chatting as an unregistered user. If you'd like to have all the features (adding videos, voting, and profile) you must register. 
-                                </span>
-                            </div>                            
+                                <span class="message"></span>
+                            </div>                   
                         </div>
                         <input id="send-whisper" class="send-whisper" placeholder="Send Message.." type="text" maxlength="240"/>
                     </div>
