@@ -1,7 +1,7 @@
 		<script type="text/javascript" src="/js/perfect-scrollbar-0.4.8.with-mousewheel.min.js"></script>
 		<div class="friendsList">
 			<div class="whisper-container">
-                <div class="whisper-window" id="friends-list-whisper-userID-32">
+<!--                <div class="whisper-window" id="friends-list-whisper-userID-32">
                     <div class="whisper-window-title-bar">
                         <div class="close"></div>
                         <div class="window-title">Messaging Mewte</div>                        
@@ -15,7 +15,7 @@
                         </div>
                         <input id="send-whisper" class="send-whisper" placeholder="Send Message.." type="text" maxlength="240"/>
                     </div>
-                </div>
+                </div>-->
             </div>
             <div class="friendsList-expand">
                 <img class="friends-list-icon" src="/images/social/friends_icon.png" height="26" width="26"/>
@@ -72,5 +72,4 @@
             </ul>
             <div class="context-menu"></div>
         </div>
-        <script type="text/javascript" src="/js/friends.js">
-        </script>
+        <script type="text/javascript" src="/js/friends.js"></script>

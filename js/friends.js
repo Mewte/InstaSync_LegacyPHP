@@ -2,14 +2,6 @@
 var friendsListSocket = null;
 var thisFriendsListUI = null;
 $(document).ready(function(){
-    $("#friends-list-whisper-userID-32").draggable({handle: $("#friends-list-whisper-userID-32 .whisper-window-title-bar"), containment: "document"});
-    $("#friends-list-whisper-userID-32 .whisper-box").perfectScrollbar();
-    $("#friends-list-whisper-userID-32").resizable({minHeight: 180, minWidth: 240, maxWidth: 360, maxHeight: 360, handles: "se", stop: function(){$("#friends-list-whisper-userID-32 .whisper-box").perfectScrollbar("update");}});
-    $("#friends-list-whisper-userID-32").draggable({handle: $("#friends-list-whisper-userID-32 .whisper-window-title-bar"), containment: "document"});
-    $( "#friends-list-whisper-userID-32" ).keypress(function(e) {
-        console.log( "Handler for .keypress() called." );
-    });
-    $( "#friends-list-whisper-userID-32 .close" ).click(function(){$("#friends-list-whisper-userID-32").fadeOut()});
     friendsListSocket = new friendsList();
     friendsListSocket.connect();
     thisFriendsListUI = new friendsListUI($(".friendsList"), friendsListSocket);
@@ -219,8 +211,8 @@ function friendsListUI(domElement, friendsListSocket)
                             item: "Open Window",
                             action: function()
                             {         
-								openWhisper(id, username);
-								moveWhisperWindow(id, e.pageX, e.pageY);
+                                openWhisper(id, username);
+                                moveWhisperWindow(id, e.pageX, e.pageY);
                             }
                         });
                         clickMenuItems.push({
@@ -247,17 +239,22 @@ function friendsListUI(domElement, friendsListSocket)
         $("#friends-list-chatwindow-count").html(parseInt($("#friends-list-chatwindow-count").html(), 10) - 1);
     };
     this.clear = function(id){
-        $(ui).find(".category-list").empty();
+		$(ui).find(".category-list").empty();
         //make all values 0
         
         
     };
-	
 	function openWhisper(id, username){
-		if ($("#friends-list-whisper-userID-"+id).length == 0)
+		var windowId = "#friends-list-whisper-userID-"+id;
+		if ($(windowId).length == 0)
 		{
 			$(".whisper-container").append(createWhisperWindow(id, username));
-			//Bind events to new message window
+			$(windowId).draggable({handle: $(windowId+" .whisper-window-title-bar"), containment: "document"});
+			$(windowId + " .whisper-box").perfectScrollbar();
+			$(windowId).resizable({minHeight: 180, minWidth: 240, maxWidth: 360, maxHeight: 360, handles: "se", stop: function(){$(windowId+".whisper-box").perfectScrollbar("update");}});
+			$(windowId).draggable({handle: $(windowId+" .whisper-window-title-bar"), containment: "document"});
+			$(windowId).keypress(function(e) {});
+			$(windowId+" .close").click(function(){$(windowId).fadeOut();});
 		}
 		//move to mouse location
 
@@ -266,39 +263,44 @@ function friendsListUI(domElement, friendsListSocket)
 	}
 	function moveWhisperWindow(id, x, y)
 	{
-
+		//TEMP FIX: OFFSET THE FRIENDS LIST DROP DOWN MENU SINCE THAT SEEMS TO BE 0 LEFT AND 0 TOP
+		var offsetX = $(".friendsList").offset().left;
+		var offsetY = $(".friendsList").offset().top;
+		var windowId = "#friends-list-whisper-userID-"+id;
+		$(windowId).css("top", y - offsetY - 100); //-100 pixels to bring the window 100 square pixels above the cursor
+		$(windowId).css("left", x - offsetX - 100);
 	};
 	function addWhisper(id, username, message){
 
 	}
 	function createWhisperWindow(id, username){
-		//**** Entire Container
-		var whisperWindow = $("<div/>", {
-			"class":"whisper-window",
-			"id":"friends-list-whisper-userID-"+id
-		});
-		//****
-		//**** TITLE BAR
-		var titleBar = $("<div/>",
-		{
-			"class":"whisper-window-title-bar"
-		}).append($("<div/>",{"class":"close"})).append($("<div/>",{"class":"window-title", "html":"Messaing " + username}));
-		//****
-		//**** WHISPER WINDOW CONTENT
-		var whisperWindowContent = $("<div/>", {
-			"class":"whisper-window-content"
-		}).append($("<div/>", {"class":"whisper-box"}))
-				.append($("<input/>",{
-				"class":"send-whisper",
-				"placeholder":"Send Message...",
-				"type":"text",
-				"maxlength":"240"}));
+			//**** Entire Container
+			var whisperWindow = $("<div/>", {
+					"class":"whisper-window",
+					"id":"friends-list-whisper-userID-"+id
+			});
+			//****
+			//**** TITLE BAR
+			var titleBar = $("<div/>",
+			{
+					"class":"whisper-window-title-bar"
+			}).append($("<div/>",{"class":"close"})).append($("<div/>",{"class":"window-title", "html":"Messaing " + username}));
+			//****
+			//**** WHISPER WINDOW CONTENT
+			var whisperWindowContent = $("<div/>", {
+					"class":"whisper-window-content"
+			}).append($("<div/>", {"class":"whisper-box"}))
+							.append($("<input/>",{
+							"class":"send-whisper",
+							"placeholder":"Send Message...",
+							"type":"text",
+							"maxlength":"240"}));
 
-		//****
-		
-		whisperWindow.append(titleBar);
-		whisperWindow.append(whisperWindowContent)
-		return whisperWindow;
+			//****
+
+			whisperWindow.append(titleBar);
+			whisperWindow.append(whisperWindowContent)
+			return whisperWindow;
 	}
 	function closeWhisper(id){
 
