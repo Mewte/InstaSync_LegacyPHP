@@ -76,8 +76,7 @@ function friendsListUI(domElement, friendsListSocket)
                                 item: "Send Message",
                                 action: function()
                                 {
-                                    addWhisperTab(id, username);
-                                    openWhisper(id, username);
+									openWhisper(id, username, true);
                                 }
                             });
                         }
@@ -200,8 +199,8 @@ function friendsListUI(domElement, friendsListSocket)
         this.addFriend(id, username, "offline");
         //todo: add status message
     };
-	this.whisper = function(id, username, message){
-		addWhisper(id, username, message);
+	this.whisper = function(id, username, message, action){
+		addWhisper(id, username, message, action);
 	};
     function addWhisperTab(id, username){
         var friend = $("<li/>", {
@@ -222,7 +221,6 @@ function friendsListUI(domElement, friendsListSocket)
                             action: function()
                             {
                                 closeWhisper(id);
-                                removeWhisperTab(id);
                             }
                         });                        
                         clickMenu.create(clickMenuItems);
@@ -248,23 +246,33 @@ function friendsListUI(domElement, friendsListSocket)
 	//so a show parameter was added to save code
 	function openWhisper(id, username, show){ 
 		var windowId = "#friends-list-whisper-userID-"+id;
-		if ($(windowId).length == 0)
+		if (!$(windowId).length)
 		{
 			$(".whisper-container").append(createWhisperWindow(id, username));
 			$(windowId).draggable({handle: $(windowId+" .whisper-window-title-bar"), containment: "document"});
 			$(windowId + " .whisper-box").perfectScrollbar();
 			$(windowId).resizable({minHeight: 180, minWidth: 240, maxWidth: 360, maxHeight: 360, handles: "se", stop: function(){$(windowId+".whisper-box").perfectScrollbar("update");}});
 			$(windowId).draggable({handle: $(windowId+" .whisper-window-title-bar"), containment: "document"});
-			$(windowId).keypress(function(e) {
-				//todo: send message
+			$(windowId + " .send-whisper").keypress(function(e) {
+				if ($(this).val().trim() != '' && e.which == 13) //message isn't empty and enter key pressed
+				{
+					friendsListSocket.sendCmd("whisper", {id: id, message: $(windowId + " .send-whisper").val()});
+					$(windowId + " .send-whisper").val('');
+				}
 			});
 			$(windowId+" .close").click(function(){$(windowId).fadeOut();});
+			addWhisperTab(id, username);
 		}
 		if (show)
 		{
 			$(windowId).show();
 		}
 	}
+	function closeWhisper(id){
+		var windowId = "#friends-list-whisper-userID-"+id;
+		$(windowId).remove();
+		removeWhisperTab(id);
+	}	
 	function moveWhisperWindow(id, x, y){
 		//TEMP FIX: OFFSET THE FRIENDS LIST DROP DOWN MENU SINCE THAT SEEMS TO BE 0 LEFT AND 0 TOP
 		var offsetX = $(".friendsList").offset().left;
@@ -273,15 +281,13 @@ function friendsListUI(domElement, friendsListSocket)
 		$(windowId).css("top", y - offsetY - 100); //-100 pixels to bring the window 100 square pixels above the cursor
 		$(windowId).css("left", x - offsetX - 100);
 	};
-	function addWhisper(id, username, message){
-		var windowWindow = "friends-list-whisper-userID-"+id;
+	function addWhisper(id, username, message, action){
+		var window = "#friends-list-whisper-userID-"+id;
 		openWhisper(id, username, false);
-		var whisperBox = $("<div/>",{"class":"whisper-box"});
-			var whisper = $("<div/>", {"class":"whisper "+(id === friendsListSocket.id) ? "you" : "them"});
-			whisper.append($("<span/>"),{"class":"username", "html":username});
-			whisper.append($("<span/>"),{"class":"message", "html":message});
-		whisperBox.append(whisper);
-		$(windowWindow).append(whisperBox);
+		var whisper = $("<div/>", {"class":"whisper " + action});
+			whisper.append($("<span/>",{"class":"username", "html":username + ":"}));
+			whisper.append($("<span/>",{"class":"message", "html":message}));
+		$(window + " .whisper-box").append(whisper);
 	}
 	function createWhisperWindow(id, username){
 			//**** Entire Container
@@ -294,7 +300,7 @@ function friendsListUI(domElement, friendsListSocket)
 			var titleBar = $("<div/>",
 			{
 					"class":"whisper-window-title-bar"
-			}).append($("<div/>",{"class":"close"})).append($("<div/>",{"class":"window-title", "html":"Messaing " + username}));
+			}).append($("<div/>",{"class":"close"})).append($("<div/>",{"class":"window-title", "html":"Messaging " + username}));
 			//****
 			//**** WHISPER WINDOW CONTENT
 			var whisperWindowContent = $("<div/>", {
@@ -312,15 +318,12 @@ function friendsListUI(domElement, friendsListSocket)
 			whisperWindow.append(whisperWindowContent)
 			return whisperWindow;
 	}
-	function closeWhisper(id){
-
-	}	
 }
 function friendsList(){
     var server = window.location.hostname + ":37999";
     var socket = null;
     this.user = null; //this users info (i.e. username)
-    
+    var thisSocket = this; //for callbacks
 	socket = io.connect(server, 
     {
         reconnect: true,
@@ -346,7 +349,7 @@ function friendsList(){
         socket.emit('join', {username: $['cookie']('username'), sessionid: $['cookie']('sessionid')}); //Requires jquery.cookie.js
     });
     socket.on('success', function (data){
-        me = data.me;
+        thisSocket.user = data.user;
         for(var friend in data.friendslist) 
         {
             thisFriendsListUI.addFriend(data.friendslist[friend].id, data.friendslist[friend].username, data.friendslist[friend].status);
@@ -361,7 +364,7 @@ function friendsList(){
         }
     });   
     socket.on('whisper', function (data){
-        
+        thisFriendsListUI.whisper(data.id, data.username, data.message, data.action);
     });            
     socket.on('reconnecting', function (data) {});
     socket.on('reconnected', function (data) {});

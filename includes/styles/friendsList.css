@@ -91,8 +91,8 @@
     
 }
 .friendsList .whisper-container .whisper-window{
-    width: 300px;
-    height: 300px;
+    width: 240px;
+    height: 180px;
     position: absolute;
 }
 .friendsList .whisper-container .whisper-window .whisper-window-title-bar{
@@ -134,11 +134,11 @@
     font-size: 14px;
     border-radius: 8px;
 }
-.friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .you{
+.friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .sent{
     margin: 4px 4px 4px 10%;
     background-color: rgba(100,100,100,0.2);
 }
-.friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .them{
+.friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box .received{
     margin: 4px 10% 4px 4px;
     background-color: rgba(100,100,100,0.4);
 }

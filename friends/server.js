@@ -93,7 +93,7 @@ friends_list.sockets.on('connection', function(socket)
                                 }
                                 users[socket.user.id] = socket;
                                 friends_list.sockets.in("id:"+socket.user.id).emit('online', {username: socket.user.username, id: socket.user.id}); 
-                                socket.emit('success', {friendslist: socket.friendsList.friends, friendRequests: socket.friendRequests.get()});
+                                socket.emit('success', {friendslist: socket.friendsList.friends, friendRequests: socket.friendRequests.get(), user: socket.user});
                                 setSocketEvents();
                             }
                             connection.end();
@@ -362,7 +362,7 @@ friends_list.sockets.on('connection', function(socket)
         });
         socket.on('whisper', function(data)
         {
-            if (data.id !== undefined && data.whisper != undefined)
+            if (data.id !== undefined && data.message != undefined)
             {
                 if (socket.friendsList.isFriend(data.id))
                 {
@@ -371,8 +371,8 @@ friends_list.sockets.on('connection', function(socket)
                     {
                         if (users[data.id].friendsList.isFriend(socket.user.id)) //double verify
                         {
-                            users[data.id].emit('whisper-received', {whisper: replaceTags(data.whisper), from: socket.user});
-                            socket.emit('whisper-sent', {whisper: replaceTags(data.whisper), to: data.id});
+                            users[data.id].emit('whisper', {message: replaceTags(data.message), id: socket.user.id, username: socket.user.username, action: "received"});
+                            socket.emit('whisper', {message: replaceTags(data.message), id: data.id, username: socket.user.username, action: "sent"});
                             //TODO
                             //If reciever verifies message recieved, THEN tell the sender it's been recieved
                         }
