@@ -97,7 +97,7 @@
 }
 .friendsList .whisper-container .whisper-window .whisper-window-title-bar{
     height: 26px;
-    background-color: rgb(34, 132, 181);
+    background-color: rgba(34, 132, 181, 0.9);
     font-weight: bold;
     color: rgb(34,34,34);
     cursor: move;
@@ -125,7 +125,7 @@
 }
 .friendsList .whisper-container .whisper-window .whisper-window-content .whisper-box{
     height: calc(100% - 30px);
-    background-color: rgb(70,162,206);
+    background-color: rgba(70,162,206, 0.9);
     overflow: hidden;
     position: relative; /* require for perfect-scroll bar */
 }

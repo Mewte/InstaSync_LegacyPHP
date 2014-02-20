@@ -77,6 +77,7 @@ function friendsListUI(domElement, friendsListSocket)
                                 action: function()
                                 {
 									openWhisper(id, username, true);
+									moveWhisperWindow(id, e.pageX, e.pageY);
                                 }
                             });
                         }
@@ -260,6 +261,19 @@ function friendsListUI(domElement, friendsListSocket)
 					$(windowId + " .send-whisper").val('');
 				}
 			});
+			$(windowId + " .send-whisper").focus();
+			$(windowId + " .whisper-box").on('scroll',function()
+			{
+				var scrollHeight = $(this)[0].scrollHeight,
+					scrollTop = $(this).scrollTop(),
+					height = $(this).height();
+				if ((scrollHeight - scrollTop) < height*1.1){
+					$(windowId).data("autoscroll", true);
+				}else{
+					$(windowId).data("autoscroll", true); //atm: just always auto scroll, let's just see how bad it is.
+					//$(windowId).data("autoscroll", false);
+				}
+			});
 			$(windowId+" .close").click(function(){$(windowId).fadeOut();});
 			addWhisperTab(id, username);
 		}
@@ -288,6 +302,11 @@ function friendsListUI(domElement, friendsListSocket)
 			whisper.append($("<span/>",{"class":"username", "html":username + ":"}));
 			whisper.append($("<span/>",{"class":"message", "html":message}));
 		$(window + " .whisper-box").append(whisper);
+		$(window+" .whisper-box").perfectScrollbar("update");
+		if ($(window).data("autoscroll")) {
+			var textarea = document.getElementById('friends-list-whisper-userID-'+id).getElementsByClassName("whisper-box")[0];
+			textarea.scrollTop = textarea.scrollHeight;
+		}
 	}
 	function createWhisperWindow(id, username){
 			//**** Entire Container
