@@ -44,6 +44,9 @@
 ?>
 <script>
 	var ROOMNAME = "<?php echo $roomname; ?>"
+	//push history event
+	var stateObj = {page: "room", room: ROOMNAME};
+	history.pushState(stateObj, "InstaSynch - " + ROOMNAME + "'s Room", "/rooms/" + ROOMNAME);
 </script>
 <div style="display: none;" id="cleanUpOnRemoval"></div>
 <div id="st-descr">

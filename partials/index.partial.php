@@ -10,6 +10,11 @@
     $title = "InstaSynch - Watch videos with friends!";
     $description = "Watch synchronized videos with friends and strangers!";
 ?>
+<script>
+	var stateObj = {page: "index", room: null};
+	history.pushState(stateObj, "InstaSynch - Watch Videos With Friends", "/");
+	document.title = "InstaSynch - Watch Videos with Friends";
+</script>
 <div class="index-content">
 	<div class="content-header">
 		<div class="left">

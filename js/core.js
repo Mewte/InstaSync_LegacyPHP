@@ -5,6 +5,9 @@
 requestPartialPage = null;
 loadRoomObj = null;
 $(function (){
+window.onpopstate = function(event) {
+  requestPartialPage(event.state.page, event.state.room);
+};
 requestPartialPage = function(page, room)
 {
 	$("#partialPage").empty();
@@ -12,9 +15,6 @@ requestPartialPage = function(page, room)
 	{
 		$("#partialPage").load("/partials/room.partial.php?room="+room, function()
 		{
-			//var stateObj = {};
-			//history.pushState(stateObj, "InstaSynch - " + page, displayUrl);	
-			//if room load room
 			loadRoom();
 		});
 	}
@@ -22,9 +22,6 @@ requestPartialPage = function(page, room)
 	{
 		$("#partialPage").load("/partials/index.partial.php", function()
 		{
-			//var stateObj = {};
-			//history.pushState(stateObj, "InstaSynch - " + page, displayUrl);	
-			//if room load room
 		});
 	}
 };
@@ -69,6 +66,7 @@ function loadRoom() {
     }
     $(document).ready(function () 
     {      
+		alert("Attaching Events!");
         $('#addUrl').click(function () {
             var url = $('#URLinput').val();
             if ($('#URLinput').val().trim() != '')
@@ -211,9 +209,16 @@ function loadRoom() {
 				}
 			}
 		});
+		$("#join").on("keypress", function(e)
+		{
+			if (e.which == 13)
+			{
+				
+			}
+		});		
         //-----------------------
         room.connect();
-		$("#cleanUpOnRemoval").on("remove", function() //disconnect when swapping
+		$("#cleanUpOnRemoval").on("remove", function() //disconnect when swapping page
 		{
 			room.disconnect();
 		});
@@ -534,8 +539,7 @@ function loadRoom() {
             if (!isNaN(data[1])) {
                room.sendcmd('play', {
                     info: playlist[data[1]].info
-                });
-                
+                });            
             }
         },
         "'pause": function (data) {
@@ -632,13 +636,11 @@ function loadRoom() {
 	var sliderTimer = false;
 	var mutedIps = new Array();
 	var userInfo = null;
-
-	//TODO: Put globals into a global object
-	$(document).ready(function()
-	{
-	   video = new player("media", room.sendcmd);
-	   detectIE();
-	});
+	var newMsg = false;
+	
+	video = new player("media", room.sendcmd);
+	detectIE();
+	
 	function addMessage(username, message, userstyle, textstyle) {
 		message = linkify(message, false, true);
 		$('<span/>', {
