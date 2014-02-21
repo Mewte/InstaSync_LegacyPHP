@@ -84,10 +84,3 @@ function setUserInfo(avatar, bio, callback)
         callback(result.error);
     });
 }
-function requestPartialPage(page, displayUrl)
-{
-	$("#partialPage").load("/partials/" + page);
-	var stateObj = {};
-	history.pushState(stateObj, "InstaSynch - " + page, displayUrl);	
-	
-}

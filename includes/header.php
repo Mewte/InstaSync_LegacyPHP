@@ -24,7 +24,6 @@
 			<script type="text/javascript" src="/js/request.js"></script>
 		<!-- Room Specific -->
 			<script type="text/javascript" src="/js/core.js"></script>
-			<script type="text/javascript" src="/js/io.js"></script>
 			<script type='text/javascript' src='/js/player.js'></script>
 		<!-- Friends List -->
 			<script type="text/javascript" src="/js/friends.js"></script>

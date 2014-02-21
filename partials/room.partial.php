@@ -45,6 +45,7 @@
 <script>
 	var ROOMNAME = "<?php echo $roomname; ?>"
 </script>
+<div style="display: none;" id="cleanUpOnRemoval"></div>
 <div id="st-descr">
 	<div class="top-descr">
 		 <?php echo $roomname;?>'s room  
@@ -182,3 +183,10 @@
 		</p>
 	</div>
 </div>
+<script>
+	$(document).ready(function()
+	{
+		if (loadRoomObj != null) //fire once
+			loadRoomObj();
+	});
+</script>

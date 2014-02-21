@@ -75,14 +75,14 @@
 			{
 				echo "<div class='room'>";
 					echo "<div class='left'>";
-						echo "<a href='/rooms/{$room["roomname"]}'>";
+						echo "<a href='/rooms/{$room["roomname"]}' onclick='return false;'>";
 							echo "<img width='120px' height='90px' src='{$room["thumbnail"]}'></img>";
 						echo "</a>";
 						echo "<div class='title'>".htmlspecialchars($room["title"])."</div>";
 						echo "<div class='viewers'>{$room["users"]} Viewing</div>";
 					echo "</div>";
 					echo "<div class='right'>";
-						echo "<div class='name'><a href='/rooms/{$room["roomname"]}'>{$room["roomname"]}</a></div>";
+						echo "<div class='name'><a href='/rooms/{$room["roomname"]}' onclick='requestPartialPage(\"room\", \"{$room["roomname"]}\"); return false;'>{$room["roomname"]}</a></div>";
 						echo "<p class='about'>". htmlspecialchars($room["description"]) . "</p>";
 					echo "</div>";
 				echo "</div>";  
