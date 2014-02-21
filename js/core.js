@@ -13,16 +13,14 @@ requestPartialPage = function(page, room)
 	$("#partialPage").empty();
 	if (page == "room")
 	{
-		$("#partialPage").load("/partials/room.partial.php?room="+room, function()
+		$("#partialPage").load("/partials/room.partial.php?room="+room+"&nocache="+new Date().getTime(), function()
 		{
 			loadRoom();
 		});
 	}
 	else if (page == "index")
 	{
-		$("#partialPage").load("/partials/index.partial.php", function()
-		{
-		});
+		$("#partialPage").load("/partials/index.partial.php" + "?nocache="+new Date().getTime(), function(){});
 	}
 };
 loadRoomObj = loadRoom;
@@ -212,7 +210,7 @@ function loadRoom() {
 		{
 			if (e.which == 13)
 			{
-				
+				join();
 			}
 		});		
         //-----------------------

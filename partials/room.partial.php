@@ -7,7 +7,9 @@
     }
 ?>
 <?php 
-    header('Access-Control-Allow-Origin: *'); 
+    header('Access-Control-Allow-Origin: *');
+	header("Cache-Control: no-cache");
+	header("Pragma: no-cache");
     $roomname = str_replace("/", "", $_GET["room"]);
     $visits = 0;
     $about = "";
@@ -47,6 +49,13 @@
 	//push history event
 	var stateObj = {page: "room", room: ROOMNAME};
 	history.pushState(stateObj, "InstaSynch - " + ROOMNAME + "'s Room", "/rooms/" + ROOMNAME);
+</script>
+<script>
+	$(document).ready(function()
+	{
+		if (loadRoomObj != null) //fire once
+			loadRoomObj();
+	});
 </script>
 <div style="display: none;" id="cleanUpOnRemoval"></div>
 <div id="st-descr">
@@ -186,10 +195,3 @@
 		</p>
 	</div>
 </div>
-<script>
-	$(document).ready(function()
-	{
-		if (loadRoomObj != null) //fire once
-			loadRoomObj();
-	});
-</script>

@@ -3,14 +3,18 @@
     {
         header('HTTP/1.0 404 Not Found');
         echo "Domain mismatch.";
-	exit();
-    }	
+		exit();
+    }
+	header("Cache-Control: no-cache");
+	header("Pragma: no-cache");
+	
     require  dirname(__FILE__) . '/../includes/connect.php';
     mysql_select_db("bibbytube", $connection);
     $title = "InstaSynch - Watch videos with friends!";
     $description = "Watch synchronized videos with friends and strangers!";
 ?>
 <script>
+	//set history for this partial page
 	var stateObj = {page: "index", room: null};
 	history.pushState(stateObj, "InstaSynch - Watch Videos With Friends", "/");
 	document.title = "InstaSynch - Watch Videos with Friends";
