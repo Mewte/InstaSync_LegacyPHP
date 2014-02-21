@@ -1,6 +1,6 @@
             <div id="truetop">
                 <div class="room-top" id="top">  
-                    <a href="/"><img src="/images/logoNoBG.png" height="55" width="172"></a>
+                    <img style="cursor: pointer;" src="/images/logoNoBG.png" height="55" width="172" onclick="requestPartialPage('index.partial.php', '/', 'title')">
                     <div id="loginfrm">
                         <div class="hide" id="login">
                             <input maxlength="16" name="username" type="text" placeholder="Username" id="loginUsername"/>

@@ -1,4 +1,3 @@
-		<script type="text/javascript" src="/js/perfect-scrollbar-0.4.8.with-mousewheel.min.js"></script>
 		<div class="friendsList">
 			<div class="whisper-container">
 <!--            <div class="whisper-window" id="friends-list-whisper-userID-32">
@@ -72,4 +71,3 @@
             </ul>
             <div class="context-menu"></div>
         </div>
-        <script type="text/javascript" src="/js/friends.js"></script>

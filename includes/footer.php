@@ -29,7 +29,3 @@
                     </ul>
                 </div>
             </div>
-<?php
-    include dirname(__FILE__) . "/statCounter.php";
-    include dirname(__FILE__) . "/noiframe.php";
-?>
