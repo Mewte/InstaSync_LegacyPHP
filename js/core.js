@@ -66,7 +66,6 @@ function loadRoom() {
     }
     $(document).ready(function () 
     {      
-		alert("Attaching Events!");
         $('#addUrl').click(function () {
             var url = $('#URLinput').val();
             if ($('#URLinput').val().trim() != '')
