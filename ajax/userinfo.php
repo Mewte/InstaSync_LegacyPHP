@@ -18,7 +18,7 @@
             $output["error"] = "User not found.";           
         }        
     }
-    elseif (isset($_POST["avatar"], $_POST["bio"]))
+    elseif (isset($_POST["avatar"], $_POST["bio"], $_POST["social"]))
     {
         if (isset($_COOKIE["username"], $_COOKIE["sessionid"]))
         {
@@ -28,9 +28,10 @@
             $sessionid = mysql_real_escape_string($_COOKIE["sessionid"]);        
             $avatar = imgurCode(mysql_real_escape_string($_POST["avatar"]));
             $bio = mysql_real_escape_string($_POST["bio"]);
+			$social = mysql_real_escape_string($_POST["social"]);
             if ($avatar != false && $bio != "")
             {
-                $query = "update users set avatar = '{$avatar}', bio='{$bio}' where username = '{$username}' and cookie = '{$sessionid}' limit 1";
+                $query = "update users set avatar = '{$avatar}', bio='{$bio}', social={$social} where username = '{$username}' and cookie = '{$sessionid}' limit 1";
                 mysql_query($query);
                 if (mysql_affected_rows() === 1)
                 {

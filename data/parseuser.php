@@ -27,6 +27,7 @@
    }
    function isToxic($ip)
    {
+       return false; //temp removed
        $variable = file_get_contents('bannedips.csv');
        //$ip2 = ',' . $ip . ',';
        if (substr_count($variable,$ip))

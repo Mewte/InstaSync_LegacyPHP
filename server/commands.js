@@ -394,7 +394,7 @@ module.exports.commands =
                     if (chat_room.sockets.sockets[socket.id] != undefined) //check for rare instance that socket disconnected
                     {
                         if (msg == undefined) //list empty
-                            msg = "Ban list is empty.";                        
+                            msg = "Mod list is empty.";                        
                         socket.emit('sys-message', {message: msg});
                     }             
                 });

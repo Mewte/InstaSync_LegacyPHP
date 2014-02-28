@@ -5,7 +5,7 @@
         mysql_select_db("bibbytube", $connection);
         $username = mysql_real_escape_string($_COOKIE["username"]);
         $sessionid = mysql_real_escape_string($_COOKIE["sessionid"]);        
-        $userLookup = mysql_query("select * from users 
+        $userLookup = mysql_query("select username, avatar, bio, social from users 
                            where 
                            username = '{$username}' 
                            and cookie = '{$sessionid}'");
@@ -16,6 +16,8 @@
             $output["username"] = $user["username"];
             $output["avatar"] = "http://i.imgur.com/" . $user["avatar"] . ".jpg";
             $output["bio"] = htmlspecialchars($user["bio"]);
+			$output["social"] = $user["social"];
+
         }
         else
         {

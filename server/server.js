@@ -8,7 +8,6 @@ var parser = require("./parsers");
 var app = connect().use(connect.static('public')).listen(38000);
 var crypto = require('crypto');
 
-
 global.chat_room = io.listen(app, {"log level": 2, "heartbeat timeout": 20, "heartbeat interval": 5, "close timeout": 20, "transports": ['websocket']});
 
 global.phploc = "http://127.0.0.1/";
@@ -29,6 +28,7 @@ var iptable = new Object();
 
 chat_room.sockets.on('connection', function(socket)
 {
+
         var ip = "";
         try {(ip = socket.manager.handshaken[socket.id].address.address)} catch (e) {console.log("Error with socket IP address"); socket.disconnect(); return;}
         if (iptable[ip] != undefined)
