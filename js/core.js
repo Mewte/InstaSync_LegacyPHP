@@ -330,16 +330,16 @@ function loadRoom() {
         });
         socket.on('reconnecting', function (data) {
             addMessage('', 'Reconnecting...', 'system-msg');
-			if (global.onReconnected != undefined)
+			if (global.onReconnecting != undefined)
 			{
 				global.onReconnecting();
 			}
         });
         socket.on('reconnected', function (data) {});
         socket.on('disconnect', function (data){
-			if (global.onReconnected != undefined)
+			if (global.onDisconnect != undefined)
 			{
-				global.onReconnected();
+				global.onDisconnect();
 			}
         });
         socket.on('userinfo', function (data) {
