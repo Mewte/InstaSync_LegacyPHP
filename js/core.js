@@ -343,7 +343,7 @@ function loadRoom() {
 			}
         });
         socket.on('userinfo', function (data) {
-            if (userInfo == null) 
+            if (true)//if (userInfo == null) //edit this when ready to fix unnamed bug (github issue #4)
             {
                 userInfo = data;
                 if (data['loggedin']) 
@@ -372,7 +372,7 @@ function loadRoom() {
                     isMod = true;
                 }
             } 
-            else 
+            else //edit this when ready to fix unnamed bug (Github issue #4)
             {
                 if (userInfo['loggedin'] == false && userInfo['username'] != 'unnamed') 
                 {
