@@ -99,6 +99,7 @@ function friendsListUI(domElement, friendsListSocket)
                                 action: function()
                                 {
 									openWhisper(id, username, true);
+									$("#friends-list-whisper-userID-"+id+" .send-whisper").focus();
 									moveWhisperWindow(id, e.pageX, e.pageY);
                                 }
                             });
@@ -243,6 +244,7 @@ function friendsListUI(domElement, friendsListSocket)
                             action: function()
                             {         
                                 openWhisper(id, username, true);
+								$("#friends-list-whisper-userID-"+id+" .send-whisper").focus();
                                 moveWhisperWindow(id, e.pageX, e.pageY);
                             }
                         });
@@ -291,7 +293,6 @@ function friendsListUI(domElement, friendsListSocket)
 					$(windowId + " .send-whisper").val('');
 				}
 			});
-			$(windowId + " .send-whisper").focus();
 			$(windowId).data("autoscroll", true);
 //			$(windowId + " .whisper-box").on('scroll',function()
 //			{
