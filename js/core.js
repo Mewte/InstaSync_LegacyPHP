@@ -7,6 +7,9 @@ global.requestPartialPage = null;
 global.loadRoomObj = null;
 global.page = new Object();
 global.page = {title: null, url: null, name: null, room: null};
+global.sendcmd = null;
+
+var video = null;
 
 $(function (){
 window.onpopstate = function(event) {
@@ -40,6 +43,10 @@ global.requestPartialPage = function(name, room, back)
 global.loadRoomObj = loadRoom;
 function loadRoom() {
     var room = new webSocket();
+	global.sendcmd = room.sendcmd;
+	video = new player("media", global.sendcmd);
+	detectIE();
+
     var join = function () 
     {
         if (validateJoin($('#join').val())) 
@@ -230,6 +237,8 @@ function loadRoom() {
         room.connect();
 		$("#cleanUpOnRemoval").on("remove", function() //disconnect when swapping page
 		{
+			global.sendcmd = null;
+			video = null;
 			room.disconnect();
 		});
     });
@@ -299,6 +308,10 @@ function loadRoom() {
         });
         socket.on('connecting', function () {
             addMessage('', 'Connecting..', '', 'hashtext');
+			if (global.onConnecting != undefined)
+			{
+				global.onConnecting();
+			}
         });
         socket.on('connect', function () {
             addMessage('', 'Connection Successful!', '', 'hashtext');
@@ -310,12 +323,24 @@ function loadRoom() {
             {
                 socket.emit('join', {username: $['cookie']('username'),cookie: $['cookie']('sessionid'), room: ROOMNAME});
             }
+			if (global.onConnected != undefined)
+			{
+				global.onConnected();
+			}
         });
         socket.on('reconnecting', function (data) {
             addMessage('', 'Reconnecting...', 'system-msg');
+			if (global.onReconnected != undefined)
+			{
+				global.onReconnecting();
+			}
         });
         socket.on('reconnected', function (data) {});
         socket.on('disconnect', function (data){
+			if (global.onReconnected != undefined)
+			{
+				global.onReconnected();
+			}
         });
         socket.on('userinfo', function (data) {
             if (userInfo == null) 
@@ -622,7 +647,11 @@ function loadRoom() {
         "'unlead": function (data) {
            room.sendcmd("unlead", null);
         }           
-    };
+    };	
+}
+});
+
+	//Moved all these down here so they can be exposed for userscripts
 	var users = new Array();
 	var playlist = new Array();
 	playlist.move = function (old_index, new_index) //Code is property of Reid from stackoverflow
@@ -642,14 +671,13 @@ function loadRoom() {
 	var autoscroll = true;
 	var isMod = false;
 	var isLeader = false;
-	var video = null;
 	var sliderTimer = false;
 	var mutedIps = new Array();
 	var userInfo = null;
 	var newMsg = false;
-	
-	video = new player("media", room.sendcmd);
-	detectIE();
+	//var video = null;
+	//video = new player("media", global.sendcmd);
+	//detectIE();
 	
 	function addMessage(username, message, userstyle, textstyle) {
 		message = linkify(message, false, true);
@@ -899,7 +927,7 @@ function loadRoom() {
 					{
 						if (isLeader)
 						{
-							room.sendcmd('play', {info: $(this).data("info")});
+							global.sendcmd('play', {info: $(this).data("info")});
 						}
 						else
 						{
@@ -939,7 +967,7 @@ function loadRoom() {
 				"class": 'removeBtn x',
 				"html": '',
 				"click": function () {
-					room.sendcmd('remove', {info: $(this).parent().parent().data('info')});
+					global.sendcmd('remove', {info: $(this).parent().parent().data('info')});
 				}
 			});
 		$('#ulPlay').append(li.append(plinfo.append(plinfo_title).append(plinfo_duration).append(expand).append(removeBtn)));
@@ -1092,7 +1120,7 @@ function loadRoom() {
 				"click": function(){ 
 					if (userInfo.loggedin)
 					{
-						room.sendcmd("poll-vote", {vote: $(this).data("option")});
+						global.sendcmd("poll-vote", {vote: $(this).data("option")});
 					}
 					else
 					{
@@ -1175,7 +1203,4 @@ function loadRoom() {
 		{
 			addMessage("","Internet Explorer versions 9 and and older are not supported. Please upgrade to I.E. 10 or later.","","errortext");
 		}
-	}	
-	
-}
-});
+	}
