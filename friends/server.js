@@ -18,7 +18,6 @@ var fs = require('fs');
 process.on('uncaughtException', function (error) {
     console.log("UNHANDLED ERROR! Logged to file.");
     fs.appendFile("crashlog.txt", error.stack + "---END OF ERROR----");
-	process.exit(1);
 });
 function db()
 {
