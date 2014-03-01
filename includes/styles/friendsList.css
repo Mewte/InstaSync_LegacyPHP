@@ -53,7 +53,7 @@
     float: right;
 }
 .friendsList .friendsList-list .category-list{
-    max-height: 90px;
+    max-height: 120px;
     overflow-y: hidden;
     overflow-x: hidden;
     display: none;
