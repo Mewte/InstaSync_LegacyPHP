@@ -281,10 +281,9 @@ function friendsListUI(domElement, friendsListSocket)
 		if (!$(windowId).length)
 		{
 			$(".whisper-container").append(createWhisperWindow(id, username));
-			$(windowId).draggable({handle: $(windowId+" .whisper-window-title-bar"), containment: "document"});
 			$(windowId + " .whisper-box").perfectScrollbar();
 			$(windowId).resizable({minHeight: 180, minWidth: 240, maxWidth: 360, maxHeight: 360, handles: "se", stop: function(){$(windowId+".whisper-box").perfectScrollbar("update");}});
-			$(windowId).draggable({handle: $(windowId+" .whisper-window-title-bar"), containment: "document"});
+			$(windowId).draggable({handle: $(windowId+" .whisper-window-title-bar"), containment: "document", stack: ".whisper-window"});
 			$(windowId + " .send-whisper").keypress(function(e) {
 				if ($(this).val().trim() != '' && e.which == 13) //message isn't empty and enter key pressed
 				{
