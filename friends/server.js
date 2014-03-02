@@ -16,17 +16,28 @@ app.setMaxListeners(0);
 */
 var fs = require('fs');
 process.on('uncaughtException', function (error) {
-    console.log("UNHANDLED ERROR! Logged to file.");
-    fs.appendFile("crashlog.txt", error.stack + "---END OF ERROR----");
+	console.log("Error Received.");
+	if (error.errno != "ECONNREFUSED") //don't log ECONNREFUSED as it floods the logs and just means a server is down (which you probally already know is happening)
+	{
+		console.log("ERROR! Logged to file.");
+		fs.appendFile("crashlog.txt", error.stack + "---END OF ERROR----");
+	}
 });
 function db()
 {
-    return mysql.createConnection({
+    var conn =  mysql.createConnection({
         host     : 'localhost',
         user     : 'root',
         password : '',
         database : 'bibbytube'
     });
+	conn.connect();
+	conn.on('error', function(err)
+	{
+		console.log("MySQL ERROR! Logged to file.");
+		fs.appendFile("mysqlerror.txt", err + "---END OF ERROR----");
+	});
+	return conn;
 }
 
 var users = {}; //store friendslist and num of connected sockets here.
@@ -42,7 +53,6 @@ friends_list.sockets.on('connection', function(socket)
         if (data.username != undefined && data.sessionid != undefined && socket.joinEmitted == false)
         {                      
             var connection = db();
-            connection.connect();
             connection.query(queries.loggedInQuery, [data.username, data.sessionid],function(err, user, fields) 
             {
                 if (err) { connection.end(); throw err;}
@@ -146,7 +156,6 @@ friends_list.sockets.on('connection', function(socket)
                 if (users[socket.user.id].friendsList.length <= 50)
                 {
                     var connection = db();
-                    connection.connect();
                     connection.query(queries.queryByUsername, [data.username],function(err, user, fields) 
                     {
                         if (err) { connection.end(); throw err;}
@@ -215,12 +224,11 @@ friends_list.sockets.on('connection', function(socket)
                 if (users[socket.user.id].friendsList.isFriend(data.id))
                 {
                     var connection = db();
-                    connection.connect();
                     var friend = users[socket.user.id].friendsList.friends[data.id];
                     var userA = Math.min(friend.id, socket.user.id);
                     var userB = Math.max(friend.id, socket.user.id);
                     connection.query(queries.removeFriends,[userA, userB],function(err)
-                    {   
+                    {
                         if (err){connection.end();throw err;}
                         else
                         {
@@ -238,6 +246,7 @@ friends_list.sockets.on('connection', function(socket)
 								socket.leave("id:"+friend.id)
 							});
                         }
+						connection.end();
                     });
                     
                 }
@@ -252,7 +261,6 @@ friends_list.sockets.on('connection', function(socket)
                     if (users[socket.user.id].friendRequests.exist(data.id, "received"))
                     {
                         var connection = db();
-                        connection.connect();
                         var friend = users[socket.user.id].friendRequests.get().received[data.id];
                         var userA = Math.min(friend.id, socket.user.id);
                         var userB = Math.max(friend.id, socket.user.id);
@@ -314,7 +322,6 @@ friends_list.sockets.on('connection', function(socket)
                 if (users[socket.user.id].friendRequests.exist(data.id, "received"))
                 {
                     var connection = db();
-                    connection.connect();
                     var friend = users[socket.user.id].friendRequests.get().received[data.id];
                     var userA = Math.min(friend.id, socket.user.id);
                     var userB = Math.max(friend.id, socket.user.id);
@@ -351,7 +358,6 @@ friends_list.sockets.on('connection', function(socket)
                 if (users[socket.user.id].friendRequests.exist(data.id,"sent"))
                 {
                     var connection = db();
-                    connection.connect();
                     var friend = users[socket.user.id].friendRequests.get().sent[data.id];
                     var userA = Math.min(friend.id, socket.user.id);
                     var userB = Math.max(friend.id, socket.user.id);
