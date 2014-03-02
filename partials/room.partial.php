@@ -49,10 +49,6 @@
 	global.page.title = "InstaSynch - " + ROOMNAME + "'s Room";
 	global.page.name = "room";
 	global.page.room = ROOMNAME;
-	$(document).ready(function()
-	{
-		global.loadRoomObj();
-	});
 	//get emotes
 	$.ajax({
             type: "GET",
@@ -207,3 +203,9 @@
 		</p>
 	</div>
 </div>
+<script>
+	$(document).ready(function()
+	{
+		global.loadRoomObj();
+	});
+</script>
