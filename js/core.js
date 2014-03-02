@@ -45,6 +45,7 @@ function loadRoom() {
     var room = new webSocket();
 	global.sendcmd = room.sendcmd;
 	video = new player("media", global.sendcmd);
+	messages = 0;
 	detectIE();
 
     var join = function () 
