@@ -28,7 +28,7 @@
 			<h1>Awesome! But how do I get started?</h1>
 			<p>
 				Simply visit any room you'd like and you can begin chatting as an unregistered user. 
-				If you'd like to have all the features (adding videos, voting, and profile) you must register.
+				If you'd like to have all the features (adding videos, voting, friends list, and profile) you must register.
 			</p>
 			<h1>
 				What about my own room?
@@ -39,7 +39,7 @@
 			</p>
 			<h1>But I need more help than that!</h1>
 			<p>
-				Check out the <a href="help.php">Help</a> page!<br />
+				Check out the <a href="help.php" onclick='global.requestPartialPage("help"); return false;'>Help</a> page!<br />
 				Questions/Comments? Email me at: admin@instasynch.com
 			</p>
 			<div class="social">

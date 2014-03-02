@@ -1,6 +1,6 @@
 #footer {
       bottom: 0px;
-      background-color: rgb(25,25,25);
+      background-color: rgba(25,25,25, 0.6);
       position: absolute;
       width: 100%;
       text-align: right;

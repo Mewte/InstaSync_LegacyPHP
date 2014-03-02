@@ -1,7 +1,7 @@
             <div id="truetop">
                 <div class="room-top" id="top">
 					<a href="/" onclick="global.requestPartialPage('index'); return false;">
-						<img style="cursor: pointer;" src="/images/logoNoBG.png" height="55" width="172">
+						<img style="cursor: pointer; margin-top: 3px;" src="/images/logoNoBG.png" height="55" width="172">
 					</a>
                     <div id="loginfrm">
                         <div class="hide" id="login">

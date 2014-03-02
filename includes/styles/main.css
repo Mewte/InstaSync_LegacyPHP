@@ -3,6 +3,7 @@ body, html {
     height:100%; /* ADD this */
     width: 100%;
     min-width: 1000px;
+	background-image: url('/images/test2.jpg');
 }
 .container {
       min-height: 100%;
