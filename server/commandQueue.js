@@ -11,7 +11,7 @@ function commandQueue(commandsPerSecond)
     {
         queue.push(Math.floor(new Date().getTime() / 1000));
         queue.shift();
-    }
+    };
     this.checkFlood = function() //check if all values are equal
     {
         for (var i = 0; i < queue.length; i++)
@@ -22,7 +22,7 @@ function commandQueue(commandsPerSecond)
             }
         }
         return true;
-    }
+    };
 }
 module.exports.create = function(commandsPerSecond)
 {

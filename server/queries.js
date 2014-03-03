@@ -1,1 +1,0 @@
-//MySQL query wrappers. Run all queries through here via callbacks. Do not open or close the connection here. Pass the connection object TO here. Open/close it on the outside.

@@ -21,7 +21,7 @@ module.exports.commands =
                 }
             }
                 
-        },    
+        },
         "reload":function(data, socket)
         {
             socket.emit('play', {info: rooms[socket.info.room].nowPlaying.info, time: rooms[socket.info.room].time(), playing: rooms[socket.info.room].playing});
@@ -197,6 +197,7 @@ module.exports.commands =
                     banSocket.emit('sys-message', {message: "You've been banned."});
                     request.post(phploc + 'actions/bans.php', {form:{ip: banSocket.info.ip, username: banSocket.info.username,
                                                                     room: banSocket.info.room, reason: "", action: "add" }}, function(error, response, msg){});
+					banSocket.emit("request-disconnect");
                     banSocket.disconnect();
                     rooms[socket.info.room].kickAllByIP(banSocket.info.ip);
                     chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " has banned a user."});   
@@ -259,6 +260,7 @@ module.exports.commands =
                 {        
                   
                     kickSocket.emit('sys-message', {message: "You've been kicked."});
+					kickSocket.emit("request-disconnect");
                     kickSocket.disconnect();
                     rooms[socket.info.room].kickAllByIP(kickSocket.info.ip);
                     chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " has kicked a user."});
@@ -427,9 +429,9 @@ module.exports.commands =
         {
             if (socket.info.permissions > 0 )
             {                   
-                rooms[socket.info.room].savePlaylist();
-                socket.emit('sys-message', {message: "Playlist saved."});                  
-                chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " has saved the playlist."});                 
+                //rooms[socket.info.room].savePlaylist();
+                socket.emit('sys-message', {message: "That command has been removed. Playlist now auto back at set intervals."});                  
+                //chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " has saved the playlist."});                 
             }            
         },
         "poll-create":function(data, socket)

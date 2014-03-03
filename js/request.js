@@ -35,7 +35,6 @@ function login()
     $.post("/ajax/login.php", {username: username, password: password}).done(function(data)
     {
         var result = JSON.parse(data);
-        console.log(result);
         if (result.success)
         {
             window.location.hash = "";

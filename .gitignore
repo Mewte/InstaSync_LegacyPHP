@@ -15,5 +15,6 @@ build
 node_modules
 /nbproject/private/
 nbproject
-playlistdump
+playlistbackupdump
+crashlog.txt
 bannedips.csv

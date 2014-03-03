@@ -22,11 +22,17 @@ function room(roomName)
     this.playlist = new Array(); //vidinfostores: title, vidcode, duration, addedby vidinfo: provider mediaType id channel
     this.maxVids = 300;
     this.nowPlaying = {info: null, timeStarted: 0, duration: 0, title: "No Videos", stoppedTime: 0}; //paused time stores the time the playlist was at during the last pause
+		
     this.MOTD = "Welcome to " + this.roomName + "!";
     
     this.banOnSpam = false;
     
     this.playTimeout = null;
+	this.autosave = null; //auto save playlist interval
+	this.playlistSaveNeeded = false; //if playlist is modified, save on next interval tick.
+	this.saveInterval = 300000; //5 minutes
+	this.playlistLoading = false; //don't let users join if loading playlist.
+	
     this.playlist.move = function (old_index, new_index) //Code is property of Reid from stackoverflow
     { 
         if (new_index >= this.length) {
@@ -40,19 +46,30 @@ function room(roomName)
 }
 room.prototype.tryJoin = function(socket)
 {
-    if (this.roomLock)//check if room is locked, if so, only allow mods in
+    if (this.roomLock)//check if room is locked, if so, only allow mods in *Not implemented yet*
+	{
         if (!socket.info.permissions > 0)
         {
-            socket.emit('sys-message', "Room is locked. Your permissions were too low to enter.");
+            socket.emit('sys-message', {message: "Room is locked. Your permissions were too low to enter."});
             socket.disconnect();
             return;
         }
+	}
+	if (this.playlistLoading)
+	{
+		console.log("Playlist is still loading..");
+		socket.emit('sys-message', {message: "Playlist is still loading. Please refresh."});
+		socket.disconnect();
+		return;
+	}
     if (socket.info.username.toLowerCase() == "unnamed")
     {
         if (socket.info.username == "unnamed")
             this.join(socket);
-        else //some how, the user may have hijacked the join and put unnamed in a variation of caps
-            socket.disconnect(); 
+        else //some how, the user may have hijacked the join and put unnamed in a variation of caps /todo: remove this maybe? I dont think its needed anymore * 3/8/2014
+		{
+            socket.disconnect();
+		}
     }
     else
     {
@@ -65,8 +82,8 @@ room.prototype.tryJoin = function(socket)
                 {
                     if (socket.info.loggedin) //socket is a registered user, thus he has higher precendence over the already connected socket
                     {
-                        connectedSocket.emit('sys-message', {message: "A registered user has entered with your name."})
-                        //this.leave(connectedSocket); //make the connected socket leave the userlist (possible fix for user clone)
+                        connectedSocket.emit('sys-message', {message: "A registered user has entered with your name."});
+                        //this.leave(connectedSocket); If you have duplicate user issues, try modify this 3/9/2014
                         connectedSocket.disconnect();
                     }
                     else //name is already in use
@@ -92,6 +109,11 @@ room.prototype.leave = function(socket)
     if (this.users.length == 0)
     {
         this.stop();
+		if (this.autosave != null)
+		{
+			clearInterval(this.autosave);
+			this.autosave = null;
+		}
     }
     if (socket.info.loggedin)
     {
@@ -131,13 +153,13 @@ room.prototype.join = function(socket)
     socket.emit('userinfo', {id: socket.id, username: socket.info.username, permissions: socket.info.permissions, room: socket.info.room, loggedin: socket.info.loggedin, ip: socket.info.hashedIp});
     socket.emit('playlist', {playlist: this.playlist});
     socket.emit('userlist', {userlist: this.users}); //NOTE: session ID is sent with this, be sure that sessionIDs are worthless
-    socket.emit('room-event', {action: "playlistlock", data: this.playListLock});        
-    socket.broadcast.to(this.roomName).emit('add-user', {user: user});
+    socket.emit('room-event', {action: "playlistlock", data: this.playListLock});
+	console.log(socket.broadcast);
+    socket.broadcastToRoom(this.roomName, 'add-user', {user: user});
     socket.emit('sys-message', {message: this.MOTD});
     if (this.nowPlaying.info === null)
     {
-        //TODO: Inspect the load playlist function and this, had an error where nowPlaying.info was null after server restart
-        socket.emit('sys-message', {message: "playlist is empty."});
+        socket.emit('sys-message', {message: "playlist is empty."}); //the first user that joins after a restart will see this message because .info hasnt been edited by start yet 3/9/2014
     }
     if (this.poll !== null)
     {
@@ -153,9 +175,25 @@ room.prototype.join = function(socket)
         this.numberOfRegisteredUsers++;
         this.updateSkips();
     }
-    //socket.emit('messages', {message: JSON.stringify(this.messages)}); recent messages   
     if (this.users.length == 1){
-        this.start(); //resume playlist
+        this.start();
+		//activate autosave interval
+		if (this.autosave == null)
+		{
+			var thisRoom = this;
+			this.autosave = setInterval(function()
+			{
+				if (thisRoom.playlistSaveNeeded)
+				{
+					console.log("Auto saving playlist for room: "+thisRoom.roomName);
+					thisRoom.savePlaylist();
+					thisRoom.playlistSaveNeeded = false;
+					this.autosave = null;
+				}
+				else
+					console.log("no save needed.");
+			}, this.saveInterval);//this.saveInterval);
+		}
     }
     socket.emit('play', {info: this.nowPlaying.info, time: this.time(), playing: this.playing});    
     this.updateRoomInfo();
@@ -169,7 +207,7 @@ room.prototype.kickAllByIP = function(ip) //called after kicking a specific user
         {
             if (socket.info != undefined && socket.info.ip === ip && !(socket.info.permissions > 0))
             {
-                socket.emit('sys-message', {message: "A user with your ip address has been kicked/banned."})
+                socket.emit('sys-message', {message: "A user with your ip address has been kicked/banned."});
                 socket.disconnect();                  
             }            
         }
@@ -223,11 +261,6 @@ room.prototype.lastIpByUsername = function(username)
 };
 room.prototype.rename = function(socket, newname)
 {
-    if (newname.toLowerCase() == "mewte")
-    {
-        socket.emit("sys-message", {message: "b-but you are not Mewte...<img src='/images/notsure.jpg' width='50' height='50' >"});
-        return;
-    }
     var indexOfUser = this.indexOfUserByID(socket.id);
     if ((this.indexOfUser(newname) === -1) && newname.match(/^([A-Za-z0-9]|([-_](?![-_]))){1,16}$/) != null) //is name already taken?
     {
@@ -279,8 +312,7 @@ room.prototype.start = function()
     else
     { //resuming
         this.playing = true;
-        this.nowPlaying.timeStarted = new Date().getTime() - (this.nowPlaying.stoppedTime * 1000);        
-        //chat_room.sockets.in(this.roomName).emit('play', {info: this.nowPlaying.info, time: this.time(), playing: this.playing});
+        this.nowPlaying.timeStarted = new Date().getTime() - (this.nowPlaying.stoppedTime * 1000);
         this.setTimer(); 
         chat_room.sockets.in(this.roomName).emit('resume', {time: this.time()});        
     }
@@ -328,6 +360,7 @@ room.prototype.addVideo = function(vidinfo)
         {
             this.start();
         }
+		this.playlistSaveNeeded = true;
         return "Video added successfully.";
     }
 };
@@ -350,7 +383,8 @@ room.prototype.removeVideo = function(vidinfo, emitToSocket) //if true, emits th
             }    
         }
         if (emitToSocket)
-            chat_room.sockets.in(this.roomName).emit('remove-vid', {info: vidinfo});      
+            chat_room.sockets.in(this.roomName).emit('remove-vid', {info: vidinfo});
+		this.playlistSaveNeeded = true;
         this.playlist.splice(index, 1);
     }
 };
@@ -362,6 +396,7 @@ room.prototype.moveVideo = function(vidinfo, position)
         if (vidPosition > -1)
         {
             this.playlist.move(vidPosition, position);
+			this.playlistSaveNeeded = true;
             chat_room.sockets.in(this.roomName).emit('move-vid', {info: vidinfo, position: position});
         } 
     }     
@@ -550,7 +585,7 @@ room.prototype.savePlaylist = function()
 {
     if (this.playlist.length > 0)
     {
-        var filename = "C:/wamp/www/server/playlistdump/" + this.roomName.toString() + ".playlist";
+        var filename = "playlistdump/" + this.roomName.toString() + ".playlist";
         fs.writeFile(filename, JSON.stringify(this.playlist), function (err) {
             if (err) throw err;
         });
@@ -558,14 +593,15 @@ room.prototype.savePlaylist = function()
 };
 room.prototype.loadPlaylist = function()
 {
-    //TODO: be sure no one can join until this is done.
-    var thisRoom = this; //because you can't use this in a callback function, welcome to callback hell -___-
-    var filename = "playlistdump/" + this.roomName.toLowerCase() + ".playlist";
+    var thisRoom = this; //because you can't use this in a callback function
+    var filename = "playlistbackupdump/" + this.roomName.toLowerCase() + ".playlist";
+	this.playlistLoading = true; //make sure no one can join while this is going.
     fs.exists(filename, function(exists){
         if (exists)
         {
             fs.readFile(filename, function (err, data) {
                 if (err) throw err;
+				thisRoom.playlistLoading = false; //allow users to join now
                 var playlist = null;
                 try {playlist = JSON.parse(data)} catch(e) {console.log("JSON from playlist invalid?"); return;}
                 thisRoom.playlist = playlist;
@@ -582,6 +618,10 @@ room.prototype.loadPlaylist = function()
                 //chat_room.sockets.in(this.roomName).emit('playlist', {playlist: thisRoom.playlist});                
             });
         }
+		else //no playlist
+		{
+			thisRoom.playlistLoading = false; //allow users to join now
+		}
     });
 };
 //---
@@ -612,7 +652,7 @@ poll.prototype.removeVote = function(vote)
 
 module.exports.create = function(roomName)
 {
-    var thisroom = new room(roomName);
-    thisroom.loadPlaylist();
-    return thisroom;
+	var thisroom = new room(roomName);
+	thisroom.loadPlaylist();
+	return thisroom;
 }
