@@ -3,7 +3,7 @@
     {
         header('HTTP/1.0 404 Not Found');
         echo "Domain mismatch.";
-	exit();
+		exit();
     }
     $title = "InstaSynch - Watch videos with friends!";
     $description = "Watch synchronized videos with friends and strangers!";
@@ -13,7 +13,8 @@
     <?php include "includes/header.php" ?>
     <body> 
         <div class="container"> 
-            <?php include "includes/truetop.php"; ?>   
+            <?php include "includes/truetop.php"; ?>
+			<?php include "includes/adsense.php"; ?>
 			<div id="partialPage">	
 				<?php include "partials/index.partial.php"; ?>
 			</div>
