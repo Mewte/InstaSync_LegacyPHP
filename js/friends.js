@@ -1,3 +1,7 @@
+/*
+    <InstaSynch - Watch Videos with friends.>
+    Copyright (C) 2013  InstaSynch
+*/
 global.loadFriendService = null;
 testRemove = null;
 (function(){

@@ -1,3 +1,7 @@
+/*
+    <InstaSynch - Watch Videos with friends.>
+    Copyright (C) 2013  InstaSynch
+*/
 function register()
 {
     var username = $("#username").val();
