@@ -214,7 +214,7 @@ if (cluster.isWorker) {
 	var port = process.env.port;
 	console.log("Worker ID: "+cluster.worker.id+" listening on port: " + port);
 	var app = connect(function(req, res) {res.writeHead(404); res.end("No resource found.");}).listen(port);
-	var io = require('socket.io').listen(app, {"log level": 4, "heartbeat timeout": 20, "heartbeat interval": 5, "close timeout": 20, "transports": ['websocket','htmlfile', 'xhr-polling', 'jsonp-polling'], 'polling duration': 10});
+	var io = require('socket.io').listen(app, {"log level": 2, "heartbeat timeout": 20, "heartbeat interval": 5, "close timeout": 20, "transports": ['websocket','htmlfile', 'xhr-polling', 'jsonp-polling'], 'polling duration': 10});
 	var RedisStore = require('socket.io/lib/stores/redis');
 	var redis = require('socket.io/node_modules/redis');
 	var commandQueue = require("./commandQueue");
