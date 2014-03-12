@@ -593,7 +593,7 @@ room.prototype.savePlaylist = function()
 room.prototype.loadPlaylist = function()
 {
     var thisRoom = this; //because you can't use this in a callback function
-    var filename = "playlist/" + this.roomName.toLowerCase() + ".playlist";
+    var filename = "playlistdump/" + this.roomName.toLowerCase() + ".playlist";
 	this.playlistLoading = true; //make sure no one can join while this is going.
     fs.exists(filename, function(exists){
         if (exists)
