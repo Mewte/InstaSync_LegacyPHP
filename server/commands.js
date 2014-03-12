@@ -430,7 +430,7 @@ module.exports.commands =
             if (socket.info.permissions > 0 )
             {                   
                 //rooms[socket.info.room].savePlaylist();
-                socket.emit('sys-message', {message: "That command has been removed. Playlist now auto back at set intervals."});                  
+                socket.emit('sys-message', {message: "That command has been removed. Playlist now automatically save at set intervals."});                  
                 //chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " has saved the playlist."});                 
             }            
         },
