@@ -2,6 +2,14 @@
     <InstaSynch - Watch Videos with friends.>
     Copyright (C) 2013  InstaSynch
 */
+//I.E. <10 doesn't support console.log
+if( window.console != undefined) {
+	window.console = {log: function()
+		{
+			//do nothing
+		}
+	};
+}
 var global = new Object();
 global.requestPartialPage = null;
 global.loadRoomObj = null;
@@ -1211,22 +1219,5 @@ function detectIE()
 	if (ie < 10)
 	{
 		addMessage("","Internet Explorer versions 9 and and older are not supported. Please upgrade to I.E. 10 or later.","","errortext");
-		window.onerror = function() {
-			return true;
-		};
-		/* some i.e. compatability stuff to mess with when ready for that update
-			I.E. <10 doesn't support console.log (Don't know why I bother)
-			if( window.console != undefined) {
-				window.console = {log: function()
-					{
-						//do nothing
-					}
-				};
-			}
-			window.onerror = function(){
-			   return true;
-			};
-			//---------------------------------
-		 */
 	}
 }
