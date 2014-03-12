@@ -213,8 +213,8 @@ if (cluster.isWorker) {
 	var connect = require('connect');
 	var port = process.env.port;
 	console.log("Worker ID: "+cluster.worker.id+" listening on port: " + port);
-	var app = connect(function(req, res) {res.writeHead(404); res.end("No resource found.");}).listen(port);																									//temporarly 0 for compatability with short polling.
-	var io = require('socket.io').listen(app, {"log level": 4, "heartbeat timeout": 20, "heartbeat interval": 5, "close timeout": 20, "transports": ['websocket','htmlfile', 'xhr-polling', 'jsonp-polling'], 'polling duration': 10});//warning: USING MASSIVE CPU FOR SHORT POLLING 0, Possible fix includes master calling child for emit to socket.
+	var app = connect(function(req, res) {res.writeHead(404); res.end("No resource found.");}).listen(port);
+	var io = require('socket.io').listen(app, {"log level": 4, "heartbeat timeout": 20, "heartbeat interval": 5, "close timeout": 20, "transports": ['websocket','htmlfile', 'xhr-polling', 'jsonp-polling'], 'polling duration': 10});
 	var RedisStore = require('socket.io/lib/stores/redis');
 	var redis = require('socket.io/node_modules/redis');
 	var commandQueue = require("./commandQueue");
