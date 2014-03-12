@@ -74,6 +74,10 @@ if (cluster.isMaster) {
 			workerMap[socket.workerId].send({type: "emit", id: msg.id, event: event, data: data});
 		};
 		socket.disconnect = function(){
+			if (socket.joined)
+			{
+				socket.leave(socket.info.room); //unsubscribe user from room immediately
+			}
 			workerMap[socket.workerId].send({type: "disconnect", id: msg.id});
 		};
 		socket.broadcastToRoom = function(room, event, data) //custom broadcast
@@ -353,7 +357,11 @@ if (cluster.isWorker) {
 				io.sockets.socket(msg.id).broadcast.to(msg.room).emit(msg.event, msg.data);
 				break;
 			case "disconnect":
-				io.sockets.socket(msg.id).disconnect();
+				io.sockets.socket(msg.id).emit('request-disconnect');
+				setTimeout(function() //give socket a small delay to disconnect itself before we force boot it
+				{
+					io.sockets.socket(msg.id).disconnect();
+				}, 500);
 				break;
 		}
 	});
