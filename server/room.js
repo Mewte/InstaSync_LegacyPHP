@@ -154,7 +154,6 @@ room.prototype.join = function(socket)
     socket.emit('playlist', {playlist: this.playlist});
     socket.emit('userlist', {userlist: this.users}); //NOTE: session ID is sent with this, be sure that sessionIDs are worthless
     socket.emit('room-event', {action: "playlistlock", data: this.playListLock});
-	console.log(socket.broadcast);
     socket.broadcastToRoom(this.roomName, 'add-user', {user: user});
     socket.emit('sys-message', {message: this.MOTD});
     if (this.nowPlaying.info === null)
