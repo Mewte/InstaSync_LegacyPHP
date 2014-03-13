@@ -24,6 +24,7 @@
     <body>
         <div class="container">
             <?php include dirname(__FILE__) . "/truetop.php" ?>
+			<?php include dirname(__FILE__) . "/adsense.php"; ?>			
 			<div id="partialPage">
 				<?php include dirname(__FILE__) . "/../partials/room.partial.php"; ?>
 			</div>
