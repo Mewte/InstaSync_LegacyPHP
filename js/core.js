@@ -3,7 +3,7 @@
     Copyright (C) 2013  InstaSynch
 */
 //I.E. <10 doesn't support console.log
-if( window.console != undefined) {
+if( window.console == undefined) {
 	window.console = {log: function()
 		{
 			//do nothing
@@ -29,7 +29,13 @@ $(document).ready(function()
 	//use replaceState so that the state is saved into the history.state object, but doesn't push the entry into history
 	if (history.state == undefined)
 	{
+		try{ //only html5 browsers support this
 		history.replaceState(global.page, global.page.title, global.page.url);
+		}
+		catch (e)
+		{
+			//not supported
+		}
 	}
 	document.title = global.page.title;
 });
