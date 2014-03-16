@@ -41,10 +41,10 @@ if (cluster.isMaster) {
 	 * during reconnect, socket will connect to the same worker that was handling it
 	 * which is also useful for short polling too.
 	 */
-	createWorker(38000);
-	createWorker(38001);
-	createWorker(38002);
-	createWorker(38003);
+	createWorker(38000); //memory leak temp fix
+	//createWorker(38001);
+	//createWorker(38002);
+	//createWorker(38003);
 	
 	function createWorker(port)
 	{

@@ -261,7 +261,7 @@ function loadRoom() {
     var filterGreyname = false; 
     function webSocket() {
         var server = window.location.hostname;
-		var port = Math.floor(Math.random() * 4 + 38000);
+		var port = 38000;//Math.floor(Math.random() * 4 + 38000);
         var lastMsg = null;
         var socket = null;
 		var delay = 0;
