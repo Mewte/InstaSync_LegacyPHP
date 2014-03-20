@@ -268,7 +268,7 @@ function loadRoom() {
         socket = io.connect(server + ":" + port, 
         {
             reconnect: true,
-            "force new connection": false,
+            "force new connection": true,
             "try multiple transports": false,
             "reconnection delay": 1000,
             "max reconnection attempts": 5,
