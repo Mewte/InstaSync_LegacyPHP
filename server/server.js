@@ -200,7 +200,14 @@ if (cluster.isMaster) {
 		if (data.command != undefined && commands.commands[data.command] !=  undefined && socket.joined)
 		{
 			if (data.data !== undefined) //TODO: Check if data is not null for certain commands
+			{
+				if (data.data === null)
+				{
+					data.data = {}; //help prevent crash when null is sent but needed. 
+					//commands.js will see this as an object and thus .property will trigger the undefined checks
+				}
 				commands.commands[data.command](data.data, socket);
+			}
 		}		
 	}
 	cluster.on('exit', function(worker, code, signal) {
