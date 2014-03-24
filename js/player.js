@@ -29,7 +29,13 @@ function player(elementId, sendcmd)
     }
     this.resume = function()
     {
-        player.resume();
+		try{ //incase player is null
+			player.resume();
+		}
+		catch (e)
+		{
+			
+		}
     }
     this.pause = function()
     {
