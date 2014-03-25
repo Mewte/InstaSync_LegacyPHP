@@ -189,7 +189,7 @@ if (cluster.isMaster) {
 		//Max IP connected to this worker logic
 		if (iptable[ip] != undefined)
         {
-            if (iptable[ip] > 100)
+            if (iptable[ip] > 5)
             {
 				console.log("Max users online with IP:"+ip);
                 socket.emit('sys-message', { message: "Max users online with this IP."});
