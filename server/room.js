@@ -51,7 +51,7 @@ room.prototype.tryJoin = function(socket)
         if (!socket.info.permissions > 0)
         {
             socket.emit('sys-message', {message: "Room is locked. Your permissions were too low to enter."});
-            socket.disconnect();
+            socket.attemptDisconnect();
             return;
         }
 	}
@@ -59,7 +59,7 @@ room.prototype.tryJoin = function(socket)
 	{
 		console.log("Playlist is still loading..");
 		socket.emit('sys-message', {message: "Playlist is still loading. Please refresh."});
-		socket.disconnect();
+		socket.attemptDisconnect();
 		return;
 	}
     if (socket.info.username.toLowerCase() == "unnamed")
@@ -68,7 +68,7 @@ room.prototype.tryJoin = function(socket)
             this.join(socket);
         else //some how, the user may have hijacked the join and put unnamed in a variation of caps /todo: remove this maybe? I dont think its needed anymore * 3/8/2014
 		{
-            socket.disconnect();
+            socket.attemptDisconnect();
 		}
     }
     else
@@ -84,12 +84,12 @@ room.prototype.tryJoin = function(socket)
                     {
                         connectedSocket.emit('sys-message', {message: "A registered user has entered with your name."});
                         //this.leave(connectedSocket); If you have duplicate user issues, try modify this 3/9/2014
-                        connectedSocket.disconnect();
+                        connectedSocket.attemptDisconnect();
                     }
                     else //name is already in use
                     {
                         socket.emit('sys-message', {message: "Name is in use. Disconnected."});
-                        socket.disconnect();
+                        socket.attemptDisconnect();
                         return;
                     }                     
                 }
@@ -154,7 +154,7 @@ room.prototype.join = function(socket)
     socket.emit('playlist', {playlist: this.playlist});
     socket.emit('userlist', {userlist: this.users}); //NOTE: session ID is sent with this, be sure that sessionIDs are worthless
     socket.emit('room-event', {action: "playlistlock", data: this.playListLock});
-    socket.broadcastToRoom(this.roomName, 'add-user', {user: user});
+    socket.broadcast.to(this.roomName).emit('add-user', {user: user});
     socket.emit('sys-message', {message: this.MOTD});
     if (this.nowPlaying.info === null)
     {
@@ -207,7 +207,7 @@ room.prototype.kickAllByIP = function(ip) //called after kicking a specific user
             if (socket.info != undefined && socket.info.ip === ip && !(socket.info.permissions > 0))
             {
                 socket.emit('sys-message', {message: "A user with your ip address has been kicked/banned."});
-                socket.disconnect();                  
+                socket.attemptDisconnect();                  
             }            
         }
     }
@@ -217,7 +217,7 @@ room.prototype.updateRoomInfo = function()
     var thumbnail = "http://i1.ytimg.com/vi/2312/default.jpg"; //default blank youtube thumbnail
     if (this.nowPlaying.info !== null)
         thumbnail = this.nowPlaying.info.thumbnail;
-    request.post("http://localhost/actions/updateroominfo.php", 
+    request.post(phploc + "actions/updateroominfo.php", 
         {form:{users: this.users.length, thumbnail: thumbnail, title: this.nowPlaying.title, roomname: this.roomName}}, function(error, response, msg){});
 };
 room.prototype.chatmessage = function(socket, message)

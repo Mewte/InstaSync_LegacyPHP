@@ -198,7 +198,7 @@ module.exports.commands =
                     request.post(phploc + 'actions/bans.php', {form:{ip: banSocket.info.ip, username: banSocket.info.username,
                                                                     room: banSocket.info.room, reason: "", action: "add" }}, function(error, response, msg){});
 					banSocket.emit("request-disconnect");
-                    banSocket.disconnect();
+                    banSocket.attemptDisconnect();
                     rooms[socket.info.room].kickAllByIP(banSocket.info.ip);
                     chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " has banned a user."});   
                 }
@@ -261,7 +261,7 @@ module.exports.commands =
                   
                     kickSocket.emit('sys-message', {message: "You've been kicked."});
 					kickSocket.emit("request-disconnect");
-                    kickSocket.disconnect();
+                    kickSocket.attemptDisconnect();
                     rooms[socket.info.room].kickAllByIP(kickSocket.info.ip);
                     chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " has kicked a user."});
                 }

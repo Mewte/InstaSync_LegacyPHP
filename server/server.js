@@ -8,57 +8,21 @@ if (cluster.isMaster) {
 	var commands = require("./commands");
 	var parser = require("./parsers");
 	var crypto = require('crypto');
-	var server = require('http').createServer();
-	var RedisStore = require('socket.io/lib/stores/redis');
-	var redis = require('socket.io/node_modules/redis');
-	global.chat_room = require('socket.io').listen(server);
-	global.chat_room.set('store', new RedisStore({
-		redisPub: redis.createClient(),
-		redisSub: redis.createClient(),
-		redisClient: redis.createClient()
-	}));
+
 	process.on('uncaughtException', function (error) {
 		console.log("UNHANDLED ERROR! Logged to file.");
 		fs.appendFile("crashlog.txt", error.stack + "---END OF ERROR----");
 		console.log("line 23: "+error.stack);
 	});
-	
-	global.phploc = "http://127.0.0.1/";
-	
+	var connect = require('connect');
+	var app = connect(function(req, res) {res.writeHead(404); res.end("No resource found.");}).listen(38000);
+	global.chat_room = require('socket.io').listen(app, {"log level": 2, "heartbeat timeout": 20, "heartbeat interval": 5, "close timeout": 20, "transports": ['websocket','htmlfile', 'xhr-polling', 'jsonp-polling'], 'polling duration': 10});
+
+	//global.phploc = "http://127.0.0.1/";
+	global.phploc = "http://dev.instasynch.com/";
 	global.iptable = new Object();
 	global.rooms = new Array();
-	global.workerMap = new Object(); //store workers here to pass back socket emit to worker process to handle it
-	
-	var workerToSocketsMap = new Object(); //TODO: if worker dies, use this to remove the users from the rooms they were in.
-	
-	/*
-	 * Node.JS round robin doesn't like to assign ports 'randomly' but seems to 
-	 * stick to one worker. The problem with this is if the server restarts, 
-	 * chances are a socket will reconnect to a new worker. This causes 'client
-	 * not handshake, should reconnect' error.
-	 * New Method: Assign ports manually using javascript to randomize port number
-	 * to create a more random round robin load balancing. Also insures that
-	 * during reconnect, socket will connect to the same worker that was handling it
-	 * which is also useful for short polling too.
-	 */
-	createWorker(38000); //memory leak temp fix
-	//createWorker(38001);
-	//createWorker(38002);
-	//createWorker(38003);
-	
-	function createWorker(port)
-	{
-		var worker = cluster.fork({port: port});
-		workerMap[worker.id] = worker;
-		worker.on('message', function(msg) //gateway for various messages
-		{
-			onMessage(msg);
-		});
-	}
-	/*
-	 * Takes message from onMessage and turns it into a complete socket for 
-	 * compatability and minimal modification to commands.js and room.js
-	 */
+
 	function getSocket(msg)
 	{
 		//build socket (for compatibility with old JS files)
@@ -66,28 +30,16 @@ if (cluster.isMaster) {
 		if (socket.connected == undefined){
 			socket.connected = true; //only if undefined, i.e. not false
 		}
-		socket.workerId = msg.workerId;
-		//--------
-		//replace regular emit with new emit (that sends message to child process instead
-		socket.emit = function(event, data)
-		{
-			workerMap[socket.workerId].send({type: "emit", id: msg.id, event: event, data: data});
-		};
-		socket.disconnect = function(){
+		socket.attemptDisconnect = function(){
 			if (socket.joined)
 			{
 				socket.leave(socket.info.room); //unsubscribe user from room immediately
 			}
-			workerMap[socket.workerId].send({type: "disconnect", id: msg.id});
+			messageSocket({type: "disconnect", id: msg.id});
 		};
-		socket.broadcastToRoom = function(room, event, data) //custom broadcast
-		{
-			workerMap[socket.workerId].send({type: "broadcast", id: msg.id, event: event, data: data, room: room});
-		};
-		//-------
 		return socket;
 	}
-	function onMessage(msg)
+	function socketMessage(msg)
 	{
 		var socket = getSocket(msg);
 		switch(msg.type)
@@ -109,6 +61,24 @@ if (cluster.isMaster) {
 				break;
 		}
 	}
+	function messageSocket(msg) { //master passes single socket emits via this.
+		switch (msg.type)
+		{
+			case "emit":
+				chat_room.sockets.socket(msg.id).emit(msg.event, msg.data);
+				break;
+			case "broadcast":
+				chat_room.sockets.socket(msg.id).broadcast.to(msg.room).emit(msg.event, msg.data);
+				break;
+			case "disconnect": //handles disconnect for xhr pollers
+				chat_room.sockets.socket(msg.id).emit('request-disconnect');
+				setTimeout(function() //give socket a small delay to disconnect itself before we force boot it
+				{
+					chat_room.sockets.socket(msg.id).disconnect();
+				}, 500);
+				break;
+		}
+	};
 	function join(socket, username, cookie, roomname){
 		if (!socket.joined)
 		{
@@ -124,18 +94,18 @@ if (cluster.isMaster) {
 						{
 							rooms[roomname] = room.create(roomname);
 							socket.emit('sys-message', { message: "Room loaded into memory, refresh page."});
-							socket.disconnect();
+							socket.attemptDisconnect();
 						}
 						else
 						{
 							socket.emit('sys-message', { message: "Room is stil loading, refresh page."});
-							socket.disconnect();
+							socket.attemptDisconnect();
 						}
 					}
 					else
 					{
 						socket.emit('sys-message', { message: "This roomname does not exist."});
-						socket.disconnect();
+						socket.attemptDisconnect();
 					}
 				});              
 			}
@@ -153,7 +123,7 @@ if (cluster.isMaster) {
 					if (user.error != "none")
 					{
 						socket.emit('sys-message', {message: user.error});
-						socket.disconnect();
+						socket.attemptDisconnect();
 					}
 					else
 					{     
@@ -188,7 +158,7 @@ if (cluster.isMaster) {
                 rooms[socket.info.room].leave(socket);
             }
 		}
-		socket.disconnect(); //remove socket from clients memory in master
+		//socket.disconnect(); //remove socket from clients memory in master
 	}
 	function message(socket, message){
 		if (socket.joined && socket.info.username.toLowerCase() != "unnamed")
@@ -210,36 +180,12 @@ if (cluster.isMaster) {
 			}
 		}		
 	}
-	cluster.on('exit', function(worker, code, signal) {
-		console.log('worker ' + worker.process.pid + ' died!!!! RECOMEND SERVER RESTART.');
-		//createWorker();
-	}); 
-}
-
-if (cluster.isWorker) {
-	var connect = require('connect');
-	var port = process.env.port;
-	console.log("Worker ID: "+cluster.worker.id+" listening on port: " + port);
-	var app = connect(function(req, res) {res.writeHead(404); res.end("No resource found.");}).listen(port);
-	var io = require('socket.io').listen(app, {"log level": 2, "heartbeat timeout": 20, "heartbeat interval": 5, "close timeout": 20, "transports": ['websocket','htmlfile', 'xhr-polling', 'jsonp-polling'], 'polling duration': 10});
-	var RedisStore = require('socket.io/lib/stores/redis');
-	var redis = require('socket.io/node_modules/redis');
-	var commandQueue = require("./commandQueue");
-	io.set('store', new RedisStore({
-		redisPub: redis.createClient(),
-		redisSub: redis.createClient(),
-		redisClient: redis.createClient()
-	}));
-	process.on('uncaughtException', function (error) {
-		console.log(error.stack);
-	});
 	var iptable = new Object();
-	io.sockets.on('connection', function(socket) {
+	chat_room.sockets.on('connection', function(socket) {
 		//get IP
-		console.log("Connected to worker: "+cluster.worker.id);
 		var ip = "";
 		//Fixes rare error that happened from time to time
-        try {ip = socket.manager.handshaken[socket.id].address.address} catch (e) {console.log("Error with socket IP address"); socket.emit("request-disconnect"); socket.disconnect(); return;}
+        try {ip = socket.manager.handshaken[socket.id].address.address} catch (e) {console.log("Error with socket IP address"); socket.emit("request-disconnect"); socket.attemptDisconnect(); return;}
 		//Max IP connected to this worker logic
 		if (iptable[ip] != undefined)
         {
@@ -248,7 +194,7 @@ if (cluster.isWorker) {
 				console.log("Max users online with IP:"+ip);
                 socket.emit('sys-message', { message: "Max users online with this IP."});
 				socket.emit("request-disconnect");
-                socket.disconnect();
+                socket.attemptDisconnect();
                 return;
             }
             else
@@ -267,7 +213,7 @@ if (cluster.isWorker) {
 			{// this is a one time emit per socket connection
 				if (data.username != undefined && data.cookie != undefined && data.room != undefined)
 				{
-					process.send({type: "join", id: socket.id, workerId: cluster.worker.id, data: {username: data.username, cookie: data.cookie, room: data.room}});
+					socketMessage({type: "join", id: socket.id, data: {username: data.username, cookie: data.cookie, room: data.room}});
 				}
 			}
 			joinEmitted = true;
@@ -283,7 +229,7 @@ if (cluster.isWorker) {
 				}
 				else
 				{
-					process.send({type: "rename", id: socket.id, workerId: cluster.worker.id, data: {username: data.username}});
+					socketMessage({type: "rename", id: socket.id, data: {username: data.username}});
 					renameEmitted = true;
 				}
 			}
@@ -295,7 +241,7 @@ if (cluster.isWorker) {
 			{
 				delete iptable[ip];
 			}
-			process.send({type: "disconnect", id: socket.id, workerId: cluster.worker.id});
+			socketMessage({type: "disconnect", id: socket.id});
 		});
 		
 		var currentCharacters = 0; 
@@ -317,7 +263,7 @@ if (cluster.isWorker) {
 				else
 				{      
 					lastMessage = data.message;
-					process.send({type: "chat", id: socket.id, workerId: cluster.worker.id, data: {message: data.message}});
+					socketMessage({type: "chat", id: socket.id, data: {message: data.message}});
 				}
 				if (reduceMsgInterval === null)
 				{
@@ -337,7 +283,7 @@ if (cluster.isWorker) {
 			}			
 			
 		});
-		var queue = commandQueue.create(4);
+		var queue = commandQueue.create(6);
 		socket.on('command', function(data)
 		{
 			queue.addCommand();
@@ -349,27 +295,8 @@ if (cluster.isWorker) {
 				return;
 			}
 			if (joinEmitted){
-				process.send({type: "command", id: socket.id, workerId: cluster.worker.id, data: {data: data}});
+				socketMessage({type: "command", id: socket.id, data: {data: data}});
 			}
 		});
-	});
-
-	process.on('message', function(msg) { //master passes single socket emits via this.
-		switch (msg.type)
-		{
-			case "emit":
-				io.sockets.socket(msg.id).emit(msg.event, msg.data);
-				break;
-			case "broadcast":
-				io.sockets.socket(msg.id).broadcast.to(msg.room).emit(msg.event, msg.data);
-				break;
-			case "disconnect":
-				io.sockets.socket(msg.id).emit('request-disconnect');
-				setTimeout(function() //give socket a small delay to disconnect itself before we force boot it
-				{
-					io.sockets.socket(msg.id).disconnect();
-				}, 500);
-				break;
-		}
 	});
 }
