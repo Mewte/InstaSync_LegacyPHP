@@ -153,7 +153,7 @@ friends_list.sockets.on('connection', function(socket)
         {
             if (data.username != undefined)
             {
-                if (users[socket.user.id].friendsList.length <= 50)
+                if (users[socket.user.id].friendsList.length <= 99)
                 {
                     var connection = db();
                     connection.query(queries.queryByUsername, [data.username],function(err, user, fields) 
@@ -256,7 +256,7 @@ friends_list.sockets.on('connection', function(socket)
         {
             if (data.id != undefined)
             {        
-                if (users[socket.user.id].friendsList.length <= 50)
+                if (users[socket.user.id].friendsList.length <= 99)
                 {
                     if (users[socket.user.id].friendRequests.exist(data.id, "received"))
                     {
