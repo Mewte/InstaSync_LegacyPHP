@@ -23,7 +23,7 @@
 		<div class="left">
 			<div>
 				<iframe width="364" height="205" src="//www.youtube.com/embed/uWMONDOgEd4?rel=0" frameborder="0" allowfullscreen></iframe>
-				<div style="display: inline-block; width: 335px; float: right; text-align: center; margin-top: 30px;">
+				<div style="display: inline-block; width: 350px; float: right; text-align: center; margin-top: 30px;">
 					<img src="/images/logoNOBG.png" height="38" width="119"/>
 					<h3 style="margin-bottom: 4px;"><a href="https://twitter.com/search?q=%23basedtyrone&src=typd" target="_blank">#BasedTyrone</a> Approved</h3>
 					<h3 style="font-weight: bold; text-shadow: 1px 1px rgb(114,114,114);">Since 2014</h3>
