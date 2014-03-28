@@ -10,17 +10,50 @@
 	
     require  dirname(__FILE__) . '/../includes/connect.php';
     mysql_select_db("bibbytube", $connection);
-    $title = "InstaSynch - Watch videos with friends!";
+    $title = "InstaSynch - The only #BasedTyrone Approved Internet Forum - Watch videos with 'friends' HAHA FRIENDS HA HA HA";
     $description = "Watch synchronized videos with friends and strangers!";
 ?>
 <script>
 	global.page.url = "/";
-	global.page.title = "InstaSynch - Watch videos with friends!";
+	global.page.title = "<?php echo $title ?>";
 	global.page.name = "index";
 </script>
 <div class="index-content">
 	<div class="content-header">
 		<div class="left">
+			<div>
+				<iframe width="364" height="205" src="//www.youtube.com/embed/uWMONDOgEd4?rel=0" frameborder="0" allowfullscreen></iframe>
+				<div style="display: inline-block; width: 335px; float: right; text-align: center; margin-top: 30px;">
+					<img src="/images/logoNOBG.png" height="38" width="119"/>
+					<h3 style="margin-bottom: 4px;"><a href="https://twitter.com/search?q=%23basedtyrone&src=typd" target="_blank">#BasedTyrone</a> Approved</h3>
+					<h3 style="font-weight: bold; text-shadow: 1px 1px rgb(114,114,114);">Since 2014</h3>
+				</div>
+			</div>			
+			<div class="social">
+				<span class="media">
+					  <a target="_blank" href="http://youtube.com"><img width="32" border="0" height="32" alt="facebook" src="/images/youtube.png"></img></a>                          
+				</span>
+				<span class="media">
+					<a target="_blank" href="http://vimeo.com"><img width="32" border="0" height="32" alt="facebook" src="/images/vimeo.png"></img></a>                            
+				</span>
+				<span class="media">
+					<a target="_blank" href="http://twitch.tv"><img width="32" border="0" height="32" alt="facebook" src="/images/twitch.png"></img></a>                            
+				</span>                            
+				<span class="media">
+					<a target="_blank" href="https://www.facebook.com/instasynch"><img width="32" border="0" height="32" alt="facebook" src="/images/facebook.png"></img></a>
+				</span>            
+				<span class="media">
+					<a target="_blank" href="http://twitter.com/instasynch"><img width="32" border="0" height="32" alt="twitter" src="/images/twitter.png"></img></a>
+				</span>  
+			</div>
+		</div>
+		<div class="right">
+			<div>
+				<a class="twitter-timeline"  href="https://twitter.com/InstaSynch"  data-widget-id="364186530270543872" height="200" width="250">Tweets by @InstaSynch</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</div>
+		</div>
+		<div class="left" style="width: 100%;">
 			<h1>What is InstaSynch?</h1>
 			<p>
 			InstaSynch (Inspired by SynchTube) is a place that allows users to watch synchronized videos with each other and chat in real time, fully synchronized!
@@ -41,38 +74,7 @@
 			<p>
 				Check out the <a href="help.php" onclick='global.requestPartialPage("help"); return false;'>Help</a> page!<br />
 				Questions/Comments? Email me at: admin@instasynch.com
-			</p>
-			<div class="social">
-				<span class="media">
-					  <a target="_blank" href="http://youtube.com"><img width="32" border="0" height="32" alt="facebook" src="/images/youtube.png"></img></a>                          
-				</span>
-				<span class="media">
-					<a target="_blank" href="http://vimeo.com"><img width="32" border="0" height="32" alt="facebook" src="/images/vimeo.png"></img></a>                            
-				</span>
-				<span class="media">
-					<a target="_blank" href="http://twitch.tv"><img width="32" border="0" height="32" alt="facebook" src="/images/twitch.png"></img></a>                            
-				</span>                            
-				<span class="network">
-					<a target="_blank" href="https://www.facebook.com/instasynch"><img width="32" border="0" height="32" alt="facebook" src="/images/facebook.png"></img></a>
-				</span>            
-				<span class="network">
-					<a target="_blank" href="http://twitter.com/instasynch"><img width="32" border="0" height="32" alt="twitter" src="/images/twitter.png"></img></a>
-				</span>  
-			</div>
-		</div>
-		<div class="right">
-			<div>
-				<a class="twitter-timeline"  href="https://twitter.com/InstaSynch"  data-widget-id="364186530270543872" height="200" width="250">Tweets by @InstaSynch</a>
-				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-			</div>
-<!--			<div>
-				<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="text-align: center">
-				<input type="hidden" name="cmd" value="_s-xclick">
-				<input type="hidden" name="hosted_button_id" value="PPYMXEF8LXWGE">
-				<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-				<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-				</form>
-			</div>-->
+			</p>			
 		</div>
 	</div>
 	<div class="content-body">
