@@ -3,18 +3,6 @@
    DON'T DELETE YOUR ORIGINAL CSS FILE. Keep it so you can fix the glitches later.
    Some rules have been deleted, some selectors are prefixed with "UNUSED".
    Look for the UNUSED items and see if you can remove them. */
-
-html, body, div, span, UNUSEDapplet, UNUSEDobject, iframe, UNUSEDh1, UNUSEDh2, UNUSEDh3, UNUSEDh4, UNUSEDh5, UNUSEDh6, UNUSEDp, UNUSEDblockquote, UNUSEDpre, a, UNUSEDabbr, UNUSEDacronym, UNUSEDaddress, UNUSEDbig, UNUSEDcite, UNUSEDcode, UNUSEDdel, UNUSEDdfn, UNUSEDem, img, UNUSEDins, UNUSEDkbd, UNUSEDq, UNUSEDs, UNUSEDsamp, UNUSEDsmall, UNUSEDstrike, UNUSEDstrong, UNUSEDsub, UNUSEDsup, UNUSEDtt, UNUSEDvar, UNUSEDb, UNUSEDu, UNUSEDi, UNUSEDcenter, UNUSEDdl, UNUSEDdt, UNUSEDdd, UNUSEDol, ul, li, UNUSEDfieldset, UNUSEDform, UNUSEDlabel, UNUSEDlegend, UNUSEDtable, UNUSEDcaption, UNUSEDtbody, UNUSEDtfoot, UNUSEDthead, UNUSEDtr, UNUSEDth, UNUSEDtd, UNUSEDarticle, UNUSEDaside, UNUSEDcanvas, UNUSEDdetails, UNUSEDembed, UNUSEDfigure, UNUSEDfigcaption, UNUSEDfooter, UNUSEDheader, UNUSEDhgroup, UNUSEDmenu, UNUSEDnav, UNUSEDoutput, UNUSEDruby, UNUSEDsection, UNUSEDsummary, UNUSEDtime, UNUSEDmark, UNUSEDaudio, UNUSEDvideo {
-    border: 0 none;
-    font: inherit;
-    margin: 0;
-    padding: 0;
-    vertical-align: baseline;
-}
-UNUSED.bold, .b {
-    font-weight: bold !important;
-}
-
 .hashtext
 {
     color: #7882BF;
@@ -57,7 +45,7 @@ q, blockquote {
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
     display: block;
 }
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
     border: 0 none;
     font: inherit;
     margin: 0;
@@ -86,7 +74,7 @@ strong {
     font-weight: bold;
 }
 input {
-    font-size: 14px;
+    /*font-size: 14px;*/
 }
 button{
     background: -moz-linear-gradient(center top , #FFFFFF, #EFEFEF) repeat scroll 0 0 #F6F6F6;
@@ -113,12 +101,6 @@ body {
     background: none repeat scroll 0 0 #222222;
     color: #000000;
     font-family: Arial,Helvetica,sans-serif;
-}
-UNUSEDbody.chat-only #chat_list, UNUSEDbody.chat-only #cin {
-    width: 835px !important;
-}
-body.chat-only #chat_list {
-    height: 281px !important;
 }
 h2 {
     font-size: 22px;
@@ -331,11 +313,10 @@ a:hover {
 }
 #chat #chat_users {
     background: none repeat scroll 0 0 #FFFFFF;  
-    border-bottom: #C4C4C4 solid 2px;
     font-size: 12px;
     height: 318px;
     overflow: auto;
-    width: 121px;
+    width: 130px;
     float: right;
 }
 #chat #chat_users .user_list > div > * {
@@ -363,7 +344,7 @@ a:hover {
     height: 20px;
     text-align: left;
     width: 315px;
-    padding: 3px 5px 5px 5px;
+    padding: 1px 5px 5px 5px;
     position: absolute;
     left: 1px;
     top: 290px;
@@ -394,8 +375,8 @@ a:hover {
     float: left;
     font-family: arial;
     padding: 3px;
-    width: 319px;
-    height: 20px;
+    width: 320px;
+    height: 28px;
 }
 #chat #chat_controls {
     position: absolute;
@@ -445,12 +426,12 @@ a:hover {
     border-width: 2px;
     border-top: none;
     float: left;
-    height: 280px;
+    height: 290px;
     line-height: normal;
     overflow-x: hidden;
     overflow-y: auto;
     padding: 5px;
-    width: 315px;
+    width: 320px;
     word-wrap: break-word;    
 }
 #chat #chat_list .spoiler:hover {
@@ -483,263 +464,4 @@ a:hover {
 }
 #chat #chat_list {
     text-align: left;
-}
-/* PLAYER STYLE~~~ */
-#playlist {
-    border-right: 1px solid #666666;
-    display: inline-block;
-    overflow: hidden;
-    text-align: left;
-    width: 550px;
-}
-#playlist .pl-info .play.title
-{
-    width: 500px;
-}
-#playlist #playlistcontrols > * {
-    display: inline-block;
-    vertical-align: middle;
-}
-#playlist #playlistcontrols > * .basic-btn-menu-split, #playlist #playlistcontrols > * .basic-btn-menu-item {
-    display: block;
-}
-#playlist #playlistcontrols {
-    min-height: 22px;
-    padding: 5px;
-    width: 550px;
-}
-#playlist #playlistcontrols .basic-btn-btnbar .basic-btn-btnbar-right, #playlist #playlistcontrols .basic-btn-btnbar .basic-btn-btnbar-left {
-    border-radius: 0 0 0 0;
-}
-#playlist #playlistcontrols .hide {
-    display: none;
-}
-#playlist #playlistcontrols div {
-    display: inline-block;
-    vertical-align: middle;
-}
-#playlist .playlist {
-    background: none repeat scroll 0 0 #444444;
-    color: #FFFFFF;
-}
-#playlist .playlist .play {
-    cursor: pointer;
-    width:500px;
-}
-#playlist .playlist #playlist_total {
-    border-top: 1px dotted #666666;
-    color: #BBBBBB;
-    font-size: 11px;
-    height: 12px;
-    padding: 3px;
-
-}
-#playlist .playlist #playlist_total .total-videos {
-    float: left;
-    margin-left: 15px;
-}
-#playlist .playlist #playlist_total .total-duration {
-    float: right;
-    margin-right: 29px;
-}
-#playlist_items li .pl-info .removeBtn
-{
-    cursor: pointer;    
-    position: absolute;
-    top: 2px;
-    left: 510px;
-}
-#playlist_items li .pl-info .expand
-{
-    cursor: pointer;    
-    position: absolute;
-    top: 2px;
-    left: 493px;
-    height: 16px;
-    width: 16px;
-    background-image:url('/images/expand.png');    
-}
-#playlist_items
-{
-    overflow: scroll;
-    overflow-x: hidden;
-    margin-top: 2px;
-    width: 550px;
-    border-style: solid;
-    border-width: 2px;
-    border-color: grey;
-}
-#playlist_items ul li
-{
-background: none repeat scroll 0px 0px rgb(68, 68, 68);
-border-style: solid;
-position: relative;
-border-width: 2px;
-border-color: grey;
-}
-#playlist .playlist #playlist_items {
-    height: 269px;
-}
-
-#playlist .playlist .pllist li:hover {
-    background: none repeat scroll 0 0 #555555;
-}
-#playlist .playlist .pllist li .title {
-    float: left;
-    font-size: 12px;
-    height: 12px;
-    line-height: 12px;
-    overflow: hidden;
-    width: 265px;
-}
-#playlist .playlist .pllist li .duration {
-    color: #BBBBBB;
-    float: right;
-    text-align: right;
-    width: 35px;
-    position: relative;
-    left: -25px;
-}
-#playlist_items li .pl-info .removeBtn
-{
-    cursor: pointer;    
-    position: absolute;
-    top: 2px;
-    left: 510px;
-}
-#playlist_items li .pl-info .expand
-{
-    cursor: pointer;    
-    position: absolute;
-    top: 2px;
-    left: 493px;
-    height: 16px;
-    width: 16px;  
-}
-#playlist .playlist .pllist li .meta {
-    color: #CCCCCC;
-    margin-top: 2px;
-    width: 300px;
-}
-#playlist .playlist .pllist .pl-list-move {
-    background-image: url("/images/icons/grip.png");
-    background-position: 3px 0;
-    background-repeat: repeat-y;
-    cursor: move;
-    height: 17px;
-    margin: 2px;
-    width: 10px;
-}
-#playlist .playlist .pllist .via {
-    font-size: 11px;
-}
-#playlist .playlist .plthumb .pl-thumb-move {
-    background-image: url("/images/icons/grip.png");
-    background-position: 3px 0;
-    background-repeat: repeat-y;
-    cursor: move;
-    height: 50px;
-    margin: 2px;
-    width: 10px;
-}
-.pl-info
-{
-    padding: 5px;
-    width: 500px;
-}
-#playlist .playlist .pllist li .title {
-    float: left;
-    font-size: 12px;
-    height: 12px;
-    line-height: 12px;
-    overflow: hidden;
-    width: 465px;
-}
-#playlist .playlist .plthumb .pl-info > * {
-    display: inline-block;
-    vertical-align: middle;
-}
-#playlist .playlist .plthumb .pl-info {
-    margin: 5px 0;
-    width: 300px;
-}
-#playlist .playlist .plthumb .pl-info .title {
-    cursor: pointer;
-    font-size: 12px;
-    line-height: normal;
-}
-#playlist .playlist .plthumb .pl-info .pl-img {
-    float: left;
-    height: 49px;
-    margin-right: 10px;
-    overflow: hidden;
-    position: relative;
-    width: 70px;
-}
-#playlist .playlist .plthumb .pl-info .pl-img .score {
-    background: none repeat scroll 0 0 #000000;
-    border-radius: 3px 3px 3px 3px;
-    bottom: 2px;
-    font-size: 18px;
-    left: 2px;
-    opacity: 0.7;
-    padding: 2px;
-    position: absolute;
-}
-
-#playlist .playlist .plthumb .pl-info .pl-img img {
-    height: 65px;
-    left: -7px;
-    position: absolute;
-    top: -8px;
-}
-#playlist .playlist .plthumb .pl-info .pl-img .ico {
-    opacity: 0.7;
-    position: absolute;
-    right: 10px;
-    top: 10px;
-}
-#playlist .playlist .plthumb .pl-info .pl-img .ico img {
-    height: 16px;
-    width: 16px;
-}
-#playlist .playlist .plthumb .pl-info .pl-meta {
-    overflow: hidden;
-    width: 200px;
-}
-#playlist .playlist .plthumb .pl-info .pl-meta .meta {
-    color: #CCCCCC;
-    font-size: 11px;
-    margin-top: 2px;
-}
-#playlist .playlist ul li.active {
-    background: none repeat scroll 0 0 #D1E1FA !important;
-    color: #000000;
-}
-#playlist .playlist ul li.active .pl-info {
-    color: #000000;
-}
-#playlist .playlist ul li.active .duration {
-    color: #444444;
-}
-#playlist .playlist ul li.active .meta {
-    color: #444444 !important;
-}
-#playlist .playlist ul li {
-    background: none repeat scroll 0 0 #444444;
-    border-top: 1px solid #666666;
-    position: relative;
-}
-#playlist .playlist ul li .pl-list-destroy {
-    cursor: pointer;
-    height: 16px;
-    position: absolute;
-    right: 0;
-    top: 1px;
-    width: 16px;
-}
-#playlist .playlist ul li > * {
-    display: inline-block;
-    font-size: 11px;
-    vertical-align: middle;
 }

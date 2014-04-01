@@ -101,5 +101,10 @@ var $codes = {
     "feels": '<img src="http://i.imgur.com/3d9rVYL.gif" width="55" height="60">',
     "mewte": '<img src="http://i.imgur.com/aHk0nnU.gif" width="60" height="45">',
     "boogie": '<img width="60" height="60" src="http://i.imgur.com/6aqGVba.gif"></img>',
-    "disco": '<img width="46" height="60" src="http://i.imgur.com/DaUdTh0.gif"></img>'
+    "disco": '<img width="46" height="60" src="http://i.imgur.com/DaUdTh0.gif"></img>',
+	"lewd": '<img width="50" height="53" src="http://i.imgur.com/r6OJDU5.png"></img>',
+	"oo": '<img width="50" height="49" src="http://i.imgur.com/ifjt6ru.gif"></img>',
+	":o": '<img width="50" height="49" src="http://i.imgur.com/cw2K1qQ.gif"></img>',
+	"rin": '<img src="http://i.imgur.com/rgeL0X0.gif" width="56" height="60"></img>',
+	"motherofgod": '<img width="50" height="38" src="http://i.imgur.com/MYnVAEY.gif"></img>'
 };

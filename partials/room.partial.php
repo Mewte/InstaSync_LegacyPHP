@@ -130,42 +130,94 @@
 							<img height="16" src="/images/gear.png" width="16"/> 
 						</div>
 					</div>                           
-					<div class="content hide"></div>     
+					<div class="content hide"></div>
 				</div>                         
-			</div>             
-			<div id="playlist" style="overflow: visible;">
-				<div class="playlist">
-					<div id="playlistcontrols">
-						<div class="sliderContainer leader" style="display: none;">  
-							<div id="play" class="basic-button">PLAY</div><div id="pause" class="basic-button">PAUSE</div>
-							<div id="slider" class="slider">
-								<div class="info" style="font-size: 10px; float: right;">
-									<span id="sliderCurrentTime">0:00</span>
-									<span id="sliderDuration">/ 5:00</span>
+			</div>
+			<div id="playlist">
+				<div class="playlist-controls">
+					<div class="leader sliderContainer" style="display: none;">
+						<div id="play" class="play-button icon"></div><div id="pause" class="pause-button icon"></div>
+						<div id="slider" class="slider" style="padding: 2px 0px 2px 0px; height: 15px; margin: 6px 0px 0px 12px;">
+							<div class="info" style="font-size: 10px; float: right;">
+								<span id="sliderCurrentTime">0:00</span>
+								<span id="sliderDuration">/ 5:00</span>
+							</div>
+						</div>
+					</div>
+					<div class="controls noselect">
+						<div class="skips" title="Vote to skip video">
+							<div id="skip" class="skip-image"></div>
+							<div class="counter" title="Total votes / Votes needed">
+								<div style="margin-bottom: 3px; font-size: 12px;">
+									Skips
+								</div>
+								<div id="skip-count">
+									0/0
 								</div>
 							</div>
 						</div>
-						<div class="basic-btn-btnbar" id="playlistactions">
-							<div id="skip" class="basic-button">Skip Video</div>
-							<div id="skipCounter">0/0</div>
-							<div id="addVid" style="visibility: hidden; position: relative; left: 10px;">
-								<input name="URLinput" id="URLinput" type="text" disabled/>
-								<div style="margin-left: 5px; margin-right: 10px; position: relative;" id="addUrl" class="basic-button" >Add Vid</div>
-							</div>   
-							<div id="resynch" class="basic-button">Resynch</div>
-							<div id="reload" class="basic-button">Reload</div>                                    
-							<div id="toggleplaylistlock"><img src="/images/lock.png"/></div>                                    
+						<div class="add-vid" id="addVid">
+							<input id="URLinput" title="Add YouTube/Vimeo/Twitch URL" type="text" placeholder="Video URL"/><div id="addUrl" title="Add Video" class="plus"></div>
 						</div>
-						<div id="playlist_items">
-								 <ul id="ulPlay" class="items ui-sortable pllist">              
-
-								 </ul>
+						<div id="toggleplaylistlock" class="playlistlock" title="Playlist lock"></div>
+						<div class="settings">
+							<div class="open"></div>
+							<ul id="playlist-settings-menu" class="menu noselect">
+								<li id="resynch" title="Resynchs the video to the correct position">Resynch</li>
+								<li id="reload" title="Reloads the video if video failed to load or an error occured.">Reload</li>
+								<li title="Enable or disable video autosynch"><label for="autosynch">Autosynch</label><input id="autosynch" type="checkbox" value="Autosynch" checked/></li>
+							</ul>
 						</div>
-						<div id="playlist_total">
-							<span class="total-videos">0 videos</span>
-							<span style="position: relative; left: 10px;" class="total-duration"> 00:00</span>
+						<!-- search
+						<div class="search">
+							<div class="open"></div>
+							<div class="search-box">
+								
+							</div>
 						</div>
-					</div>   
+						-->
+					</div>
+				</div>
+				<div class="playlist">
+					<ul id="videos" class="videos">
+						<div id="video-list"></div>
+					</ul>
+					<script>
+						$(document).ready(function()
+						{
+							$("#videos").jScrollPane({mouseWheelSpeed: 31, contentWidth: '0px'});
+						});
+					</script>
+					<div class="overall">
+						<div class="total-videos"><span id="total-videos">0</span> videos</div>
+						<div class="total-duration"><span id="total-duration">00:00:00</span></div>
+					</div>
+					<div class="detailed-info" style="display: none;">
+						<div class="loading"></div>
+						<div class="provider youtube">
+							<div id="youtube-title" class="title">Test Movie Title</div>
+							<div class="stats">
+								<div id="youtube-uploader"></div>
+								<div class="views" title="Video Views">
+									<div id="youtube-views"></div><div class="view-image image-offset"></div>
+								</div>
+								<div class="rating" title="Video likes & dislikes">
+									<div id="youtube-likes"></div><div class="thumbsup-image image-offset"></div>
+									<div id="youtube-dislikes"></div><div class="thumbsdown-image image-offset"></div>									
+								</div>
+							</div>
+							<p id="youtube-description" class="description"></p>
+						</div>
+						<div class="close"></div>
+						<script>
+							$(".detailed-info .close").click(function()
+							{
+								$(".detailed-info").fadeOut();
+								$(".detailed-info .provider").hide();
+								$(".detailed-info .loading").show();
+							});
+						</script>
+					</div>
 				</div>
 			</div>
 			<div class="poll-container">

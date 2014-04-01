@@ -125,7 +125,7 @@ function player(elementId, sendcmd)
             {
                 thisPlayer.resynch();
             }
-        }
+        };
         this.play = function(vidinfo, time, playing){
             //userTriggered = false; with this commented out, every user will request a resynch right after a video plays
             jQuery(media).tubeplayer('play', {id: vidinfo.id,time: time});
@@ -134,7 +134,7 @@ function player(elementId, sendcmd)
         {
             userTriggered = false;
             jQuery(media).tubeplayer('seek', time);
-        }
+        };
         this.resume = function(){
             userTriggered = false;
             jQuery(media).tubeplayer('play');
@@ -145,8 +145,9 @@ function player(elementId, sendcmd)
         };
         this.time = function(callback)
         {
-            callback(player.getCurrentTime());
-        }
+			if (player!=null) //player is null error was happening when switching from vimeo to youtube
+				callback(player.getCurrentTime());
+        };
     }
     function vimeoVideo(vidinfo, time, playing) { 
         var autoplay = playing ? 1 : 0;

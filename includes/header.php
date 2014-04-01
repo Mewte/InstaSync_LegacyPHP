@@ -20,6 +20,8 @@
 			<script type='text/javascript' src='/js/tubeplayer.js'></script>
 			<script src="/js/jquery-ui.js"></script>
 			<script type="text/javascript" src="/js/perfect-scrollbar-0.4.8.with-mousewheel.min.js"></script>
+			<script type="text/javascript" src="/js/jquery.jscrollpane.min.js"></script>
+			<script type="text/javascript" src="/js/jquery.mousewheel.js"></script>
 		<!-- Site Wide -->
 			<script type="text/javascript" src="/js/request.js"></script>
 		<!-- Room Specific -->

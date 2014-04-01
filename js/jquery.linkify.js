@@ -2,7 +2,8 @@
 //Not my code. Property of uudashr on github.
 //changes made: linkify opens links in new tab.
 function linkify(string, buildHashtagUrl, includeW3, target) {
-    target = "_blank"
+  target = "_blank";
+  includeW3 = true;
   string = string.replace(/((http|https|ftp)\:\/\/|\bw{3}\.)[a-z0-9\-\.]+\.[a-z]{2,3}(:[a-z0-9]*)?\/?([a-z0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~])*/gi, function(captured) {
     var uri;
     if (captured.toLowerCase().indexOf("www.") == 0) {
@@ -13,7 +14,7 @@ function linkify(string, buildHashtagUrl, includeW3, target) {
     } else {
       uri = captured;
     }
-    return "<a href=\"" + uri+ "\" target=\"" + target + "\">" + captured + "</a>";;
+    return "<a href=\"" + uri+ "\" target=\"" + target + "\" title=\"" + uri + "\">" + captured + "</a>";
   });
   
   if (buildHashtagUrl) {

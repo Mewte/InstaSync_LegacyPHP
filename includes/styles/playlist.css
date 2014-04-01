@@ -1,0 +1,382 @@
+#playlist{
+	width: 550px;
+	float: left;
+	overflow: hidden;
+	background-color: #444;
+}
+#playlist .playlist-controls{
+	border: 2px solid rgba(213, 213, 213, 0.8);
+	border-bottom: none;
+	margin: 5px 5px 0px 5px;
+	border-radius: 4px 4px 0px 0px;
+}
+#playlist .playlist-controls .sliderContainer{
+	height: 40px;
+	padding: 5px;
+}
+#playlist .playlist-controls .sliderContainer > div{
+	float: left;
+}
+#playlist .playlist-controls .sliderContainer .icon{
+	opacity: 0.8;
+}
+#playlist .playlist-controls .sliderContainer .icon:hover{
+	opacity: 1;
+}
+#playlist .playlist-controls .sliderContainer .icon:active{
+	opacity: 0.4;
+}
+#playlist .playlist-controls .sliderContainer .play-button{
+	background-image: url('/images/play.png');
+	background-size: 28px 28px;
+	background-repeat:no-repeat;
+	height: 28px;
+	width: 28px;
+	cursor: pointer;
+}
+#playlist .playlist-controls .sliderContainer .pause-button{
+	background-image: url('/images/pause.png');
+	background-size: 28px 28px;
+	background-repeat:no-repeat;
+	height: 28px;
+	width: 28px;
+	cursor: pointer;	
+}
+#playlist .playlist-controls .sliderContainer .ui-slider-handle{
+	height: 20px;
+}
+#playlist .playlist-controls .controls{
+	height: 40px;
+	padding: 5px;
+	clear: both;
+}
+#playlist .playlist-controls .controls > div{ /* Each DIV is a seperate control box */
+	float: left;
+	display: inline-block;
+	height: 28px;
+	margin: 0px 5px 0px 5px;
+}
+#playlist .playlist-controls .controls .skips{
+	cursor: default;
+}
+#playlist .playlist-controls .controls .skips > div{
+	float: left;
+}
+#playlist .playlist-controls .controls .skips .skip-image{
+	background-image: url('/images/skip.png');
+	background-size: 28px 28px;
+	background-repeat:no-repeat;
+	height: 28px;
+	width: 28px;
+	cursor: pointer;
+}
+#playlist .playlist-controls .controls .skips .skip-image:hover{
+	background-image: url('/images/skiphover.gif');
+}
+#playlist .playlist-controls .controls .skips .counter{
+	max-width: 60px;
+	overflow: hidden;
+	color: white;
+	text-align: center;
+	margin: 0px 5px 0px 5px;
+}
+#playlist .playlist-controls .controls .add-vid{
+	padding: 5px;
+}
+#playlist .playlist-controls .controls .add-vid input{
+	width: 155px;
+	height: 18px;
+	font-size: 14px;
+}
+#playlist .playlist-controls .controls .add-vid .plus{
+	cursor: pointer;
+	background-image: url('/images/plus.png');
+	background-size: 18px 18px;
+	background-repeat:no-repeat;
+	height: 18px;
+	width: 18px;
+	float:right;
+	margin-left: 2px;
+	opacity: 0.8;
+}
+#playlist .playlist-controls .controls .add-vid .plus:hover{
+	opacity: 1;
+}
+#playlist .playlist-controls .controls .add-vid .plus:active{
+	opacity: 0.4;
+
+}
+#playlist .controls .settings{
+	float: right !important; /* Only way to override > div*/
+}
+#playlist .controls .settings .open{
+	cursor: pointer;
+	background-image: url('/images/gear.png');
+	background-size: 18px 18px;
+	background-repeat:no-repeat;
+	height: 18px;
+	width: 18px;
+	margin-top: 6px;
+}
+#playlist .controls .settings .open:hover{
+	opacity: 0.8;
+}
+#playlist .controls .settings .menu{
+	display: none;
+	background-color: rgba(240,240,240, 1);
+	box-shadow: 1px 1px rgba(34,34,34,0.9);
+	padding: 2px;
+	border-radius: 4px;
+	margin-top: -4px;
+	position: absolute;
+	z-index: 1;
+}
+#playlist .controls .settings .menu li{
+	padding: 4px;
+}
+#playlist .controls .settings .menu li:hover{
+	cursor: pointer;
+	background-color: rgb(200,200,200);
+}
+#playlist .controls .settings .menu li:active{
+	cursor: pointer;
+	background-color: rgb(220,220,220);
+}
+#playlist .controls .settings:hover #playlist-settings-menu{
+	display: block;
+}
+#playlist .playlist-controls .controls .playlistlock{
+	cursor: pointer;
+	background-image: url('/images/lock.png');
+	background-size: 18px 18px;
+	background-repeat:no-repeat;
+	height: 18px;
+	width: 18px;
+	margin: 6px 22px 0px 0px; /* 27 right margin to line up nicely with video buttons */
+	float: right;
+}
+#playlist .playlist{
+	position: relative;
+}
+#playlist .playlist .videos{
+	height: 225px;
+	border: rgba(213,213,213,0.8) 2px solid;
+	margin: 0px 5px;
+	border-radius: 0px 0px 4px 4px;
+	color: rgb(232,232,232);
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+#playlist .playlist .videos .video.active{
+	background-color: rgb(209, 225, 250);
+	color: rgb(34,34,34);
+}
+#playlist .playlist .videos .video{
+	border: #808080 1px solid;
+	border-left: none;
+	border-right: none;
+	height: 30px;
+	margin-right: -20px /* forces video to ignore jspane scrollbar */
+}
+/* Only applies to all .videos but not .videos.active */
+#playlist .playlist .videos .video:not(.active):hover{
+	background: none repeat scroll 0 0 #555555;
+}
+#playlist .playlist .videos .video .video-info{
+	display: inline-block;
+	width: 455px;
+	height: 100%;
+	padding: 8px 0px 0px 6px;
+	float: left;
+	cursor: pointer;
+	font-size: 11px;
+}
+#playlist .playlist .videos .video .video-info .title{
+	max-width: 315px;
+	height: 100%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	float: left;
+	font-size: 12px;
+}
+#playlist .playlist .videos .video .video-info .via{
+	height: 16px;
+	float: left;
+	margin-left: 2px;
+	padding-top: 2px;
+}
+#playlist .playlist .videos .video .video-info .duration{
+	float: right;
+	color: #BBB;
+}
+#playlist .playlist .videos .video.active .video-info .duration{
+	float: right;
+	color: rgb(34,34,34);
+}
+#playlist .playlist .videos .video .buttons{
+	width: 75px;
+	height: 100%;
+	display: inline-block;
+	float: left;
+	padding: 3px 0px 0px 0px;
+	margin-right: 10px;
+}
+#playlist .playlist .videos .video .buttons > div{
+	display: inline-block;
+	margin-right: 2px;
+}
+#playlist .playlist .videos .video .buttons .info{
+	cursor: pointer;
+	background-image: url('/images/help.png');
+	background-size: 18px 18px;
+	background-repeat:no-repeat;
+	height: 18px;
+	width: 18px;
+	opacity: 0.7;
+	margin-left: 12px;
+}
+#playlist .playlist .videos .video .buttons .info:hover{
+	opacity: 1;
+}
+#playlist .playlist .videos .video .buttons .link{
+	cursor: pointer;
+	background-image: url('/images/link.png');
+	background-size: 18px 18px;
+	background-repeat:no-repeat;
+	height: 18px;
+	width: 18px;
+	opacity: 0.7;
+}
+#playlist .playlist .videos .video .buttons .link:hover{
+	opacity: 1;
+}
+#playlist .playlist .videos .video .buttons .remove{
+	cursor: pointer;
+	background-image: url('/images/close.png');
+	background-size: 18px 18px;
+	background-repeat:no-repeat;
+	height: 18px;
+	width: 18px;
+	opacity: 0.7;
+}
+#playlist .playlist .videos .video .buttons .remove:hover{
+	opacity: 1;
+}
+#playlist .playlist .overall{
+	color: #BBB;
+	overflow: auto;
+}
+#playlist .playlist .overall > div{
+	display: inline;
+	float: right;
+	margin: 8px;
+	font-size: 12px;	
+}
+#playlist .playlist .overall .total-videos{
+	margin-right: 30px;
+	color: #BBB;
+}
+/*
+* Detailed information panel from within the Playlist
+* This is located inside the #playlist but could change a later date
+*/
+#playlist .detailed-info{
+	position: absolute; 
+	margin: 15px 0px 0px 40px;
+	box-shadow: 4px 4px rgba(34, 34, 34, 0.3);
+	padding: 5px;
+	border-radius: 3px;
+	background-color: whitesmoke; 
+	width: 420px; 
+	height: 245px;
+	top: -20px;
+	left: 0px;
+	font-family: "arial,sans-serif";
+}
+#playlist .detailed-info .loading{
+	background-image: url('/images/loading.gif');
+	background-size: 26px 26px;
+	background-repeat:no-repeat;
+	height: 26px;
+	width: 26px;
+	position: absolute;
+	margin: 10% 0px 0px 45%;
+}
+#playlist .detailed-info .close{
+	background-image: url('/images/close.png');
+	background-size: 18px 18px;
+	background-repeat:no-repeat;
+	height: 18px;
+	width: 18px;	
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	cursor: pointer;
+}
+#playlist .detailed-info span, #playlist .detailed-info div{
+	cursor: default;
+}
+#playlist .detailed-info .provider{
+	display: none;
+}
+#playlist .detailed-info .provider.youtube .title{
+	font-size: 16px;
+	width: 375px;
+	height: 100%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inline-block;
+	padding: 2px 2px 2px 0px;
+}
+#playlist .detailed-info .provider.youtube .stats{
+	width: 180px;
+	font-size: 14px;
+}
+#playlist .detailed-info .provider.youtube .stats .rating > div, #playlist .detailed-info .provider.youtube .stats .views > div{
+	display: inline-block;
+}
+#playlist .detailed-info .provider.youtube .description{
+	margin-top: 5px;
+	height: 150px;
+	overflow: auto;
+	font-family: arial,sans-serif;
+	padding: 4px;
+	background-color: rgba(34,34,34,0.1);
+	border-radius: 4px;
+}
+#playlist .detailed-info .provider.youtube .description a{	
+	max-width: 350px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inline-block;
+}
+#playlist .detailed-info .provider.youtube .stats .view-image{
+	background-image: url('/images/views.png');
+	background-size: 18px 18px;
+	background-repeat:no-repeat;
+	height: 18px;
+	width: 18px;
+	position: relative;
+}
+#playlist .detailed-info .provider.youtube .stats .thumbsup-image{
+	background-image: url('/images/up.png');
+	background-size: 18px 18px;
+	background-repeat:no-repeat;
+	height: 18px;
+	width: 18px;
+}
+#playlist .detailed-info .provider.youtube .stats .thumbsdown-image{
+	background-image: url('/images/down.png');
+	background-size: 18px 18px;
+	background-repeat:no-repeat;
+	height: 18px;
+	width: 18px;
+}
+#playlist .detailed-info .provider.youtube .stats .image-offset{
+	position: relative;
+	top: 4px;
+	margin-left: 4px;
+}

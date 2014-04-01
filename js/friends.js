@@ -375,7 +375,8 @@ function friendsListUI(domElement, friendsListSocket)
 	}
 }
 function friendsList(){
-    var server = window.location.hostname + ":37999";
+    //var server = window.location.hostname + ":37999";
+	var server = "http://chat.instasynch.com:37999"
     var socket = null;
     this.user = null; //this users info (i.e. username)
     var thisSocket = this; //for callbacks

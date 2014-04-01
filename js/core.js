@@ -23,8 +23,7 @@ $(function (){
 window.onpopstate = function(event) {
 	global.requestPartialPage(event.state.name, event.state.room, true);
 };
-$(document).ready(function()
-{
+$(document).ready(function(){
 	//mark this current page load in the history state (so we can come back to it if the user presses back)
 	//use replaceState so that the state is saved into the history.state object, but doesn't push the entry into history
 	if (history.state == undefined)
@@ -197,11 +196,11 @@ function loadRoom() {
         $("#lead").click(function()
         {
            room.sendcmd("lead", null);
-        })
+        });
         $("#unlead").click(function()
         {
            room.sendcmd("unlead", null);
-        })
+        });
         $('#mute').click(function()
         {
             mute($(this).data('ip'));
@@ -247,7 +246,12 @@ function loadRoom() {
 			{
 				join();
 			}
-		});		
+		});	
+		$("#autosynch").on("change", function()
+		{
+			toggleAutosynch();
+		});
+	
         //-----------------------
         room.connect();
 		$("#cleanUpOnRemoval").on("remove", function() //disconnect when swapping page
@@ -260,7 +264,13 @@ function loadRoom() {
     
     var filterGreyname = false; 
     function webSocket() {
-        var server = window.location.hostname;
+		var server = "";
+		if (document.domain == "dev.instasynch.com"){
+			server = "dev.instasynch.com";
+		}
+		else{
+			server = "chat.instasynch.com";
+		}
 		var port = 38000;//Math.floor(Math.random() * 4 + 38000);
         var lastMsg = null;
         var socket = null;
@@ -439,20 +449,20 @@ function loadRoom() {
                 {
                     isLeader = true;
                     $(".leader").show();
-                    $( "#ulPlay" ).sortable(
+                    $( "#video-list" ).sortable(
                     {
                         update : function (event, ui){
                                    room.sendcmd('move', {info: ui.item.data("info"), position: ui.item.index()});
-                                    $( "#ulPlay" ).sortable( "cancel" );
+                                    $( "#video-list" ).sortable( "cancel" );
                                  },
                          start: function(event,ui)
                          {
                              //Prevents click event from triggering when sorting videos
-                             $("#ulPlay").addClass('noclick');
+                             $("#video-list").addClass('noclick');
                          }
                         
                     });
-                    $("#ulPlay").sortable( "enable" );
+                    $("#video-list").sortable( "enable" );
                     sliderTimer = setInterval(function()
                     {
                        video.time(function(time)
@@ -480,7 +490,7 @@ function loadRoom() {
                             sliderTimer = false;
                         }
                         $(".leader").css("display", "none");
-                        $("#ulPlay").sortable("disable");
+                        $("#video-list").sortable("disable");
                         $("#unlead").hide();
                         if (isMod)
                         {
@@ -527,10 +537,10 @@ function loadRoom() {
             addMessage(user.username, data.message, userstyle, '');
         });
         socket.on('add-vid', function (data) {
-            addVideo(data.info);
+            addVideo(data.info, true);
         });
         socket.on('remove-vid', function (data) {
-            removeVideo(data.info);
+            removeVideo(data.info, true);
         });
         socket.on('move-vid', function (data) {
             moveVideo(data.info, data.position);
@@ -923,96 +933,151 @@ function sortUserlist() {
 		return 0;
 	});
 }
-function addVideo(vidinfo) {
+function addVideo(vidinfo, updateScrollbar) {
 	playlist.push({info: vidinfo.info, title: vidinfo.title, addedby: vidinfo.addedby, duration: vidinfo.duration});
-	if (vidinfo.title.length > 55) 
-	{
-		vidinfo.title = vidinfo.title.substring(0, 55);
-		vidinfo.title += '...';
-	}
-	var li = $('<li/>', {"data": {info: vidinfo.info}});
-	var plinfo = $('<div/>', {"class": 'pl-info'});
-		var plinfo_title = $('<div/>', 
-		{
-			"class": 'play title',
-			"title": vidinfo.title,
-			"html": vidinfo.title,
-			"data": {
-				info: vidinfo.info
-			},
-			"click": function () 
+	var li = $('<li/>', {"class":"video","data":{info: vidinfo.info}});
+		var vidInfo = $('<div/>', {"class":"video-info"})
+			.append($('<div/>',{"class":"title","text":vidinfo.title, "title":vidinfo.title}))
+			.append($('<div/>',{"class":"via", "text":"via " + vidinfo.addedby}))
+			.append($('<div/>',{"class":"duration","text":secondsToTime(vidinfo.duration)}));
+		var buttons = $('<div/>',{"class":"buttons"})
+			.append($('<div/>',{
+					"class":"info",
+					"title":"More information about this video.",
+					"click":function()
+					{
+						$(".detailed-info").fadeIn(); //to show loading spinner
+						getVideoInfo(vidinfo.info, function(err, data){
+							if (err){
+								//output error
+							}
+							else{
+								showVideoInfo(vidinfo.info, data);
+							}
+						});
+					}
+				}))
+			.append($('<a/>',{
+					"class":"link",
+					"title":"Open this video in a new tab.",
+					"href":url(vidinfo),
+					"target":"_blank",
+					"style":"display: inline-block"
+				}));
+			if (isMod) //if mod, 
 			{
-				if ($("#ulPlay").hasClass("noclick"))
+				buttons.append($('<div/>',
 				{
-					$("#ulPlay").removeClass('noclick');
-				}
-				else
-				{
-					if (isLeader)
+					"class":"remove",
+					"title":"Remove video",
+					"click":function()
 					{
-						global.sendcmd('play', {info: $(this).data("info")});
+						global.sendcmd('remove', {info: vidinfo.info});
 					}
-					else
-					{
-						$('#cin').val($('#cin').val() + getVideoIndex($(this).parent().parent().data('info')) + ' ');
-						$('#cin').focus();
-					}
-				}
+				}));
 			}
-		}).append($('<span/>', {
-			"class": 'via',
-			"html": ' via ' + vidinfo.addedby
-		}));
-		var plinfo_duration = $('<div/>', {
-			"class": 'duration',
-			"html": secondsToTime(vidinfo.duration)
-		});
-		var vidlink = '';
-		if (vidinfo.info.provider === 'youtube') {
-			vidlink = 'http://www.youtube.com/watch?v=' + vidinfo.info.id;
-		} 
-		else if (vidinfo.info.provider === 'vimeo') {
-			vidlink = 'http://vimeo.com/' + vidinfo.info.id;
+	$(vidInfo).click(function()
+	{
+		if ($("#video-list").hasClass("noclick")) //Don't make the video play if sorting video
+		{
+			$("#video-list").removeClass('noclick');
 		}
-		else if (vidinfo.info.provider === 'twitch') {
-			if (vidinfo.info.mediaType === "stream")
-				vidlink = 'http://twitch.tv/' + vidinfo.info.channel;
-		}        
-		var expand = $('<div/>', {
-			"class": 'expand'
-		}).append($('<a/>', {
-			"href": vidlink,
-			"target": '_blank'
-		}).append($('<img/>', {
-			"src": '/images/expand.png'
-		})));
-		var removeBtn = $('<div/>', {
-			"class": 'removeBtn x',
-			"html": '',
-			"click": function () {
-				global.sendcmd('remove', {info: $(this).parent().parent().data('info')});
+		else
+		{
+			if (isLeader)
+			{
+				global.sendcmd('play', {info: vidinfo.info});
 			}
-		});
-	$('#ulPlay').append(li.append(plinfo.append(plinfo_title).append(plinfo_duration).append(expand).append(removeBtn)));
+			else
+			{
+				$('#cin').val($('#cin').val() + getVideoIndex(vidinfo.info) + ' ');
+				$('#cin').focus();
+			}
+		}
+	});
+	li.append(vidInfo).append(buttons);	
+	$('#video-list').append(li);
 	totalTime += vidinfo.duration;
-	$('.total-videos').html(playlist.length + ' videos');
-	$('.total-duration').html(secondsToTime(totalTime));
+	$('#total-videos').html(playlist.length);
+	$('#total-duration').html(secondsToTime(totalTime));
+	if (updateScrollbar)
+		$("#videos").data("jsp").reinitialise(); //uses alot of resources
 }
-function removeVideo(vidinfo) {
+function showVideoInfo(video, data){
+	if (video.provider == "youtube"){
+		var title = $("#youtube-title");
+		title.text(data.entry.title.$t);
+		title.attr("title", title.text());
+		var youtubeName = data.entry.author[0].name.$t;
+		var youtubeUser = data.entry.media$group.media$credit[0].$t;
+		$("#youtube-uploader").html($("<a/>",{
+			"text":youtubeName,
+			"title":"https://www.youtube.com/user/" + youtubeUser,
+			"href":"https://www.youtube.com/user/" + youtubeUser,
+			"target":"_blank"
+		}));
+		$("#youtube-views").text(commaSeparateNumber(data.entry.yt$statistics.viewCount));
+		$("#youtube-likes").text(commaSeparateNumber(data.entry.yt$rating.numLikes));
+		$("#youtube-dislikes").text(commaSeparateNumber(data.entry.yt$rating.numDislikes));
+		var description = $("#youtube-description");
+		var descriptionText = data.entry.media$group.media$description.$t;
+		if (descriptionText == ""){
+			description.html("<em>No description available.</em>");
+		}
+		else{			
+			description.text(descriptionText);
+			description.html(linkify(description.html().replace(/\n/g, '<br />'))); //transfer line breaks from description			
+		}
+		$(".detailed-info .loading").hide();
+		$(".detailed-info .provider.youtube").show();
+	}
+	else if (video.provider == "vimeo"){
+		data = data[0];//vimeo single video data is a one element array
+		var title = $("#youtube-title");
+		title.text(data.title);
+		title.attr("title", title.text());
+		$("#youtube-uploader").html($("<a/>",{
+			"text":data.user_name,
+			"title":data.user_url,
+			"href":data.user_url,
+			"target":"_blank"
+		}));
+		$("#youtube-views").text(commaSeparateNumber(data.stats_number_of_plays));
+		$("#youtube-likes").text(commaSeparateNumber(data.stats_number_of_likes));
+		$("#youtube-dislikes").text("n/a");
+		var description = $("#youtube-description");
+		var descriptionText = data.description;
+		if (descriptionText == ""){
+			description.html("<em>No description available.</em>");
+		}
+		else{
+			description.text(descriptionText.replace(/<br \/>/g, ''));
+			description.html(description.html().replace(/\n/g, '<br />')); //transfer line breaks from description			
+		}
+		$(".detailed-info .loading").hide();
+		$(".detailed-info .provider.youtube").show();		
+	}
+} 
+function removeVideo(vidinfo, updateScrollbar) {
 	var indexOfVid = getVideoIndex(vidinfo);
 	if (indexOfVid > -1 && indexOfVid < playlist.length) {
 		totalTime -= playlist[indexOfVid].duration;
 		playlist.splice(indexOfVid, 1);
-		$($('#ulPlay').children('li')[indexOfVid]).remove();
+		$($('#video-list').children('li')[indexOfVid]).remove();
 	}
-	$('.total-videos').html(playlist.length + ' videos');
-	$('.total-duration').html(secondsToTime(totalTime));
+	$('#total-videos').html(playlist.length);
+	$('#total-duration').html(secondsToTime(totalTime));
+	if (updateScrollbar)
+		$("#videos").data("jsp").reinitialise(); //this uses alot of resources
 }
+/*
+ * TODO: Improve this as it emptys the list and rebuilds it everytime
+ */
 function moveVideo(vidinfo, position) {
 	var indexOfVid = getVideoIndex(vidinfo);
 	if (indexOfVid > -1) {
 		playlist.move(indexOfVid, position);
-		var playlistElements = $('#ulPlay li').clone(true);
+		var playlistElements = $('#video-list li').clone(true);
 		playlistElements.move = function (old_index, new_index) {
 			if (new_index >= this.length) {
 				var k = new_index - this.length;
@@ -1023,8 +1088,8 @@ function moveVideo(vidinfo, position) {
 			this.splice(new_index, 0, this.splice(old_index, 1)[0]);
 		};
 		playlistElements.move(indexOfVid, position);
-		$('#ulPlay').empty();
-		$('#ulPlay').html(playlistElements);
+		$('#video-list').empty();
+		$('#video-list').html(playlistElements);
 	}
 }
 function getVideoIndex(vidinfo) {
@@ -1035,16 +1100,36 @@ function getVideoIndex(vidinfo) {
 	}
 	return -1;
 }
+function url(vidinfo)
+{
+		if (vidinfo.info.provider === 'youtube') {
+			return 'http://www.youtube.com/watch?v=' + vidinfo.info.id;
+		} 
+		else if (vidinfo.info.provider === 'vimeo') {
+			return'http://vimeo.com/' + vidinfo.info.id;
+		}
+		else if (vidinfo.info.provider === 'twitch') {
+			if (vidinfo.info.mediaType === "stream")
+				return 'http://twitch.tv/' + vidinfo.info.channel;
+		}
+		else{
+			return "http://instasynch.com";
+		}
+}
 function playlistlock(value) {
 	if (value == true) {
-		$('#toggleplaylistlock img')['attr']('src', '/images/lock.png');
+		$('#toggleplaylistlock').css('background-image', 'url("/images/lock.png")');
 	} else {
-		$('#toggleplaylistlock img')['attr']('src', '/images/unlock.png');
+		$('#toggleplaylistlock').css('background-image', 'url("/images/unlock.png")');
 	}
 }
 function toggleAutosynch()
 {
 	video.autosynch = !video.autosynch;
+	if (video.autosynch)
+	{
+		global.sendcmd('resynch', null);
+	}
 }
 function playVideo(vidinfo, time, playing) {
 	var addedby = '';
@@ -1055,7 +1140,7 @@ function playVideo(vidinfo, time, playing) {
 		title = playlist[indexOfVid].title;
 		addedby = playlist[indexOfVid].addedby;
 		$('.active').removeClass('active');
-		$($('#ulPlay').children('li')[indexOfVid]).addClass('active');
+		$($('#video-list').children('li')[indexOfVid]).addClass('active');
 		$('#vidTitle').html(title + '<div class=\'via\'> via ' + addedby + '</div>');
 		video.play(vidinfo, time, playing);   
 		$( "#slider" ).slider("option", "max", playlist[indexOfVid].duration);
@@ -1075,12 +1160,17 @@ function purge(username) {
 	for (var i = playlist.length - 1; i >= 0; i--) 
 	{
 		if (playlist[i].addedby.toLowerCase() == username.toLowerCase()) {
-			removeVideo(playlist[i].info);
+			removeVideo(playlist[i].info, false);
 		}
 	}
+	$("#videos").data("jsp").reinitialise();
+}
+//Clean all videos above this video
+function clean(video){
+	
 }
 function skips(skips, skipsNeeded) {
-	$('#skipCounter').html(skips + '/' + skipsNeeded);
+	$('#skip-count').html(skips + '/' + skipsNeeded);
 }
 function loadPlaylist(data) {
 	playlist.length = 0;
@@ -1088,9 +1178,10 @@ function loadPlaylist(data) {
 	$('#ulPlay').html('');
 	if (data != undefined && data.length != 0) {
 		for (var i = 0; i < data.length; i++) {
-			addVideo(data[i]);
+			addVideo(data[i], false);
 		}
 	}
+	$("#videos").data("jsp").reinitialise();	
 }
 function loadUserlist(userlist) {
 	users = new Array();
@@ -1123,6 +1214,16 @@ function secondsToTime(num)
 	time += minutes+':'+seconds;
 	return time;
 }
+/*
+ * Timothy Perez
+ * http://stackoverflow.com/questions/3883342/add-commas-to-a-number-in-jquery#answer-12947816
+ */
+function commaSeparateNumber(val){
+    while (/(\d+)(\d{3})/.test(val.toString())){
+      val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+    }
+    return val;
+  }
 function createPoll(poll) //poll.title, poll.options = array of {option, votes}
 {    
 	$(".st-poll").css('display', '');    

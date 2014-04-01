@@ -10,7 +10,7 @@ function register()
     var email = $("#email").val();
     if(username.match(/^([A-Za-z0-9]|([-_](?![-_]))){1,16}$/) == null)
     {
-        $(".formmsg").html("5-16 char and A-Z, 1-9, - _");
+        $(".formmsg").html("5-16 char and A-Z, 0-9, - _");
         return;                    
     }
     if (password != confirmPass)
@@ -86,4 +86,23 @@ function setUserInfo(avatar, bio, social, callback)
         var result = JSON.parse(data); 
         callback(result.error);
     });
+}
+function getVideoInfo(video, callback){
+	if (video.provider == "youtube"){
+		$.get("http://gdata.youtube.com/feeds/api/videos/" + video.id + "?v=2&alt=json").done(function(data){
+			callback(false, data);
+		}).fail(function(){
+			callback(true);
+		});
+	}
+	else if (video.provider == "vimeo"){
+		$.get("http://vimeo.com/api/v2/video/" + video.id + ".json").done(function(data){
+			callback(false, data);
+		}).fail(function(){
+			callback(true);
+		});		
+	}
+}
+function getComments(video, startIndex, endIndex){
+	
 }
