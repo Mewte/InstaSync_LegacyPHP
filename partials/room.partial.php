@@ -185,7 +185,7 @@
 					<script>
 						$(document).ready(function()
 						{
-							$("#videos").jScrollPane({mouseWheelSpeed: 31, contentWidth: '0px'});
+							$("#videos").jScrollPane({{verticalDragMinHeight: "25", mouseWheelSpeed: 31, contentWidth: '0px'});
 						});
 					</script>
 					<div class="overall">
