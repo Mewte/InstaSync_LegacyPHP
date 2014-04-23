@@ -194,13 +194,6 @@
 									</p>
 								</li>
 								<li>
-									<h3>'save</h3>
-									<p>
-										Saves the current playlist to memory so that it can be restored if the server restarts. This command will be removed
-										when playlist and automatic backups are implemented.
-									</p>
-								</li>
-								<li>
 									<strong>* Room owner only.</strong>
 								</li>
 							</ul>

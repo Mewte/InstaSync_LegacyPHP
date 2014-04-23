@@ -2,14 +2,16 @@
     require dirname(__FILE__) . '/../includes/connect.php';
     if (isset($_POST["room"]))
     {
-        mysql_select_db("bibbytube");
-        $output = "";
-        $resource = mysql_query("select username from bans where room = '{$_POST["room"]}'");
-        while($row = mysql_fetch_array($resource, MYSQL_ASSOC))
+        $db = createDb();
+        $output = array();
+		
+        $query = $db->prepare("select username, loggedin from bans where room_name = :room");
+		$query->execute(array("room"=>$_POST['room']));
+		$bans = $query->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($bans as $ban)
         {
-            $output .= $row["username"] . " ";
+			array_push($output, array("username"=>$ban['username'], "loggedin"=>$ban['loggedin']));
         }
-        echo $output;
+        echo json_encode($output);
     }
-    mysql_close($connection);
 ?>

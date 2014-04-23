@@ -3,13 +3,13 @@
     define("SERVER_USER", "root");
     define("SERVER_PASS", "");
     
-    $connection = mysql_connect(SERVER_ADD, SERVER_USER, SERVER_PASS) or die("NO SERVER"); //TODO: phase out
-    
-    //$db = new PDO('mysql:host='.SERVER_ADD.';dbname=advertise;charset=utf8', SERVER_USER, SERVER_PASS);
-    //$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    function createDb()
+    function createDb($enableErrors = false)
     {
-        global $db;
+		$db = new PDO('mysql:host='.SERVER_ADD.';dbname=instasynch;charset=utf8', SERVER_USER, SERVER_PASS);
+		if ($enableErrors)
+			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //development
+		else
+			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT); //production
         return $db;
     }
     function generateSingleToken() //40 characters
@@ -22,7 +22,7 @@
     }
     function randomPassword()
     {
-        return base_convert(mt_rand(),10, mt_rand(20,36)).base_convert(mt_rand(),10, mt_rand(20,36));
+        return base_convert(mt_rand(),10, mt_rand(20,36));
     }
     function hashpw($pass)
     {

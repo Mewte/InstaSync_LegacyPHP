@@ -1,6 +1,5 @@
 <?php
     include dirname(__FILE__) . "/../includes/connect.php";
-    mysql_select_db("bibbytube", $connection);
     if (!isset($_GET["token"]))
     {
         header('HTTP/1.0 404 Not Found');
@@ -32,22 +31,32 @@
                 <div class="ui-widget-content ui-corner-all" style="height: 130px; width: 720px; margin: 50px auto 0px auto">
                     <p style="padding: 5px;">
                         <?php
-                            $token = mysql_real_escape_string($_GET["token"]);
-                            if ($row = mysql_fetch_array(mysql_query("select * from resets where token = '{$token}'"), MYSQL_ASSOC))
+							$db = createDb();
+                            $token = $_GET["token"];
+							$query = $db->prepare("select * from resets where token = :token");
+							$query->execute(array("token"=>$token));
+                            if ($result = $query->fetch(PDO::FETCH_ASSOC))
                             {
-                                if ($row["time"] > (time() - 60*60*3)) //three hour expiration
+                                if ($result["time"] > (time() - 60*60*3)) //three hour expiration
                                 {
                                     $randomPass = randomPassword();
-                                    mysql_query("update users set hashpw = '". hashpw($randomPass) ."' where username = '{$row["username"]}' limit 1");
-                                    echo "This accounts password has been changed to: <strong>{$randomPass}</strong><br />";
-                                    echo "You may log in and change your password in the account settings page.<br />";
-                                    echo "For security reasons, the username is not displayed. The username can be found in the email that brought you here.";
+									$query = $db->prepare("update users set hashpw = :hashpw where id = :user_id limit 1");
+									if ($query->execute(array("hashpw"=>hashpw($randomPass), "user_id"=>$result["user_id"]))){
+										echo "This accounts password has been changed to: <strong>{$randomPass}</strong><br />";
+										echo "You may log in and change your password in the account settings page.<br />";
+										echo "As you will need this password again to change your password, it is recomended you copy and paste it into the correct field.<br />";
+										echo "For security reasons, the username is not displayed. The username can be found in the email that brought you here.";										
+									}
+									else{
+										echo "Database failure. Try again.";
+									}
                                 }
                                 else 
                                 {
                                     echo "This token is either not valid or has expired.";
                                 }
-                                mysql_query("delete from resets where token = '{$token}' limit 1");
+                                $query = $db->prepare("delete from resets where token = :token limit 1");
+								$query->execute(array("token"=>$token));
                             }
                             else
                             {
@@ -61,6 +70,3 @@
         </div>
     </body>
 </html>
-<?php
-    mysql_close($connection);
-?>

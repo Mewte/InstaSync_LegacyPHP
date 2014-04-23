@@ -11,8 +11,7 @@ if (cluster.isMaster) {
 
 	process.on('uncaughtException', function (error) {
 		console.log("UNHANDLED ERROR! Logged to file.");
-		fs.appendFile("crashlog.txt", error.stack + "---END OF ERROR----");
-		console.log("line 23: "+error.stack);
+		fs.appendFile("crashlog.txt", error.stack + "---END OF ERROR----", function(){});
 	});
 	var connect = require('connect');
 	var app = connect(function(req, res) {res.writeHead(404); res.end("No resource found.");}).listen(38000);
@@ -30,13 +29,6 @@ if (cluster.isMaster) {
 		if (socket.connected == undefined){
 			socket.connected = true; //only if undefined, i.e. not false
 		}
-		socket.attemptDisconnect = function(){
-			if (socket.joined)
-			{
-				socket.leave(socket.info.room); //unsubscribe user from room immediately
-			}
-			messageSocket({type: "disconnect", id: msg.id});
-		};
 		return socket;
 	}
 	function socketMessage(msg)
@@ -119,16 +111,17 @@ if (cluster.isMaster) {
 					//data to send back from php file: username, permissions, class, style
 					if (socket.connected == false) //if the socket disconnected by the time this runs, stop
 						return;
-					try {var user = JSON.parse(msg)} catch(e) {console.log("JSON from parseuser.php not valid?" + msg); return;}
-					if (user.error != "none")
+					try {var response = JSON.parse(msg); } catch(ex) {console.log("JSON from parseuser.php not valid?" + e +"response:"+ msg); return;}
+					if (response.error)
 					{
-						socket.emit('sys-message', {message: user.error});
+						socket.emit('sys-message', {message: response.error});
 						socket.attemptDisconnect();
 					}
 					else
 					{     
+						var user = response.user;
 						var hashedIp = crypto.createHash('md5').update("Random Salt Value: $33x!20" + socketIp).digest("hex").substring(0, 11);
-						socket.info = {username: user.username, permissions: user.permissions, room: user.room, 
+						socket.info = {username: user.username, permissions: user.permissions, room: roomname, 
 									   loggedin: user.loggedin, ip: socketIp, hashedIp: hashedIp,
 									   skipped: false, voteinfo: {voted: false, option: null}};
 						if (rooms[socket.info.room] != undefined)
@@ -182,6 +175,13 @@ if (cluster.isMaster) {
 	}
 	var iptable = new Object();
 	chat_room.sockets.on('connection', function(socket) {
+		socket.attemptDisconnect = function(){
+			if (socket.joined)
+			{
+				socket.leave(socket.info.room); //unsubscribe user from room immediately
+			}
+			messageSocket({type: "disconnect", id: socket.id});
+		};		
 		//get IP
 		var ip = "";
 		//Fixes rare error that happened from time to time
@@ -194,7 +194,7 @@ if (cluster.isMaster) {
 				console.log("Max users online with IP:"+ip);
                 socket.emit('sys-message', { message: "Max users online with this IP."});
 				socket.emit("request-disconnect");
-                socket.attemptDisconnect();
+				socket.attemptDisconnect();	
                 return;
             }
             else

@@ -9,7 +9,7 @@
 	header("Pragma: no-cache");
 	
     require  dirname(__FILE__) . '/../includes/connect.php';
-    mysql_select_db("bibbytube", $connection);
+	$db = createDb();
     $title = "InstaSynch - The only #BasedTyrone Approved Internet Forum - Watch videos with 'friends' HAHA FRIENDS HA HA HA";
     $description = "Watch synchronized videos with friends and strangers!";
 ?>
@@ -24,7 +24,7 @@
 			<div>
 				<iframe width="364" height="205" src="//www.youtube.com/embed/uWMONDOgEd4?rel=0" frameborder="0" allowfullscreen></iframe>
 				<div style="display: inline-block; width: 350px; float: right; text-align: center; margin-top: 30px;">
-					<img src="/images/logoNOBG.png" height="38" width="119"/>
+					<img src="/images/logoNoBG.png" height="38" width="119"/>
 					<h3 style="margin-bottom: 4px;"><a href="https://twitter.com/search?q=%23basedtyrone&src=typd" target="_blank">#BasedTyrone</a> Approved</h3>
 					<h3 style="font-weight: bold; text-shadow: 1px 1px rgb(114,114,114);">Since 2014</h3>
 				</div>
@@ -79,9 +79,13 @@
 	</div>
 	<div class="content-body">
 		<?php
-			$query = "SELECT *, least(t.users, 10) * rand() as result FROM rooms as t where users > 0 and listing = 'public' and title <> 'No Videos' and (NSFW = 0 or NSFW = 1) order by result desc limit 24";
-			$roomlist = mysql_query($query, $connection);
-			while ($room = mysql_fetch_array($roomlist, MYSQLI_ASSOC))
+			$query = $db->query("SELECT room.*, user.username as roomname, least(room.users, 10) * rand() as result FROM rooms as room 
+						JOIN users as user ON room.room_id = user.id 
+						where users > 0 
+						and listing = 'public' and title <> 'No Videos' and (NSFW = 0 or NSFW = 1)
+						order by result desc limit 24");
+			$roomlist = $query->fetchAll(PDO::FETCH_ASSOC);
+			foreach ($roomlist as $room)
 			{
 				echo "<div class='room'>";
 					echo "<div class='left'>";
@@ -97,7 +101,7 @@
 					echo "</div>";
 				echo "</div>";  
 				echo PHP_EOL;
-			}   
+			}
 		?>
 	</div>
 </div>

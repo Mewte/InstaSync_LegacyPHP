@@ -1,14 +1,14 @@
 <?php
     require dirname(__FILE__) . "/../includes/connect.php";
+	$output = "";	
     if (isset($_GET["username"]))
     {
-        mysql_select_db("bibbytube", $connection);
-        $username = mysql_real_escape_string($_GET["username"]);    
-        $userLookup = mysql_query("select avatar, bio from users 
-                           where 
-                           username = '{$username}'");
-        $output = "";
-        if ($user = mysql_fetch_array($userLookup, MYSQL_ASSOC))
+        $db = createDb();
+        $username = $_GET["username"];
+		$query = $db->prepare("select avatar, bio from users where username = :username");
+		$query->execute(array("username"=>$username));
+
+        if ($user = $query->fetch(PDO::FETCH_ASSOC))
         {
             $output["avatar"] = "http://i.imgur.com/" . $user["avatar"] . ".jpg";
             $output["bio"] = htmlspecialchars($user["bio"]);
@@ -22,18 +22,27 @@
     {
         if (isset($_COOKIE["username"], $_COOKIE["sessionid"]))
         {
-            mysql_select_db("bibbytube", $connection);
-            $output = "";
-            $username = mysql_real_escape_string($_COOKIE["username"]);
-            $sessionid = mysql_real_escape_string($_COOKIE["sessionid"]);        
-            $avatar = imgurCode(mysql_real_escape_string($_POST["avatar"]));
-            $bio = mysql_real_escape_string($_POST["bio"]);
-			$social = mysql_real_escape_string($_POST["social"]);
+            $db = createDb();
+            $username = $_COOKIE["username"];
+            $sessionid = $_COOKIE["sessionid"];        
+            $avatar = imgurCode($_POST["avatar"]);
+            $bio = $_POST["bio"];
+			$social = $_POST["social"];
             if ($avatar != false && $bio != "")
             {
-                $query = "update users set avatar = '{$avatar}', bio='{$bio}', social={$social} where username = '{$username}' and cookie = '{$sessionid}' limit 1";
-                mysql_query($query);
-                if (mysql_affected_rows() === 1)
+                $query = $db->prepare("update users set
+										avatar = :avatar, 
+										bio = :bio,
+										social = :social
+										where username = :username and cookie = :sessionid limit 1");
+                $query->execute(array(
+					"avatar"=>$avatar,
+					"bio"=>$bio,
+					"social"=>$social,
+					"username"=>$username,
+					"sessionid"=>$sessionid
+				));
+                if ($query->rowCount() === 1)
                 {
                     $output["error"] = "Changes successfully made to: {$username}.";
                 }
@@ -58,8 +67,7 @@
         }
     }
     echo json_encode($output);
-    
-    mysql_close($connection);
+
     function imgurCode($url)
     {
         return preg_replace("/(https?:\/\/)?(www\.)?(i\.)?imgur\.com\/(gallery\/)?([a-zA-Z0-9]+)(\.(jpg|jpeg|png|gif))?/i","$5", $url);    

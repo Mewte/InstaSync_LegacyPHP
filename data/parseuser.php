@@ -3,27 +3,90 @@
  * THIS FILE PARSES INFO IT RECIEVES AND RETURNS A JSON OBJECT OF THAT USER
 */
    require dirname(__FILE__) . "/../includes/connect.php";
-   function roomExist($name, $connection)
+   if (isset($_POST["username"], $_POST["ip"], $_POST["cookie"], $_POST["room"]))
    {
-       mysql_select_db("bibbytube", $connection);
-       $query = "select * from rooms where roomname = '{$name}'";
-       if (mysql_fetch_array(mysql_query($query)))
+        $username = trim($_POST["username"]);   
+        $cookie = $_POST["cookie"];         
+        $room = $_POST["room"];         
+        $ip = $_POST["ip"];
+        $output = array();
+    
+        //error checking
+		if (!isToxic($ip)){
+			$db = createDb();
+			if (roomExist($room, $db)){
+				$user = getUser($username, $cookie, $room, $db);
+				if (!isBanned($user, $ip, $room, $db)){
+					$output['user'] = $user;
+				}
+				else{
+					$output['error'] = "Banned";
+				}
+			}
+			else{
+				$output["error"] = "Room does not exist.";
+			}
+		}
+		else{
+			$output["error"] = "In an attempt to limit the number of ban evaders, I've had to black list IPs commonly by used email and forum spammers. Your IP was in this black list and marked as toxic. I'd recomend contacting your ISP and asking for a new IP address as this could be an indication that your IP was used for illegal spamming. Your ip cannot be removed from this list by me. If you have further questions please contact admin@instasynch.com, thank you. ";
+		}
+        echo json_encode($output);
+   }
+   function roomExist($name, $db)
+   {
+	   $query = $db->prepare("select * from rooms where room_name = :room");
+	   $query->execute(array("room"=>$name));
+       if ($query->fetch(PDO::FETCH_ASSOC))
        {
-           //room exist
-           return true;
+			return true;
        }
        else
        {
            return false;
        }
    }
-   function isBanned($IP, $roomname, $connection)
-   {
-        mysql_select_db("bibbytube", $connection);
-        $query = "select * from bans where ip = '{$IP}' and room = '{$roomname}'";
-        $resource = mysql_query($query);  
-        if (mysql_fetch_array($resource)) return true;
-        else return false;
+   /*
+    * Gets username, logged in, and permissions
+    */
+   function getUser($username, $cookie, $room, $db){
+	   $query = $db->prepare("select mods.permissions from users as user 
+								LEFT JOIN mods on user.username = mods.username and mods.room_name = :room
+								WHERE user.username = :username and user.cookie = :cookie");
+	   $query->execute(array("username"=>$username, "cookie"=>$cookie, "room"=>$room));
+	   $user = $query->fetch(PDO::FETCH_ASSOC);
+	   if ($user){
+		   if ($user['permissions'] == NULL){
+			   $permissions = strtolower($username) == strtolower($room) ? 2 : 0; //if room owner, 2, else 0
+		   }
+		   else{
+			   $permissions = $user['permissions'];
+		   }
+		   return array("username"=>$username, "loggedin"=>true, "permissions"=>$permissions);
+	   }
+	   else{
+		   return array("username"=>"unnamed", "loggedin"=>false, "permissions"=>0);
+	   }
+   }
+   function isBanned($user, $ip, $room, $db){
+	   if ($user['loggedin']){
+		   if ($user['permissions'] > 0){
+			   return false;
+		   }
+		   else{
+			   $query = $db->prepare("select ban.*, user.username from bans as ban 
+										left join users as user on ban.user_id = user.id
+										where ban.room_name = :room and (user.username = :username or ban.ip = :ip)");
+			   $query->execute(array("room"=>$room, "username"=>$user['username'], "ip"=>$ip));
+		   }
+	   }
+	   else{
+		   $query = $db->prepare("select * from bans where ip = :ip and room_name = :room");
+		   $query->execute(array("ip"=>$ip, "room"=>$room));
+	   }
+	   if ($query->fetch(PDO::FETCH_ASSOC))
+		   return true;
+	   else
+		   return false;
    }
    function isToxic($ip)
    {
@@ -35,72 +98,4 @@
            return true;
        }
    }
-   if (isset($_POST["username"], $_POST["ip"], $_POST["cookie"], $_POST["room"]))
-   {
-        $username = trim(mysql_real_escape_string($_POST["username"]));   
-        $cookie = mysql_real_escape_string($_POST["cookie"]);         
-        $room = mysql_real_escape_string($_POST["room"]);         
-        $ip = $_POST["ip"];
-        $output = array();
-        
-        $output["error"] = "none";
-        //error checking
-        if (!roomExist($room, $connection)){$output["error"] = "Room does not exist.";} //does room exist?
-        if ($output["error"] == "none") //no errors
-        {
-            $output["username"] = "unnamed";
-            $output["permissions"] = 0;  
-            $output["room"] = $room;
-            //if logged in, check permissios too
-            //check if loggedin
-            mysql_select_db("bibbytube", $connection);
-            $userLookup = mysql_query("select * from users 
-                                       where 
-                                       username = '{$username}' 
-                                       and cookie = '{$cookie}'");      
-            if ($user = mysql_fetch_array($userLookup, MYSQLI_ASSOC)) //if true, user is logged in.
-            {
-                $output["loggedin"] = true;
-                $output["username"] = $username;
-                //get permissions
-                mysql_select_db("bibbytube",$connection);
-                $query = "select permissions from mods where room = '{$room}' and username = '{$username}'";
-                $getPermissions = mysql_query($query);
-                if ($permissions = mysql_fetch_array($getPermissions)) //in mod database 
-                {
-                    $output["permissions"] = $permissions["permissions"];
-                }
-                else
-                {
-                    if (strtolower($username) === strtolower($room))
-                    {
-                        $output["permissions"] = 10;    
-                    }
-                }
-                if (isBanned($ip, $room, $connection))
-                {
-                    if (!($output["permissions"] > 0)) //user isnt mod, thus banned.
-                        $output["error"] = "Banned";
-                }
-            }
-            else //not logged in
-            {
-                if (isBanned($ip, $room, $connection))
-                {
-                    $output["error"] = "Banned";
-                }               
-                else
-                {
-                    $output["username"] = "unnamed";
-                    $output["loggedin"] = false;
-                }
-            }  
-            if (isToxic($ip))
-            {
-                $output["error"] = "Your IP is toxic. Email admin@instasynch.com if you feel this is an error.";
-            }
-        }
-        echo json_encode($output);
-   }
-   mysql_close($connection); 
 ?>

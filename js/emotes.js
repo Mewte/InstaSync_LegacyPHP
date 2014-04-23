@@ -34,7 +34,6 @@ var $codes = {
     "gooby": '<img src="http://i.imgur.com/tZ7uG.png" width="40" height="40">',
     "nigga": '<img src="http://i.imgur.com/eAqvn.jpg" width="20" height="30">',
     "fukkireta": '<img src="http://i.imgur.com/e6oan.gif" width="50" height="37">',
-    "bro": '<img src="http://i.imgur.com/oMEHr.gif" width="66" height="50">',
     "bikenigger": '<img src="http://i.imgur.com/mAQAc.gif" width="24" height="36">',
     "ecchi": '<img src="http://i.imgur.com/i2SWp.gif" width="60" height="60">',
     "epicsaxguy": '<img src="http://i.imgur.com/aOXm1.gif" width="45" height="45">',

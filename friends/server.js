@@ -3,7 +3,7 @@ var connect = require('connect');
 var app = connect().use(connect.static('public')).listen(37999);
 var crypto = require('crypto');
 var mysql = require('mysql');
-var friendsList = require('./objects/friendsList');
+var friendsList = require('./objects/friendslist');
 var friendRequests = require('./objects/friendRequests');
 var queries = require('./objects/queries');
 queries = new queries();
@@ -29,7 +29,7 @@ function db()
         host     : 'localhost',
         user     : 'root',
         password : '',
-        database : 'bibbytube'
+        database : 'instasynch'
     });
 	conn.connect();
 	conn.on('error', function(err)

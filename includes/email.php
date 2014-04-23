@@ -6,8 +6,8 @@
             $mail->IsSMTP(); // enable SMTP
             $mail->SMTPDebug = 0;  // debugging: 1 = errors and messages, 2 = messages only
             $mail->SMTPAuth = false;  // authentication enabled
-            $mail->Host = 'instasynch.com';
-            $mail->Port = 25252; 
+            $mail->Host = 'relay.instasynch.com';
+            $mail->Port = 25; 
             $mail->Username = "";  
             $mail->Password = "";           
             $mail->SetFrom($from, $from_name);

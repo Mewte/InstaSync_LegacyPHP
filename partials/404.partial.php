@@ -8,7 +8,7 @@
 	header("Cache-Control: no-cache");
 	header("Pragma: no-cache");
     require  dirname(__FILE__) . '/../includes/connect.php';
-    mysql_select_db("bibbytube", $connection);
+	$db = createDb();
 ?>
 <script>
 	global.page.url = "/404.php";
@@ -26,9 +26,13 @@
 	</div>
 	<div class="content-body">
 		<?php
-			$query = "SELECT *, least(t.users, 10) * rand() as result FROM rooms as t where users > 0 and listing = 'public' and title <> 'No Videos' and (NSFW = 0 or NSFW = 1) order by result desc limit 6";
-			$roomlist = mysql_query($query, $connection);
-			while ($room = mysql_fetch_array($roomlist, MYSQLI_ASSOC))
+			$query = $db->query("SELECT room.*, user.username as roomname, least(room.users, 10) * rand() as result FROM rooms as room 
+						JOIN users as user ON room.room_id = user.id 
+						where users > 0 
+						and listing = 'public' and title <> 'No Videos' and (NSFW = 0 or NSFW = 1)
+						order by result desc limit 6");
+			$roomlist = $query->fetchAll(PDO::FETCH_ASSOC);
+			foreach ($roomlist as $room)
 			{
 				echo "<div class='room'>";
 					echo "<div class='left'>";
@@ -44,7 +48,7 @@
 					echo "</div>";
 				echo "</div>";  
 				echo PHP_EOL;
-			}   
+			} 
 		?>
 	</div>
 </div>

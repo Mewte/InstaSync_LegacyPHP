@@ -18,29 +18,31 @@
     $listing = "";
     
     require dirname(__FILE__) . "/../includes/connect.php";
-    mysql_select_db("bibbytube", $connection);
     //GET AND INCRIMENT VISITORS
-    $roomname = mysql_real_escape_string($roomname);
-    $query = "select * from rooms where roomname = '{$roomname}'";
-    $resource = mysql_query($query);
-    if ($row = mysql_fetch_array($resource, MYSQLI_ASSOC))
+	$db = createDb();
+    $query = $db->prepare("select *, user.username as roomname from rooms as room
+				JOIN users as user ON room.room_id = user.id 
+				where user.username = :roomname");
+	$query->execute(array("roomname"=>$roomname));
+    $result = $query->fetch(PDO::FETCH_ASSOC);
+    if ($result)
     {
-        $visits = $row["visits"];
+        $visits = $result["visits"];
         $visits += 1;
-        $description = $row["description"];
-        $about = $row["info"];
-        $nsfw = $row["NSFW"];
-        $listing = $row["listing"];
+        $description = $result["description"];
+        $about = $result["info"];
+        $nsfw = $result["NSFW"];
+        $listing = $result["listing"];
+		$room_id = $result["room_id"]; //for easily updating visits
     }
     else
     {
 		header("Location: /404.php");
 		exit();
     }
-	
-    $query = "UPDATE rooms SET visits = '{$visits}' WHERE rooms . roomname = '{$roomname}'";
-    mysql_query($query, $connection);
-    mysql_close($connection);
+    $query = $db->prepare("UPDATE rooms as room SET visits = :visits 
+							WHERE room_id = :room_id");
+	$query->execute(array("visits"=>$visits, "room_id"=>$room_id));
     //-----------
 ?>
 <script>
@@ -52,7 +54,7 @@
 	//get emotes
 	$.ajax({
             type: "GET",
-            url: "/emotes/"+ROOMNAME+".js",
+            url: "/emotes/"+ROOMNAME.toLowerCase()+".js",
 			error: function()
 			{
 				$.ajax({
@@ -185,7 +187,7 @@
 					<script>
 						$(document).ready(function()
 						{
-							$("#videos").jScrollPane({{verticalDragMinHeight: "25", mouseWheelSpeed: 31, contentWidth: '0px'});
+							$("#videos").jScrollPane({verticalDragMinHeight: "25", mouseWheelSpeed: 31, contentWidth: '0px'});
 						});
 					</script>
 					<div class="overall">

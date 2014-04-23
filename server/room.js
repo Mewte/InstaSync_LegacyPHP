@@ -143,7 +143,7 @@ room.prototype.leave = function(socket)
     {
         this.recentUsers.splice(0,1);
     }
-    this.recentUsers.push({username: socket.info.username, ip: socket.info.ip});
+    this.recentUsers.push(socket.info);
 };
 room.prototype.join = function(socket)
 {
@@ -249,12 +249,12 @@ room.prototype.indexOfUserByID = function(id)
     }
     return -1;
 };
-room.prototype.lastIpByUsername = function(username)
+room.prototype.lastUserByUsername = function(username)
 {
     for (var i = this.recentUsers.length - 1; i > -1; i--)
     {
         if (this.recentUsers[i].username.toLowerCase() == username.toLowerCase())
-            return this.recentUsers[i].ip;
+            return this.recentUsers[i];
     }
     return -1;
 };
@@ -363,7 +363,7 @@ room.prototype.addVideo = function(vidinfo)
         return "Video added successfully.";
     }
 };
-room.prototype.removeVideo = function(vidinfo, emitToSocket) //if true, emits the removal to the socket, if false it won't. (For efficient purging)
+room.prototype.removeVideo = function(vidinfo, single)
 {  
     var index = this.indexOfVid(vidinfo);
     if (index > -1)
@@ -381,10 +381,13 @@ room.prototype.removeVideo = function(vidinfo, emitToSocket) //if true, emits th
                 this.nextVid();                
             }    
         }
-        if (emitToSocket)
-            chat_room.sockets.in(this.roomName).emit('remove-vid', {info: vidinfo});
 		this.playlistSaveNeeded = true;
         this.playlist.splice(index, 1);
+		if (single){
+			var videos = new Array();
+			videos.push(vidinfo);
+			chat_room.sockets.in(this.roomName).emit('remove-vid', {videos: videos});			
+		}
     }
 };
 room.prototype.moveVideo = function(vidinfo, position)
@@ -402,23 +405,29 @@ room.prototype.moveVideo = function(vidinfo, position)
 };
 room.prototype.purge = function(username) //this purge is very inefficient as it requires extra loops per keycode, TODO; FIx that
 {
+	var videos = new Array();
     for (var i = this.playlist.length - 1; i > -1; i--) //loop backwards (length-1) to 0
     {
-        if (this.playlist[i].addedby.toLowerCase() == username.toLowerCase())
-            this.removeVideo(this.playlist[i].info, false); //dont emit
+        if (this.playlist[i].addedby.toLowerCase() == username.toLowerCase()){
+			videos.push(this.playlist[i].info); //push before removing otherwise the index wont be correct
+ 			this.removeVideo(this.playlist[i].info, false); //remove vidoe does an additional loop lookup..
+		}
     }
-    chat_room.sockets.in(this.roomame).emit('purge', {username: username});
+    chat_room.sockets.in(this.roomName).emit('remove-vid', {videos: videos});
 };
 room.prototype.clean = function()
 {
+	var videos = new Array();
     var indexOfPlaying = this.indexOfVid(this.nowPlaying.info);
     if (indexOfPlaying > -1)
     {
         for (var i = indexOfPlaying - 1; i >= 0; i--)
         {
-            this.removeVideo(this.playlist[i].info, true);
+			videos.push(this.playlist[i].info); //push before removing otherwise the index wont be correct
+            this.removeVideo(this.playlist[i].info, false);
         }
     }
+	chat_room.sockets.in(this.roomName).emit('remove-vid', {videos: videos});
 };
 room.prototype.time  = function()
 {

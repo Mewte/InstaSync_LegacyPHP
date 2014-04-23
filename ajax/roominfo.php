@@ -1,18 +1,19 @@
 <?php
     require dirname(__FILE__) . "/../includes/connect.php";
+	$output = "";	
     if (isset($_GET["room"]))
     {
-        mysql_select_db("bibbytube", $connection);
-        $room = mysql_real_escape_string($_GET["room"]);    
-        $userLookup = mysql_query("select * from rooms
-                           where 
-                           roomname = '{$room}'");
-        $output = "";
-        if ($record = mysql_fetch_array($userLookup, MYSQL_ASSOC))
+        $db = createDb();
+        $room = $_GET["room"];    
+        $query = $db->prepare("select room.*, user.username as roomname from rooms as room JOIN users as user
+									ON room.room_id = user.id
+								where user.username = :room limit 1");
+		$query->execute(array("room"=>$room));
+        if ($room = $query->fetch(PDO::FETCH_ASSOC))
         {
-            $output["description"] = htmlspecialchars($record["description"]);
-            $output["info"] = htmlspecialchars($record["info"]);
-            $output["listing"] = htmlspecialchars($record["listing"]);
+            $output["description"] = htmlspecialchars($room["description"]);
+            $output["info"] = htmlspecialchars($room["info"]);
+            $output["listing"] = htmlspecialchars($room["listing"]);
         }
         else
         {
@@ -25,31 +26,31 @@
     {
         if (isset($_COOKIE["username"], $_COOKIE["sessionid"]))
         {
-            mysql_select_db("bibbytube", $connection);
-            $output = "";
-            $username = mysql_real_escape_string($_COOKIE["username"]);
-            $sessionid = mysql_real_escape_string($_COOKIE["sessionid"]);        
-            $listing = mysql_real_escape_string($_POST["listing"]);
-            $description = mysql_real_escape_string($_POST["description"]);
-            $info = mysql_real_escape_string($_POST["info"]);
-            if ($row = mysql_fetch_array(mysql_query("select * from users where username = '{$username}' and cookie = '{$sessionid}' limit 1"), MYSQL_ASSOC))
-            {
-
-                $query = "update rooms set listing = '{$listing}', description='{$description}', info='{$info}' where roomname = '{$username}' limit 1";
-                mysql_query($query);
-                if (mysql_affected_rows() === 1)
-                {
-                    $output["error"] = "Changes successfully made to: {$username}.";
-                }
-                else
-                {
-                    $output["error"] = "Error saving settings, try logging back in.";
-                }
-            }
-            else
-            {
-                $output["error"] = "You are not logged in.";
-            }
+            $db = createDb();
+            $username = $_COOKIE["username"];
+            $sessionid = $_COOKIE["sessionid"];        
+            $listing = $_POST["listing"];
+            $description = $_POST["description"];
+            $info = $_POST["info"];
+			
+			$query = $db->prepare("update rooms as room JOIN users as user ON room.room_id = user.id
+									set listing = :listing, description = :description, info = :info
+									where user.username = :username and user.cookie = :sessionid");
+			$query->execute(array(
+				"listing"=>$listing,
+				"description"=>$description,
+				"info"=>$info,
+				"username"=>$username,
+				"sessionid" => $sessionid
+			));
+			if ($query->rowCount() === 1)
+			{
+				$output["error"] = "Changes successfully made to: {$username}.";
+			}
+			else
+			{
+				$output["error"] = "Error saving settings, try logging back in.";
+			}
         }
         else
         {
@@ -57,5 +58,4 @@
         }
         echo json_encode($output); 
     }
-    mysql_close($connection);   
 ?>

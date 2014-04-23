@@ -196,11 +196,26 @@ module.exports.commands =
                   
                     banSocket.emit('sys-message', {message: "You've been banned."});
                     request.post(phploc + 'actions/bans.php', {form:{ip: banSocket.info.ip, username: banSocket.info.username,
-                                                                    room: banSocket.info.room, reason: "", action: "add" }}, function(error, response, msg){});
+                                                                    room: banSocket.info.room, loggedin: banSocket.info.loggedin, action: "add" }}, 
+						function(error, response, msg){
+							if (error != null){
+								socket.emit('sys-message', {message: "Failed to ban user."});
+							}
+							else{
+								msg = JSON.parse(msg);
+								if (msg.result == true){
+									socket.emit('sys-message', {message: "User banned."});
+								}
+								else{
+									socket.emit('sys-message', {message: msg.error});
+								}
+							}							
+						});
 					banSocket.emit("request-disconnect");
                     banSocket.attemptDisconnect();
                     rooms[socket.info.room].kickAllByIP(banSocket.info.ip);
-                    chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " has banned a user."});   
+                    chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " has banned a user."});
+					
                 }
             }
         },
@@ -209,14 +224,27 @@ module.exports.commands =
             if (data.username === undefined){ return;} 
             if (socket.info.permissions > 0)                
             {    
-                var IpOfUser = rooms[socket.info.room].lastIpByUsername(data.username);
-                if (IpOfUser != -1)
+                var user = rooms[socket.info.room].lastUserByUsername(data.username);
+                if (user != -1)
                 {    
-                        request.post(phploc + 'actions/bans.php', {form:{ip: IpOfUser, username: data.username,
-                                                                        room: socket.info.room, reason: "", action: "add" }}, function(error, response, msg){});
-                        rooms[socket.info.room].kickAllByIP(IpOfUser);
-                        chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " leaverbanned a user."});  
-                        socket.emit("sys-message", {message: "Leaver ban successful."});
+                        request.post(phploc + 'actions/bans.php', {form:{ip: user.ip, username: user.username, loggedin: user.loggedin,
+                                                                        room: socket.info.room, reason: "", action: "add" }}, 
+						function(error, response, msg){
+							if (error != null){
+								socket.emit('sys-message', {message: "Failed to leaver ban user."});
+							}
+							else{
+								msg = JSON.parse(msg);
+								if (msg.result == true){
+									socket.emit('sys-message', {message: "User leaver banned."});
+								}
+								else{
+									socket.emit('sys-message', {message: msg.error});
+								}
+							}																	
+						});
+                        rooms[socket.info.room].kickAllByIP(user.ip);
+                        chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " leaverbanned a user."});
                 }
                 else
                 {
@@ -229,11 +257,23 @@ module.exports.commands =
             if (data.username === undefined){ return;} //argument 1 missing
             if (socket.info.permissions > 0)                
             {
-                request.post(phploc + 'actions/bans.php', {form:{ip:"", username: data.username,
-                                                                room: socket.info.room, reason: "", action: "remove" }}, function(error, response, msg){
-                                                            socket.emit('sys-message', {message: "If username was banned, it has been removed."});
-                                                                });
-            chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " has unbanned a user."});                                                                   
+                request.post(phploc + 'actions/bans.php', {form:{ip:"", loggedin: "", username: data.username,
+                                                                room: socket.info.room, reason: "", action: "remove" }}, 
+					function(error, response, msg){
+						if (error != null){
+							socket.emit('sys-message', {message: "Failed to unban user."});
+						}
+						else{
+							msg = JSON.parse(msg);
+							if (msg.result == true){
+								socket.emit('sys-message', {message: "User unbanned."});
+							}
+							else{
+								socket.emit('sys-message', {message: msg.error});
+							}
+						}
+                    });
+				chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " has unbanned a user."});                                                                   
             }
 
         },
@@ -242,7 +282,7 @@ module.exports.commands =
             if (socket.info.permissions > 0)
             {
                 request.post(phploc + 'actions/bans.php', {form:{ username: "", ip: "", room: socket.info.room, action: "purge"}}, function(error,response,msg){
-                    socket.emit('sys-message', {message: "Bans cleared."})
+                    socket.emit('sys-message', {message: "Bans cleared."});
                 });
                 chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " has cleared the ban list"});
             }
@@ -348,13 +388,24 @@ module.exports.commands =
         {
             if (data.username != undefined && socket.info.username.toLowerCase() === socket.info.room.toLowerCase() && socket.info.loggedin) //room owner
             {    
-                var username = data.username.split(" "); //be sure name doesnt have spaces
                 if (data.username.toLowerCase() != socket.info.username.toLowerCase()) //be sure user doesnt try to mod/unmod themself
-                request.post(phploc + 'actions/mods.php', {form:{room: socket.info.room, username: username[0], action: "add"}}, function(error,response,msg){
+                request.post(phploc + 'actions/mods.php', {form:{room: socket.info.room, username: data.username, action: "add"}}, 
+				function(error,response,msg){
                     if (chat_room.sockets.sockets[socket.id] != undefined) //check for rare instance that socket disconnected
                     {
-                        socket.emit('sys-message', {message: "Mod added."});
-                    }             
+						if (error != null){
+							socket.emit('sys-message', {message: "Failed to mod user."});
+						}
+						else{
+							msg = JSON.parse(msg);
+							if (msg.result == true){
+								socket.emit('sys-message', {message: "Mod added."});
+							}
+							else{
+								socket.emit('sys-message', {message: msg.error});
+							}
+						}	
+                    }				
                 });                
                 
             }
@@ -365,10 +416,21 @@ module.exports.commands =
             {    
                 var username = data.username.split(" "); //be sure name doesnt have spaces
                 if (data.username.toLowerCase() != socket.info.username.toLowerCase()) //be sure user doesnt try to mod/unmod themself
-                request.post(phploc + 'actions/mods.php', {form:{room: socket.info.room, username: username[0], action: "remove"}}, function(error,response,msg){
+                request.post(phploc + 'actions/mods.php', {form:{room: socket.info.room, username: data.username, action: "remove"}}, function(error,response,msg){
                     if (chat_room.sockets.sockets[socket.id] != undefined) //check for rare instance that socket disconnected
                     {
-                        socket.emit('sys-message', {message: "Mod remove."});
+						if (error != null){
+							socket.emit('sys-message', {message: "Failed to remove mod."});
+						}
+						else{
+							msg = JSON.parse(msg);
+							if (msg.result == true){
+								socket.emit('sys-message', {message: "Mod removed.."});
+							}
+							else{
+								socket.emit('sys-message', {message: msg.error});
+							}
+						}	
                     }             
                 });                
                 
@@ -381,9 +443,16 @@ module.exports.commands =
                 request.post(phploc + 'data/banlist.php', {form:{room: socket.info.room}}, function(error,response,msg){
                     if (chat_room.sockets.sockets[socket.id] != undefined) //check for rare instance that socket disconnected
                     {
-                        if (msg == undefined) //list empty
-                            msg = "Ban list is empty.";
-                        socket.emit('sys-message', {message: msg});
+						var bans = JSON.parse(msg);
+						var banlist = "";
+						if (bans.length == 0)
+							banlist = "Ban list is empty.";
+						else
+							for (var i = 0; i < bans.length; i++){
+								var ban = bans[i].username + (bans[i].loggedin == 1 ? " " : "(greyname) ");
+								banlist += ban;
+							}
+                        socket.emit('sys-message', {message: banlist});
                     }             
                 });
             }
@@ -395,18 +464,18 @@ module.exports.commands =
                 request.post(phploc + 'data/modlist.php', {form:{room: socket.info.room}}, function(error,response,msg){
                     if (chat_room.sockets.sockets[socket.id] != undefined) //check for rare instance that socket disconnected
                     {
-                        if (msg == undefined) //list empty
-                            msg = "Mod list is empty.";                        
-                        socket.emit('sys-message', {message: msg});
+						var mods = JSON.parse(msg);
+						var modlist = "";
+						if (mods.length == 0)
+							modlist = "Mod list is empty.";
+						else
+							for (var i = 0; i < mods.length; i++){
+								var mod = mods[i] + " ";
+								modlist += mod;
+							}
+                        socket.emit('sys-message', {message: modlist});
                     }             
                 });
-            }
-        },
-        "description":function(data, socket)
-        { //COMMAND, USERNAME, REASON
-            if (data.description != undefined && socket.info.username.toLowerCase() === socket.info.room.toLowerCase() && socket.info.loggedin && (data.description.length < 241))
-            {
-                request.post(phploc + 'actions/description.php', {form:{room: socket.info.room, description: data.description}}, function(error,response,msg){});
             }
         },
         "move":function(data, socket) 

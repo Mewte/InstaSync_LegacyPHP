@@ -6,7 +6,7 @@
 	exit();
     }	
     require "includes/connect.php";
-    mysql_select_db("bibbytube", $connection);
+    mysql_select_db("instasynch", $connection);
     
     $title = "InstaSynch - Help & Information";
     $description = "Variety of helpful information to get you well on your way to enjoying YouTube, Vimeo, and TwitchTV with friends.";

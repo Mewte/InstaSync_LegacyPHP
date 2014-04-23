@@ -540,7 +540,10 @@ function loadRoom() {
             addVideo(data.info, true);
         });
         socket.on('remove-vid', function (data) {
-            removeVideo(data.info, true);
+			for(var i = 0; i < data.videos.length; i++){
+				removeVideo(data.videos[i]);
+			}
+			$("#videos").data("jsp").reinitialise(); //this uses alot of resources
         });
         socket.on('move-vid', function (data) {
             moveVideo(data.info, data.position);
@@ -1058,7 +1061,7 @@ function showVideoInfo(video, data){
 		$(".detailed-info .provider.youtube").show();		
 	}
 } 
-function removeVideo(vidinfo, updateScrollbar) {
+function removeVideo(vidinfo) {
 	var indexOfVid = getVideoIndex(vidinfo);
 	if (indexOfVid > -1 && indexOfVid < playlist.length) {
 		totalTime -= playlist[indexOfVid].duration;
@@ -1067,8 +1070,6 @@ function removeVideo(vidinfo, updateScrollbar) {
 	}
 	$('#total-videos').html(playlist.length);
 	$('#total-duration').html(secondsToTime(totalTime));
-	if (updateScrollbar)
-		$("#videos").data("jsp").reinitialise(); //this uses alot of resources
 }
 /*
  * TODO: Improve this as it emptys the list and rebuilds it everytime
