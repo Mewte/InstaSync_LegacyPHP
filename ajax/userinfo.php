@@ -27,7 +27,7 @@
             $sessionid = $_COOKIE["sessionid"];        
             $avatar = imgurCode($_POST["avatar"]);
             $bio = $_POST["bio"];
-			$social = $_POST["social"];
+			$social = $_POST["social"] == "true" ? 1 : 0;
             if ($avatar != false && $bio != "")
             {
                 $query = $db->prepare("update users set

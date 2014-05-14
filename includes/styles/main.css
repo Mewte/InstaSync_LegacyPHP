@@ -11,6 +11,9 @@ em{
 .b{
 	font-weight: bold;
 }
+.username{
+	/*font-family: Cambria, Georgia, serif;*/
+}
 .container {
       min-height: 100%;
       height: auto !important;
@@ -207,18 +210,6 @@ white-space: nowrap;
     margin: 5px;
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-.hashtext{
-    color: #7882BF;
-}
-.system-msg{
-    color: #7882BF;    
-}
-.greentext{
-    color: #789922;
-}
-.errortext{
-    color: rgb(204,65,65);
-}
 .muted{
     background-color: rgb(200,200,200);
 }

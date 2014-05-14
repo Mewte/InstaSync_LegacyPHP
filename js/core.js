@@ -19,6 +19,39 @@ global.sendcmd = null;
 
 var video = null;
 
+//socket events mainly used for the connection status dialog box
+global.onConnecting = function(){
+	
+};
+global.onConnected = function(){
+	global.reconnectAttempt = 1;
+};
+global.onJoining = function(){
+	showConnectionBox("Joining..");
+};
+global.onJoined = function(){
+	$("#chat").switchClass("inactive", "active", 1200);
+	hideConnectionBox();
+};
+global.reconnectAttempt = 1;
+global.onReconnecting = function(){
+	$("#chat").switchClass("active", "inactive", 1200);
+	showConnectionBox("Reconnecting.. Attempt " + global.reconnectAttempt);
+	global.reconnectAttempt++;
+};
+global.onReconnect = function(){
+	addMessage({username: ""}, "Reconnected to chat server.", "system");
+};
+global.reconnectFailed = function(){
+	showConnectionBox("Reconnect failed.");
+};
+global.onError = function(){
+	showConnectionBox("Could not connect to server.");
+};
+global.onDisconnect = function(){
+	showConnectionBox("Disconnected from server.");
+};
+
 $(function (){
 window.onpopstate = function(event) {
 	global.requestPartialPage(event.state.name, event.state.room, true);
@@ -63,13 +96,13 @@ function loadRoom() {
 
     var join = function () 
     {
-        if (validateJoin($('#join').val())) 
+        if (validateJoin($('#join-username').val())) 
         {
-            room.rename($('#join').val());
+            room.rename($('#join-username').val());
         } 
         else 
         {
-            $('#join').val('');
+            $('#join-username').val('');
         }
     };
     function validateJoin(username) 
@@ -109,14 +142,14 @@ function loadRoom() {
         $('#toggleplaylistlock').click(function () {
             room.sendcmd('toggleplaylistlock', null);
         });
-        $('#btn-join').click(function () {
+        $('#join').click(function () {
             join();
         });
         $('#skip').click(function () {
             if (userInfo.loggedin)
                 room.sendcmd('skip', null);
             else
-                addMessage("","You must be logged in to vote to skip.","","errortext");
+                addMessage({username: ""},"You must be logged in to vote to skip.","errortext");
         });
         $('#resynch').click(function () {
             room.sendcmd('resynch', null);
@@ -159,10 +192,10 @@ function loadRoom() {
             });
            room.sendcmd("poll-create", poll);
         });
-        $('#bio').hover(function () {
+        $('#user_bio_hover').hover(function () {
             mouseOverBio = true;
         }, function () {
-            $('#bio').hide();
+            $('#user_bio_hover').hide();
             mouseOverBio = false;
         });
         //Player Controller
@@ -201,21 +234,21 @@ function loadRoom() {
         {
            room.sendcmd("unlead", null);
         });
-        $('#mute').click(function()
-        {
-            mute($(this).data('ip'));
-            $("#mute").hide();
-            $("#unmute").show();
-        });
-        $("#unmute").click(function()
-        {
-            unmute($(this).data('ip'));
-            $("#mute").show();
-            $("#unmute").hide();
-        });
+		$("#mute-button").click(function(){
+			if ($(this).hasClass("unmuted")){
+				mute($(this).data('ip'));
+				$("#mute-button").removeClass("unmuted");
+				$("#mute-button").addClass("muted");			
+			}
+			else{
+				unmute($(this).data('ip'));
+				$("#mute-button").removeClass("muted");
+				$("#mute-button").addClass("unmuted");		
+			}
+		});
         //(C) BibbyTube, (C) Faqqq
         //https://github.com/Bibbytube/Instasynch/blob/master/Chat%20Additions/Autoscroll%20Fix/autoscrollFix.js
-        $('#chat_list').on('scroll',function()
+        $('#chat-messages').on('scroll',function()
         {
             var scrollHeight = $(this)[0].scrollHeight,
                 scrollTop = $(this).scrollTop(),
@@ -240,7 +273,7 @@ function loadRoom() {
 				}
 			}
 		});
-		$("#join").on("keypress", function(e)
+		$("#join-username").on("keypress", function(e)
 		{
 			if (e.which == 13)
 			{
@@ -253,7 +286,9 @@ function loadRoom() {
 		});
 	
         //-----------------------
-        room.connect();
+		showConnectionBox("Connecting..", function(){
+		        room.connect();	
+		});
 		$("#cleanUpOnRemoval").on("remove", function() //disconnect when swapping page
 		{
 			global.sendcmd = null;
@@ -261,8 +296,7 @@ function loadRoom() {
 			room.disconnect();
 		});
     });
-    
-    var filterGreyname = false; 
+     
     function webSocket() {
 		var server = "";
 		if (document.domain == "dev.instasynch.com"){
@@ -318,7 +352,7 @@ function loadRoom() {
             socket.socket.connect();
         };
         socket.on('sys-message', function (data) {
-            addMessage('', data.message, '', 'hashtext');
+            addMessage({username: ""}, data.message, 'system');
         });
         socket.on('rename', function (data) {
             renameUser(data.id, data.username);
@@ -326,23 +360,22 @@ function loadRoom() {
                 userInfo['username'] = data['username'];
                 join = null;
                 $('#btn-join')['unbind']('click');
-                $('#join-chat')['remove']();
+                $('#join-box')['remove']();
                 $('#addVid')['css']('visibility', 'visible');
-                $('#cin')['removeClass']('hide');
+                $('#cin').switchClass('inactive', 'active');
                 $('#cin')['removeAttr']('disabled');
                 $('#cin')['focus']();
                 $('#URLinput')['removeAttr']('disabled');               
             }
         });
         socket.on('connecting', function () {
-            addMessage('', 'Connecting..', '', 'hashtext');
+			$("#connection-status").text("Connecting..");
 			if (global.onConnecting != undefined)
 			{
 				global.onConnecting();
 			}
         });
         socket.on('connect', function () {
-            addMessage('', 'Connection Successful!', '', 'hashtext');
             if ($['cookie']('username') === undefined || $['cookie']('sessionid') === undefined) 
             {
                 socket.emit('join', { username: '', cookie: '', room: ROOMNAME});
@@ -355,16 +388,28 @@ function loadRoom() {
 			{
 				global.onConnected();
 			}
+			if (global.onJoining != undefined)
+			{
+				global.onJoining();
+			}			
         });
         socket.on('reconnecting', function (data) {
-            addMessage('', 'Reconnecting...', 'system-msg');
 			if (global.onReconnecting != undefined)
 			{
 				global.onReconnecting();
 			}
         });
-        socket.on('reconnected', function (data) {});
-		//var reconnect = true;
+        socket.on('reconnect', function (data) {
+			if (global.onReconnect != undefined){
+				global.onReconnect();
+			}
+		});
+		socket.on('reconnect_failed', function () {
+			if (global.reconnectFailed != undefined)
+			{
+				global.reconnectFailed();
+			}			
+		});
 		socket.on('request-disconnect', function()
 		{
 			socket.disconnect();
@@ -375,6 +420,12 @@ function loadRoom() {
 				global.onDisconnect();
 			}
         });
+		socket.on('error', function(data){
+			if (global.onError != undefined)
+			{
+				global.onError();
+			}
+		});
         socket.on('userinfo', function (data) {
             if (true)//if (userInfo == null) //edit this when ready to fix unnamed bug (github issue #4)
             {
@@ -383,8 +434,9 @@ function loadRoom() {
                 {
                     join = null;
                     $('#btn-join')['unbind']('click');
-                    $('#join-chat')['remove']();
+                    $('#join-box').remove();
                     $('#addVid')['css']('visibility', 'visible');
+					$('#cin').switchClass('inactive', 'active');
                     $('#cin')['removeClass']('hide');
                     $('#cin')['removeAttr']('disabled');
                     $('#cin')['focus']();
@@ -392,7 +444,7 @@ function loadRoom() {
                 }
                 else 
                 {
-                    $('#join-chat')['show']();
+                    $('#join-box').show();
                     $('#addVid')['css']('visibility', 'hidden');
                     $('#cin')['show']();
                     $('#cin')['attr']('disabled', 'true');
@@ -413,6 +465,10 @@ function loadRoom() {
                 }
                 userInfo = data;
             }
+			if (global.onJoined != undefined)
+			{
+				global.onJoined();
+			}
         });
         socket.on('playlist', function (data) {
             loadPlaylist(data.playlist);
@@ -502,15 +558,7 @@ function loadRoom() {
         });
         socket.on('add-user', function (data) 
         {
-            var user = data['user'];
-            var room7 = '';
-            if (user['loggedin']) {
-                room7 += 'b ';
-                if (user['permissions'] > 0) {
-                    room7 += 'm ';
-                }
-            }
-            addUser(data['user'], room7, true);
+            addUser(data['user'], true);
         });
         socket.on('remove-user', function (data) 
         {
@@ -518,23 +566,7 @@ function loadRoom() {
         });
         socket.on('chat', function (data) 
         {
-            var user = data['user'];
-            if (filterGreyname === true) 
-            {
-                if (user.loggedin === false) 
-                {
-                    return;
-                }
-            }
-            if (isMuted(user.ip))
-            {
-                return;
-            }
-            var userstyle = '';
-            if (user.loggedin) {
-                userstyle += 'r ';
-            }
-            addMessage(user.username, data.message, userstyle, '');
+            addMessage(data.user, data.message, '');
         });
         socket.on('add-vid', function (data) {
             addVideo(data.info, true);
@@ -711,46 +743,85 @@ var sliderTimer = false;
 var mutedIps = new Array();
 var userInfo = null;
 var newMsg = false;
+var filterGreyname = false;
 //var video = null;
 //video = new player("media", global.sendcmd);
 //detectIE();
 
-function addMessage(username, message, userstyle, textstyle) {
-	message = linkify(message, false, true);
-	$('<span/>', {
-		"class": 'cun c1m ' + userstyle,
-		"id": '',
-		"css": {
-			"padding-left": '10px'
-		},
-		"html": username + ':'
-	}).appendTo('#chat_list');
-	if (message[0] == '/' && $codes[message.substring(1)] != undefined) 
+function addMessage(user, message, extraStyles) { //extraStyles = additional classes FOR THE MESSAGE STYLE
+	var usernameClass = "";
+	if (filterGreyname === true)
 	{
-		var emote = message['substring'](1);
-		$('<span/>', {
-			"class": 'cm',
-			"html": $codes[emote]
-		}).appendTo('#chat_list');
-	} 
-	else 
-	{
-		if (message['substring'](0, 4) == '&gt;') {
-			textstyle = 'greentext';
+		if (user.loggedin === false) 
+		{
+			return;
 		}
-		if (message[0] == '#') {
-			textstyle = 'hashtext';
-		}
-		$('<span/>', {
-			"class": 'cm ' + textstyle,
-			"id": '',
-			"css": {},
-			"html": message
-		}).appendTo('#chat_list');
 	}
-	$('#chat_list').append($('<br/>'));
+	if (isMuted(user.ip))
+	{
+		return;
+	}
+	if (user.loggedin) {
+		usernameClass += 'registered ';
+	}
+	else{
+		usernameClass += 'unregistered';
+	}
+	var messageBox = $('<div/>', {
+		"class": "message"
+	});
+	if (message.substring(0,4) == "/me "){ //emote text
+		message = message['substring'](3);
+		messageBox.append($("<span/>",{
+			"class":"emote",
+			"text":user.username + " " + message
+		}));
+	}
+	else if(message.substring(0, 4) == '&gt;'){ //greentext
+		messageBox.append($("<span/>", {
+			"class":"username "+usernameClass,
+			"text":user.username+": "
+		}));
+		messageBox.append($("<span/>",{
+			"class":"text greentext",
+			"html":message //convert to text when switching anti xss to client side
+		}));
+	}
+	else if (message[0] == "#"){ //hashtext
+		messageBox.append($("<span/>", {
+			"class":"username "+usernameClass,
+			"text":user.username+": "
+		}));
+		messageBox.append(($("<span/>",{
+			"class":"text hashtext",
+			"html":message //convert to text when switching anti xss to client side
+		})));	
+	}
+	else if(message[0] == '/' && $codes[message.substring(1)] != undefined){ //emote
+		var emote = message['substring'](1);
+		messageBox.append($("<span/>", {
+			"class":"username "+usernameClass,
+			"text":user.username+": "
+		}));
+		messageBox.append($("<span/>",{
+			"class":"",
+			"html":$codes[emote]
+		}));
+	}
+	else{ //regular message
+		messageBox.append($("<span/>", {
+			"class":"username "+usernameClass,
+			"text":user.username+": "
+		}));
+		var msg = $("<span/>",{
+			"class":"text "+extraStyles,
+			"html":linkify(message)//switch this to text when switching to xss prevention client side
+		});
+		messageBox.append(msg);
+	}
+	$("#chat-messages").append(messageBox);	
 	if (autoscroll === true) {
-		var textarea = document.getElementById('chat_list');
+		var textarea = document.getElementById('chat-messages');
 		textarea.scrollTop = textarea.scrollHeight;
 	}
 	if (!$('#cin')['is'](':focus')) {
@@ -771,75 +842,79 @@ function cleanChat()
 		max = max*2;
 	}
 	while(messages > max){
-		$('#chat_list > :first-child').remove(); //span user
-		$('#chat_list > :first-child').remove(); //span message
-		$('#chat_list > :first-child').remove(); //<br>
+		$('#chat-messages > :first-child').remove(); //div messages
 		messages--;
 	}
 }
-function addUser(user, css, sort) {
+function addUser(user, sort) {
+	var css = '';
+	if (user['loggedin']) {
+		css += 'registered ';
+	}
+	if (user['permissions'] > 0) {
+		css += 'm ';
+	}
+	css += isMuted(user.ip) ? "muted" : "";
 	user.css = css;
-	var muted = isMuted(user.ip) ? "muted" : "";
 	users.push(user);
-	var userElement = $('<div/>', {
-		"class": "user_list " + muted,
-		"data": {username: String(user.username), id: user.id, css: css
-		},
+	var userElement = $('<li/>', {
+		"class": css,
+		"text":user.username,
+		"data": {username: String(user.username), id: user.id, css: css, loggedin: user.loggedin, ip: user.ip},
 		"click": function () {
 			$('#cin')['val']($('#cin')['val']() + $(this).data('username'));
 			$('#cin')['focus']();
-		},
-		"css": {
-			"cursor": 'default'
 		}
-	}).append($('<div/>', {"class": css})
-	.append($('<span/>', {"html": user.username})));
+	});
 	userElement.hover(function () 
 	{
 		var thisElement = $(this);
 		$(this).data('hover', setTimeout(function () 
 		{
-			$('#bio .username span').html(thisElement.data('username'));
-														  //$("#chat").offset().top is the offten from the top of the page, Use turnary operation: If bio goes above chat, minus some pixels
-			$('#bio').css('top', ((thisElement.offset().top - $("#chat").offset().top - 15) < -10 ? -10 : thisElement.offset().top - $("#chat").offset().top - 15)); //cant be less than -10 pixels
-			$('#bio .avatar img').attr('src', '');
-			$('#bio .userinfo').html('');
-			$('#bio').show();
-			if (thisElement.data('css').indexOf('b') != -1) 
+			$('#bio-username').text(thisElement.data('username').toUpperCase());
+			$("#user_bio_hover").css('top', $(thisElement).offset().top - $("#chat").offset().top + 10);
+			$('#bio-image').attr('src', '');
+			$('#bio-text').text('');
+			//reset
+			$('#ban').data('id', "");
+			$('#kick').data('id', "");
+			$('#mute-button').data('ip', "");	
+			//
+			$('#user_bio_hover').show();
+			if (thisElement.data('loggedin') == true) 
 			{
 				getUserInfo(thisElement.data('username'), function (avatar, bio) {
-					$('#bio .avatar img').attr('src', avatar);
-					$('#bio .userinfo').html(bio);
+					$('#bio-image').attr('src', avatar);
+					$('#bio-text').text(bio);
 				});
 			} else {
-				$('#bio .userinfo').html('<span style=\'color: grey;\'>Unregistered</span>');
+				$('#bio-text').html("<span style='color: grey; font-style:italic'>User is not registered.</span>");
 			}
 			$('#ban').data('id', user['id']);
 			$('#kick').data('id', user['id']);
-			$('#mute').data('ip', user.ip);
-			$('#unmute').data('ip', user.ip)
+			$('#mute-button').data('ip', user.ip);
 			//show or hide mute/unmute buttons
 			if (isMuted(user.ip))
 			{
-				$("#unmute").show();
-				$("#mute").hide();
+				$("#mute-button").removeClass("");
+				$("#mute-button").addClass("");
 			}
 			else
 			{
-				$("#mute").show();
-				$("#unmute").hide();                
+				$("#mute-button").removeClass("");
+				$("#mute-button").addClass("");              
 			}
 		}, 600));
 	}, function () {
 		clearTimeout($(this).data('hover'));
 		setTimeout(function () {
 			if (!mouseOverBio) {
-				$('#bio').hide();
+				$('#user_bio_hover').hide();
 			}
 		}, 50);
 	});
-	$('#chat_users').append(userElement);
-	$('#viewercount').html(users.length);
+	$('#userlist').append(userElement);
+	$('#viewercount').text(users.length);
 	if (sort === true) {
 		sortUserlist();
 	}
@@ -850,7 +925,7 @@ function removeUser(id) {
 		if (id === users[i].id) 
 		{
 			users['splice'](i, 1);
-			$($('#chat_users').children('div')[i]).remove();
+			$($('#userlist').children('li')[i]).remove();
 			break;
 		}
 	}
@@ -869,7 +944,7 @@ function makeLeader(userId)
 				"height":"16px",
 				"width":"16px"
 			});
-			$($("#chat_users .user_list div")[i]).prepend(leaderElement);
+			$($("#userlist li")[i]).prepend(leaderElement);
 			break;
 		}
 	}    
@@ -880,15 +955,15 @@ function renameUser(id, username) {
 		if (users[i].id == id) 
 		{
 			users[i].username = username;
-			$($('#chat_users div span')[i]).html(username);
-			$($('#chat_users .user_list')[i]).data('username', username);
+			$($('#userlist li')[i]).html(username);
+			$($('#userlist li')[i]).data('username', username);
 			break;
 		}
 	}
 	sortUserlist();
 }
 function sortUserlist() {
-	var userlist = $('#chat_users .user_list')['clone'](true);
+	var userlist = $('#userlist li')['clone'](true);
 	userlist.sort(function (a, b) {
 		var keyA = $(a).data('username').toLowerCase();
 		var keyB = $(b).data('username').toLowerCase();
@@ -911,8 +986,8 @@ function sortUserlist() {
 		}
 		return 0;
 	});
-	$('#chat_users').empty();
-	$('#chat_users').html(userlist);
+	$('#userlist').empty();
+	$('#userlist').html(userlist);
 	users.sort(function (a, b) {
 		var keyA = a.username.toLowerCase();
 		var keyB = b.username.toLowerCase();
@@ -1175,6 +1250,17 @@ function skips(skips, skipsNeeded) {
 }
 function loadPlaylist(data) {
 	playlist.length = 0;
+	playlist = new Array();
+	playlist.move = function (old_index, new_index) //Code is property of Reid from stackoverflow
+	{ 
+		if (new_index >= this.length) {
+			var k = new_index - this.length;
+			while ((k--) + 1) {
+				this.push(undefined);
+			}
+		}
+		this.splice(new_index, 0, this.splice(old_index, 1)[0]);
+	};	
 	totalTime = 0;
 	$('#ulPlay').html('');
 	if (data != undefined && data.length != 0) {
@@ -1185,19 +1271,10 @@ function loadPlaylist(data) {
 	$("#videos").data("jsp").reinitialise();	
 }
 function loadUserlist(userlist) {
+	$('#userlist').empty();
 	users = new Array();
-	$('#chat_users').html('');
 	for (var i = 0; i < userlist.length; i++) {
-		var user = userlist[i];
-		var css = '';
-		if (user['loggedin']) {
-			css += 'b ';
-			if (user['permissions'] > 0) {
-				css += 'm ';
-			}
-		}
-		addUser(user, css, false);
-
+		addUser(userlist[i], false);
 	}
 	sortUserlist();
 }
@@ -1249,7 +1326,7 @@ function createPoll(poll) //poll.title, poll.options = array of {option, votes}
 				}
 				else
 				{
-					addMessage("","You must be logged in to vote on polls.","","errortext");
+					addMessage({username: ""},"You must be logged in to vote on polls.","errortext");
 				}
 			}
 		})).append($("<span/>",
@@ -1274,6 +1351,25 @@ function endPoll()
 {
 	$(".st-poll").css('display', 'none');    
 }
+function showConnectionBox(message, callback){
+	$("#connection-status").text(message);
+	var box = $("#connection-status-box");
+	if (box.css('display') == 'none'){
+		box.fadeIn(600, function(){
+			if (callback != undefined)
+				callback();
+		});
+	}
+}
+function hideConnectionBox(callback){
+	var box = $("#connection-status-box");
+	if ($("#connection-status-box").css('display') != 'none'){
+		box.fadeOut(1200, function(){
+			if (callback != undefined)
+				callback();
+		});
+	}
+}
 function mute(ip)
 {
 	mutedIps[ip] = ip;
@@ -1281,7 +1377,7 @@ function mute(ip)
 	{
 		if (users[i].ip == ip)
 		{
-			$($(".user_list")[i]).addClass("muted");
+			$($("#userlist li")[i]).addClass("muted");
 		}
 	}
 }
@@ -1292,7 +1388,7 @@ function unmute(ip)
 	{
 		if (users[i].ip == ip)
 		{
-			$($(".user_list")[i]).removeClass("muted");
+			$($("#userlist li")[i]).removeClass("muted");
 		}
 	}
 }
@@ -1326,6 +1422,6 @@ function detectIE()
 	}());
 	if (ie < 10)
 	{
-		addMessage("","Internet Explorer versions 9 and and older are not supported. Please upgrade to I.E. 10 or later.","","errortext");
+		addMessage({username: ""},"Internet Explorer versions 9 and and older are not supported. Please upgrade to I.E. 10 or later.","errortext");
 	}
 }

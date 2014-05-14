@@ -68,7 +68,7 @@
 								Banning and kicking users can be done by either using the 'ban or 'kick command, or by hovering over the profile of the person you wish
 								to kick/ban and clicking the corresponding button. Bans last until lifted using 'unban. To ban a user who has already left the room,
 								use 'leaverban. 'leaverban will ban the last user with the given username, however, it only works if they have recently left. 
-								Bans are IP based and not username based. In the near future this functionality will change and bans will be username as well. To view all bans type 'banlist.
+								Bans are IP based and username based.
 							</p>
 						</div> 
 						<div class="category">

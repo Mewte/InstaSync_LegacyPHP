@@ -151,7 +151,7 @@ if (cluster.isMaster) {
                 rooms[socket.info.room].leave(socket);
             }
 		}
-		//socket.disconnect(); //remove socket from clients memory in master
+		//socket.disconnect(); //causes error..?
 	}
 	function message(socket, message){
 		if (socket.joined && socket.info.username.toLowerCase() != "unnamed")

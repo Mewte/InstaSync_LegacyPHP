@@ -2,12 +2,11 @@
     if(strpos($_SERVER['HTTP_HOST'], "instasynch.com") === false)
     {
         header('HTTP/1.0 404 Not Found');
-	echo "Domain mismatch.";
-	exit();
+		echo "Domain mismatch.";
+		exit();
     }
 ?>
 <?php 
-    header('Access-Control-Allow-Origin: *');
 	header("Cache-Control: no-cache");
 	header("Pragma: no-cache");
     $roomname = str_replace("/", "", $_GET["room"]);
@@ -45,6 +44,7 @@
 	$query->execute(array("visits"=>$visits, "room_id"=>$room_id));
     //-----------
 ?>
+
 <script>
 	var ROOMNAME = "<?php echo $roomname; ?>";
 	global.page.url = "/rooms/" + ROOMNAME;
@@ -100,40 +100,45 @@
 					 </ul>
 				</div>
 			</div>                                                    
-			<div id="chat">        
-				<div id="chat_list">
-
-				</div>  
-				<div id="chat_users">
-					<!-- in the future, make this a list -->
-				</div>                           
-				<input id="cin" maxlength="240" type="text" disabled="true"/>
-				<div id="join-chat" style="display: none;">
-					<input id="join" maxlength="16" style="color: black;" class="name placeholder" placeholder="Enter a name">
-					<button id="btn-join" class="basic-btn join" tabindex="15">Join</button>
-				</div>
-				<div id="bio" style="display: none;">
-					<div class="username">
-						<span></span>
+			<div id="chat" class="inactive">
+				<div class="left">
+					<div class="messages" id="chat-messages">
 					</div>
-					<div class="userinfo">
-					</div>
-					<div class="avatar">
-						<img src=""/>
-					</div>
-					<button id="mute">Mute</button>
-					<button id="unmute">Unmute</button>
-					<button id="kick" class="mod">Kick</button>
-					<button id="ban" class="mod">Ban</button>
-				</div>
-				<div id="chat_controls" style="">
-					<div class="controls" >
-						<div id="gear" class="settings toggle">
-							<img height="16" src="/images/gear.png" width="16"/> 
+					<div class="chat-input">
+						<input id="cin" class="inactive" maxlength="240" disabled/>
+						<div class="join-box" id="join-box">
+							<input id="join-username" maxlength="16" placeholder="Enter a Username"/>
+							<button id="join">Join</button>
 						</div>
-					</div>                           
-					<div class="content hide"></div>
-				</div>                         
+					</div>
+					<div class="connection-status-box" id="connection-status-box">
+						<div class="fade">
+							<div class="connection-status" id="connection-status">Connecting..</div>
+							<div class="loading-image"></div>
+						</div>
+					</div>
+				</div>
+				<div class="right">
+					<div class="users">
+						<ul id="userlist" class="username"></ul>
+					</div>
+					<div id="user_bio_hover" class="user-bio-container">
+						<div class="bio-image">
+							<img id="bio-image" src="" />
+						</div>
+						<div class="controls">
+							<div class="unmuted" id="mute-button" title="Toggle mute/unmute"></div>
+							<div class="mod kick" id="kick" title="Kick user"></div>
+							<div class="mod ban" id="ban" title="Ban user"></div>
+						</div>
+						<div class="bio-text">
+							<p id="bio-text">	
+								
+							</p>
+						</div>
+						<div id="bio-username" class="username"></div>
+					</div>
+				</div>
 			</div>
 			<div id="playlist">
 				<div class="playlist-controls">

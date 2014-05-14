@@ -1,0 +1,234 @@
+#chat{
+	float: left;
+	background-color: white;
+	width: 440px;
+}
+#chat.active{
+	background-color: white;
+}
+#chat.inactive{
+	background-color: rgb(234,234,234);
+}
+#chat .left{
+	float: left;
+	height: 320px;
+	display: inline-block;
+	width: 320px;
+	position: relative;
+}
+#chat .right{
+	float: right;
+	height: 320px;
+	width: 120px;
+	display: inline-block;
+	overflow: visible; /* So that the bio wont be cut off */
+	position: relative;
+}
+#chat .left .messages{
+	height: 292px;
+	border: 1px solid #C4C4C4;
+	border-left: none;
+	border-top: none;
+	padding: 4px;
+	overflow: hidden;
+	overflow-y: auto;
+	word-wrap: break-word;
+	line-height: normal;
+}
+#chat .left .messages .message{
+	display: block;
+}
+#chat .left .messages .message .username.unregistered{
+	color: #666;
+}
+#chat .left .messages .message .username.registered{
+	color: black;
+}
+#chat .left .messages .message .username{
+	font-weight: bold;
+}
+#chat .left .messages .message .emote{
+	font-style: italic;
+	color: #888;
+}
+#chat .messages .message .greentext{
+	color: #789922;
+}
+#chat .messages .message .system{
+	color: #7882BF;
+	font-weight: bold;
+}
+#chat .messages .message .hashtext{
+	color: #7882BF;
+}
+#chat .messages .message .errortext{
+	color: rgb(204,65,65);
+}
+#chat .right .users{
+	border-bottom: 1px solid #C4C4C4;
+	height: 100%;
+	font-size: 12px;
+	overflow: auto;
+}
+#chat .right .users li{
+	padding: 4px 0px 4px 4px;
+	text-overflow:ellipsis;
+	max-width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+}
+#chat .right .users li:hover{
+	cursor: pointer;
+	background-color: #D1E1FA;
+}
+#chat .right .users .registered{
+	font-weight: bold;
+}
+#chat .right .users .m{
+	color: #C9421D;
+}
+#chat .right .users .userinfo{
+	
+}
+#chat .left .chat-input{
+	position: relative;
+}
+#chat .left .chat-input .join-box{
+	position: absolute;
+	left: 50%;
+	display: none;
+	color: #555;
+	top: 0px;
+	margin: 2px -85px;
+}
+#cin{
+	width: 100%;
+	height: 28px;
+	display: block;
+	border: 1px solid silver;
+	padding: 5px;
+	color: #555;
+}
+#cin.inactive{
+	background-color: rgb(200,200,200);
+}
+#cin.active{
+	background-color: white;
+}
+#chat .left .connection-status-box{
+	display: none;
+	position: absolute;
+	width: 120px;
+	height: 80px;
+	border-radius: 4px;
+	top: 50%;
+	left: 50%;
+	margin: -120px 0px 0px -40px;
+	border: 1px solid #C4C4C4;
+	background-color: white;
+	box-shadow: 2px 2px rgba(77,77,77,0.2);
+	padding: 4px;
+	text-align: center;
+}
+#chat .left .connection-status-box .loading-image{
+	height: 24px; 
+	width: 24px; 
+    background-image: url('/images/connecting.gif');
+	background-size: 100%;
+	position: absolute;
+	left: 50%;
+	margin: 6px 0px 0px -12px;
+}
+#chat .right .user-bio-container{
+	background-color: white;
+	border-radius: 4px;
+	border: 1px solid #C4C4C4;
+	background-color: white;
+	box-shadow: 2px 2px rgba(77,77,77,0.2);
+	box-shadow: 0 0 5px 2px rgba(0,0,0,.35);
+	width: 240px;
+	height: 250px;
+	position: absolute;
+	top: 10px;
+	left: -190px;
+	background-image: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.05));
+	padding: 4px;
+	z-index: 2;
+	display: none;
+	
+}
+#chat .right .user-bio-container .bio-image{
+	width: 195px;
+	height: 113px;
+	background-color: white;
+	border-radius: 4px;
+	box-shadow: 0px 0px 50px 4px rgba(77,77, 77, 0.1) inset;
+	position: relative;
+}
+#bio-image{
+	max-width:  195px;
+	max-height: 113px;
+	position:absolute;
+	margin:auto;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+}
+#chat .right .user-bio-container .username{
+	color: white;
+	font-weight: bold;
+	background-color: rgba(34,34,34,0.4);
+	text-align: center;
+	padding: 2px;
+	position: absolute;
+	bottom: 2px;
+	cursor: default;
+	
+}
+#chat .right .user-bio-container .bio-text{
+	margin-top: 5px;
+	color: #555;
+	height: 105px;
+	padding: 4px;
+	border: 1px solid #C4C4C4;
+	overflow: hidden;
+	overflow-y: auto;
+	word-wrap: break-word;
+	line-height: normal;
+}
+#chat .right .user-bio-container .controls{
+	position: absolute;
+	right: 4px;
+	top: 4px;
+}
+#chat .right .user-bio-container .controls > div{
+	height: 24px;
+	width: 24px;
+	cursor: pointer;
+	margin: 2px 0px 2px 0px;
+	background-size: 100%;
+	box-shadow: 0px 0px 8px 4px rgba(77,77, 77, 0.1) inset;
+	border-radius: 4px;
+	background-repeat: no-repeat;
+}
+#chat .right .user-bio-container .controls > div:hover{
+	box-shadow: 0px 0px 50px 4px rgba(77,77, 77, 0.4) inset;
+}
+#chat .right .user-bio-container .controls > div:active{
+	box-shadow: 0px 0px 50px 4px rgba(77,77, 77, 0.6) inset;
+}
+#chat .right .user-bio-container .controls .muted{
+	background-image: url('/images/muted.png');
+}
+#chat .right .user-bio-container .controls .unmuted{
+	background-image: url('/images/unmuted.png');
+}
+#chat .right .user-bio-container .controls .kick{
+	background-image: url('/images/kick.png');
+	background-size: 18px 18px;
+	background-position: center;
+}
+#chat .right .user-bio-container .controls .ban{
+	background-image: url('/images/ban.png');
+}

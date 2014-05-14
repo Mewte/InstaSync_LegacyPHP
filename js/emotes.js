@@ -61,7 +61,6 @@ var $codes = {
     "pull": '<img src="http://i.imgur.com/fomgV.jpg" width="40" height="40">',
     "mmmm": '<img src="http://i.imgur.com/GDa6R.jpg" width="40" height="40">',
     "gang": '<img src="http://i.imgur.com/5ziar.gif" width="30" height="40">',
-    "notcp": '<img src="http://i.imgur.com/O8O7n.gif" width="25" height="38" >',
     "pomf": '<img src="http://i.imgur.com/lotDJ.gif" width="50" height="40" >',
     "usa": '<img src="http://i.imgur.com/AJdq7Xu.gif" width="25" height="25" >',
     "miku": '<img src="http://i.imgur.com/ScyKroE.gif" width="32" height="43" >',

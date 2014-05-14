@@ -302,6 +302,7 @@ module.exports.commands =
                     kickSocket.emit('sys-message', {message: "You've been kicked."});
 					kickSocket.emit("request-disconnect");
                     kickSocket.attemptDisconnect();
+					socket.emit("sys-message", {message: "User kicked."});
                     rooms[socket.info.room].kickAllByIP(kickSocket.info.ip);
                     chat_room.sockets.in(socket.info.room).emit('log', {message: socket.info.username + " has kicked a user."});
                 }

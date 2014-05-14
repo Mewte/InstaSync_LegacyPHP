@@ -46,11 +46,15 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+ input{
+	 margin: auto;
+	 padding: auto;
+	 
+ }
 /* apply a natural box layout model to all elements */
 *, *:before, *:after {
   -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
  }
-
 <?php
     $expires = 60*60*24*3; // how long to cache in secs..
     header("Pragma: public");
@@ -60,6 +64,7 @@ table {
     $location = "../includes/styles/";
     include($location . "style.css");
     include($location . "main.css");
+	include($location . "chatbox.css");
     include($location . "footer.css");
     include($location . "clickable-dropdown/main.css");
     include($location . "friendsList.css");

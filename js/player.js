@@ -153,7 +153,7 @@ function player(elementId, sendcmd)
         var autoplay = playing ? 1 : 0;
         $(media).html($('<iframe/>', {
             "id": 'vimeo',
-            "src": 'http://player.vimeo.com/video/' + vidinfo.id + '?api=1&autoplay='+ autoplay +'&player_id=vimeo',
+			"src":"http://vimeo.instasynch.com/vimeo-redirect.php?id="+vidinfo.id+"&autoplay="+autoplay,
             "width": '550',
             "height": '320',
             "frameborder": '0'
@@ -212,7 +212,8 @@ function player(elementId, sendcmd)
             previousPlayProgress = data.seconds;
         }    
         this.play = function(vidinfo, time, playing){
-            $('#vimeo').attr('src', 'http://player.vimeo.com/video/' + vidinfo.id + '?api=1&player_id=vimeo&autoplay=1&t=' + time);
+            //$('#vimeo').attr('src', 'http://player.vimeo.com/video/' + vidinfo.id + '?api=1&player_id=vimeo&autoplay=1&t=' + time);
+			$("#vimeo").attr('src', "http://vimeo.instasynch.com/vimeo-redirect.php?id="+vidinfo.id+"&autoplay="+autoplay);
         };
         this.seekTo = function(time)
         {
