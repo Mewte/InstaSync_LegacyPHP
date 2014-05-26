@@ -2,7 +2,7 @@
 //actions add, remove, purge
 	header('Content-Type: application/json');
     require(dirname(__FILE__) . "/../includes/connect.php");
-    if (isset($_POST["username"], $_POST['loggedin'], $_POST["ip"], $_POST["room"], $_POST["action"]))
+    if (isset($_POST["username"], $_POST["ip"], $_POST["room"], $_POST["action"]))
     {   
 		$db = createDb(true);
         if ($_POST["action"] == "add")
