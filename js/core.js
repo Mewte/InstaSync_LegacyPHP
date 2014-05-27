@@ -287,13 +287,16 @@ function loadRoom() {
 	
         //-----------------------
 		showConnectionBox("Connecting..", function(){
+			if (cleanUp == false) //to stop the double connect when leaving before the show connection box function finishes
 		        room.connect();	
 		});
+		var cleanUp = false; 
 		$("#cleanUpOnRemoval").on("remove", function() //disconnect when swapping page
 		{
 			global.sendcmd = null;
 			video = null;
 			room.disconnect();
+			cleanUp = true;
 		});
     });
      
