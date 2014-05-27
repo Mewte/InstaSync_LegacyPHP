@@ -1265,7 +1265,7 @@ function loadPlaylist(data) {
 		this.splice(new_index, 0, this.splice(old_index, 1)[0]);
 	};	
 	totalTime = 0;
-	$('#ulPlay').html('');
+	$('#video-list').html('');
 	if (data != undefined && data.length != 0) {
 		for (var i = 0; i < data.length; i++) {
 			addVideo(data[i], false);
