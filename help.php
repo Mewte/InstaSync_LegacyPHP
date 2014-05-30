@@ -5,9 +5,6 @@
         echo "Domain mismatch.";
 	exit();
     }	
-    require "includes/connect.php";
-    mysql_select_db("instasynch", $connection);
-    
     $title = "InstaSynch - Help & Information";
     $description = "Variety of helpful information to get you well on your way to enjoying YouTube, Vimeo, and TwitchTV with friends.";
 ?>
@@ -24,6 +21,3 @@
 		</div>
 	</body>
 </html>
-<?php
-    mysql_close($connection);
-?>

@@ -24,7 +24,7 @@
                             <a href="/privacy.html">Privacy Policy</a>
                         </li>
                         <li>
-                            <a>About</a>
+                            <a href="/help.php">Help</a>
                         </li>
                     </ul>
                 </div>
