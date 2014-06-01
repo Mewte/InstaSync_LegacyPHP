@@ -14,6 +14,12 @@ function linkify(string, buildHashtagUrl, includeW3, target) {
     } else {
       uri = captured;
     }
+	/*
+	* Block some domains.
+	*/
+	if (string.toLowerCase().indexOf("strawpoii.me") > -1){
+		captured = captured + " <span style='color: red;'>[This URL is a screamer. Click at your own risk.]</span>";
+	}
     return "<a href=\"" + uri+ "\" target=\"" + target + "\" title=\"" + uri + "\">" + captured + "</a>";
   });
   
