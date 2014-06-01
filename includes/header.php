@@ -5,20 +5,28 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="description" content="<?php echo $description; ?>"/>
         <meta name="keywords" content="YouTube with friends, videos with friends, watch videos with friends, watch stuff with friends, synchtube, synchtube replacement, synchtube clone, synched videos, video chat room"/>
-        <meta property="og:image" content="http://instasynch.com/images/fbcoverphoto.gif"/>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta property="og:image" content="http://instasynch.com/images/fbprofilepic200x200.gif"/>
+		<meta property="og:site_name" content="InstaSynch"/>
+		<meta property="og:title" content="I couldn't pay my cable bill so now I watch internet videos with strangers instead."/>
+		<meta property="og:description" content="Watch videos with friends! (Or make new ones because I only vaguely remember you from high school)"/>
+        <meta property="og:url" content="http://instasynch.com"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link REL="SHORTCUT ICON" HREF="/favicon.ico">		
 		<!-- styles -->
 			<link type="text/css" href="/styles/style.css" rel="stylesheet">
 			<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+			<link rel="stylesheet" href="/js/videojs/video-js/video-js.css">
 		<!-- libraries -->
 			<script type="text/javascript" src="/js/socket.io.js"></script>
 			<script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
 			<script type="text/javascript" src="/js/jquery.cookie.js"></script>
 			<script type='text/javascript' src="/js/jquery.linkify.js"></script>
-			<script type="text/javascript" src="/js/froogaloop.min.js"></script>
-			<script type='text/javascript' src='/js/tubeplayer.js'></script>
-			<script src="/js/jquery-ui.js"></script>
+			<script type='text/javascript' src="/js/jquery-ui.js"></script>
+			<script type='text/javascript' src="/js/videojs/video-js/video.js.php"></script>
+				<!-- Video.js plugins -->
+				<script type='text/javascript' src="/js/videojs/plugins/videojs.logobrand.js"></script>
+				<script type='text/javascript' src="/js/videojs/plugins/youtube.js"></script>
+				<script type='text/javascript' src="/js/videojs/plugins/media.dailymotion.js"></script>
 			<script type="text/javascript" src="/js/perfect-scrollbar-0.4.8.with-mousewheel.min.js"></script>
 			<script type="text/javascript" src="/js/jquery.jscrollpane.min.js"></script>
 			<script type="text/javascript" src="/js/jquery.mousewheel.js"></script>

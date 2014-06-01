@@ -98,7 +98,7 @@
 						<li>5 If you'd like to make your room private (It wont appear on the front page) then visit the <a href="/settings/#tabs-2" target="_blank">room settings page</a> and uncheck "Public".</li>
 						<li>6. Check out the <a href="/help.php" target="_blank">Help</a> page for more information.</li>
 					 </ul>
-				</div>
+				</div>			
 			</div>                                                    
 			<div id="chat" class="inactive">
 				<div class="left">
@@ -143,12 +143,8 @@
 			<div id="playlist">
 				<div class="playlist-controls">
 					<div class="leader sliderContainer" style="display: none;">
-						<div id="play" class="play-button icon"></div><div id="pause" class="pause-button icon"></div>
-						<div id="slider" class="slider" style="padding: 2px 0px 2px 0px; height: 15px; margin: 6px 0px 0px 12px;">
-							<div class="info" style="font-size: 10px; float: right;">
-								<span id="sliderCurrentTime">0:00</span>
-								<span id="sliderDuration">/ 5:00</span>
-							</div>
+						<div style="text-align: center; color: white; width: 100%; height: 100%;">
+							Your player is now controlling the room.
 						</div>
 					</div>
 					<div class="controls noselect">

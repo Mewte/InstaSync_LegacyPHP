@@ -12,6 +12,8 @@ logs
 results
 build
 
+video.instasynch.min.js
+
 node_modules
 /nbproject/private/
 nbproject

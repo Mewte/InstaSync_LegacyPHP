@@ -125,7 +125,6 @@ module.exports.commands =
                         {
                             if (vidinfo.mediaType === "stream")
                             {
-                                var request = require('request')
                                 var url = 'http://api.twitch.tv/channels/' + vidinfo.channel // input your url here
 
                                 // use a timeout value of 10 seconds
@@ -160,16 +159,56 @@ module.exports.commands =
                                             addedby: socket.info.username,
                                             duration: 60*60*24,
                                             title: parser.replaceTags(vidinfo.channel)
-                                        }
+                                        };
                                         socket.emit('sys-message', {message: rooms[socket.info.room].addVideo(info)});                                      
                                   }
-                                })       
+                                });       
                             }
                             else
                             {
                                 socket.emit('sys-message', {message: "Twitch.tv non stream media is not supported yet."});
                             }
                         }
+						else if (vidinfo.provider === "dailymotion"){
+                                var url = "https://api.dailymotion.com/video/"+vidinfo.id+"?fields=duration,allow_embed,title,thumbnail_180_url";
+                                // use a timeout value of 10 seconds
+                                var timeoutInMilliseconds = 10*1000;
+                                var opts = { url: url, timeout: timeoutInMilliseconds};
+                                request(opts, function (err, res, body) {
+                                  if (err) {
+                                    socket.emit('sys-message', {message: "Failed to add video. Try again later."});
+                                    return;
+                                  }
+                                  var statusCode = res.statusCode;
+                                  if (statusCode !== 200)
+                                  {
+                                      socket.emit("sys-message", {message: "Video not found."});
+                                  }
+                                  else
+                                  {
+										body = JSON.parse(body);
+										if (body.allow_embed != true){
+											socket.emit("sys-message", {message: "This video does not allow embeding."});
+											return;
+										}
+                                        var info = 
+                                        {
+                                            info: 
+                                            {
+                                                provider: vidinfo.provider,
+                                                mediaType: vidinfo.mediaType,
+                                                id: vidinfo.id,
+                                                channel: vidinfo.channel,
+                                                thumbnail: body.thumbnail_180_url
+                                            },
+                                            addedby: socket.info.username,
+                                            duration: body.duration,
+                                            title: parser.replaceTags(body.title)
+                                        };
+                                        socket.emit('sys-message', {message: rooms[socket.info.room].addVideo(info)});                                      
+                                  }
+                                }); 
+						}
                     }     
                     else
                     {

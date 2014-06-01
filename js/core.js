@@ -16,7 +16,6 @@ global.loadRoomObj = null;
 global.page = new Object();
 global.page = {title: null, url: null, name: null, room: null};
 global.sendcmd = null;
-
 var video = null;
 
 //socket events mainly used for the connection status dialog box
@@ -90,7 +89,42 @@ global.loadRoomObj = loadRoom;
 function loadRoom() {
     var room = new webSocket();
 	global.sendcmd = room.sendcmd;
-	video = new player("media", global.sendcmd);
+	video = new player("media");
+	var queue = null; //stores resynch limiter timeout
+	function requestResynch(){
+		console.log("Resynch requested..");
+		if (queue === null && autosynch){
+			queue = setTimeout(function() //prevent to many resynchs
+			{
+				console.log("Resynch request sent.");
+				global.sendcmd("resynch", null);
+				queue = null;
+			}, 1000);
+		}
+	}
+	video.on["userSeeked"] = function(time){
+		if (isLeader){
+			global.sendcmd('seekto', {time: time});
+		}
+		else
+			requestResynch();
+	};
+	video.on["userPlayed"] = function(){
+		if (isLeader){
+			global.sendcmd('resume', null);
+		}
+		else{//resynch
+			requestResynch();
+		}
+	};
+	video.on["userPaused"] = function(){
+		if (isLeader){
+			global.sendcmd('pause', null);
+		}		
+	};
+	video.on['resynchNeeded'] = function(){ //trigger this if a resynch is needed? perhaps after a buffer?
+		requestResynch();
+	};
 	messages = 0;
 	detectIE();
 
@@ -155,7 +189,7 @@ function loadRoom() {
             room.sendcmd('resynch', null);
         });
         $('#reload').click(function () {
-            video.destroyPlayer();
+            video.destroy();
             room.sendcmd('reload', null);
         });
         $('#cin')['focus'](function () {
@@ -197,34 +231,6 @@ function loadRoom() {
         }, function () {
             $('#user_bio_hover').hide();
             mouseOverBio = false;
-        });
-        //Player Controller
-        $( "#slider" ).slider(
-        {
-            "slide":function(event, ui)
-            {
-                $("#sliderCurrentTime").html(secondsToTime(ui.value));
-                
-            },
-            "start": function(event, ui)
-            {
-                $("#slider").data("sliding", true);
-            },
-            "stop":function(event, ui)
-            {
-                //sendcmd("seekTo", ui.valie)
-               room.sendcmd("seekto", {time: ui.value});
-                $(this).data("sliding", false);
-            }
-        });
-        $("#slider").data("sliding", false); //do not update timer while sliding
-        $("#play").click(function()
-        {
-           room.sendcmd("resume", null);
-        });
-        $("#pause").click(function()
-        {
-           room.sendcmd("pause", null);
         });
         $("#lead").click(function()
         {
@@ -294,6 +300,7 @@ function loadRoom() {
 		$("#cleanUpOnRemoval").on("remove", function() //disconnect when swapping page
 		{
 			global.sendcmd = null;
+			video.destroy();
 			video = null;
 			room.disconnect();
 			cleanUp = true;
@@ -522,19 +529,6 @@ function loadRoom() {
                         
                     });
                     $("#video-list").sortable( "enable" );
-                    sliderTimer = setInterval(function()
-                    {
-                       video.time(function(time)
-                       {
-                           if ($("#slider").data("sliding") === false)
-                           {
-                               time = Math.round(time);
-                               $( "#slider" ).slider("option", "value", time);
-                               $("#sliderCurrentTime").html(secondsToTime(time));
-                           }
-                       });
-                    }, 1000);
-                    
                     $("#lead").hide();
                     $("#unlead").show();
                 }
@@ -543,11 +537,6 @@ function loadRoom() {
                     if (isLeader)
                     {
                         isLeader = false;
-                        if (sliderTimer != false)
-                        {
-                            clearTimeout(sliderTimer);
-                            sliderTimer = false;
-                        }
                         $(".leader").css("display", "none");
                         $("#video-list").sortable("disable");
                         $("#unlead").hide();
@@ -742,11 +731,11 @@ var mouseOverBio = false;
 var autoscroll = true;
 var isMod = false;
 var isLeader = false;
-var sliderTimer = false;
 var mutedIps = new Array();
 var userInfo = null;
 var newMsg = false;
 var filterGreyname = false;
+var autosynch = true;
 //var video = null;
 //video = new player("media", global.sendcmd);
 //detectIE();
@@ -1191,6 +1180,9 @@ function url(vidinfo)
 			if (vidinfo.info.mediaType === "stream")
 				return 'http://twitch.tv/' + vidinfo.info.channel;
 		}
+		else if (vidinfo.info.provider === 'dailymotion'){
+			return "http://dailymotion.com/video/"+vidinfo.info.id;
+		}
 		else{
 			return "http://instasynch.com";
 		}
@@ -1204,8 +1196,8 @@ function playlistlock(value) {
 }
 function toggleAutosynch()
 {
-	video.autosynch = !video.autosynch;
-	if (video.autosynch)
+	autosynch = !autosynch;
+	if (autosynch)
 	{
 		global.sendcmd('resynch', null);
 	}
@@ -1222,8 +1214,6 @@ function playVideo(vidinfo, time, playing) {
 		$($('#video-list').children('li')[indexOfVid]).addClass('active');
 		$('#vidTitle').html(title + '<div class=\'via\'> via ' + addedby + '</div>');
 		video.play(vidinfo, time, playing);   
-		$( "#slider" ).slider("option", "max", playlist[indexOfVid].duration);
-		$("#sliderDuration").html("/" + secondsToTime(playlist[indexOfVid].duration))
 	}
 }
 function resume() {
