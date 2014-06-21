@@ -8,8 +8,7 @@
 	header("Cache-Control: no-cache");
 	header("Pragma: no-cache");
 	
-    require  dirname(__FILE__) . '/../includes/connect.php';
-	$db = createDb();
+    require  dirname(__FILE__) . '/../includes/data.php';
     $title = "InstaSynch - Watch videos with friends!";
     $description = "Watch synchronized videos with friends and strangers!";
 ?>
@@ -69,28 +68,28 @@
 	</div>
 	<div class="content-body">
 		<?php
-			$query = $db->query("SELECT room.*, user.username as roomname, least(room.users, 10) * rand() as result FROM rooms as room 
-						JOIN users as user ON room.room_id = user.id 
-						where users > 0 
-						and listing = 'public' and title <> 'No Videos' and (NSFW = 0 or NSFW = 1)
-						order by result desc limit 24");
-			$roomlist = $query->fetchAll(PDO::FETCH_ASSOC);
-			foreach ($roomlist as $room)
-			{
-				echo "<div class='room'>";
-					echo "<div class='left'>";
-						echo "<a href='/rooms/{$room["roomname"]}' onclick='global.requestPartialPage(\"room\", \"{$room["roomname"]}\"); return false;'>";
-							echo "<img width='120px' height='90px' src='{$room["thumbnail"]}'></img>";
-						echo "</a>";
-						echo "<div class='title'>".htmlspecialchars($room["title"])."</div>";
-						echo "<div class='viewers'>{$room["users"]} Viewing</div>";
-					echo "</div>";
-					echo "<div class='right'>";
-						echo "<div class='name'><a href='/rooms/{$room["roomname"]}' onclick='global.requestPartialPage(\"room\", \"{$room["roomname"]}\"); return false;'>{$room["roomname"]}</a></div>";
-						echo "<p class='about'>". htmlspecialchars($room["description"]) . "</p>";
-					echo "</div>";
-				echo "</div>";  
-				echo PHP_EOL;
+			$is_data = new instasynch_data(createDb(), createMc());
+			if ($is_data->load("Roomlist")){
+				foreach ($is_data->getData() as $room)
+				{
+					echo "<div class='room'>";
+						echo "<div class='left'>";
+							echo "<a href='/rooms/{$room["roomname"]}' onclick='global.requestPartialPage(\"room\", \"{$room["roomname"]}\"); return false;'>";
+								echo "<img width='120px' height='90px' src='{$room["thumbnail"]}'></img>";
+							echo "</a>";
+							echo "<div class='title'>".htmlspecialchars($room["title"])."</div>";
+							echo "<div class='viewers'>{$room["users"]} Viewing</div>";
+						echo "</div>";
+						echo "<div class='right'>";
+							echo "<div class='name'><a href='/rooms/{$room["roomname"]}' onclick='global.requestPartialPage(\"room\", \"{$room["roomname"]}\"); return false;'>{$room["roomname"]}</a></div>";
+							echo "<p class='about'>". htmlspecialchars($room["description"]) . "</p>";
+						echo "</div>";
+					echo "</div>";  
+					echo PHP_EOL;
+				}
+			}
+			else{
+				//some sort of data error
 			}
 		?>
 	</div>
