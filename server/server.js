@@ -186,6 +186,8 @@ if (cluster.isMaster) {
 		var ip = "";
 		//Fixes rare error that happened from time to time
         try {ip = socket.manager.handshaken[socket.id].address.address} catch (e) {console.log("Error with socket IP address"); socket.emit("request-disconnect"); socket.attemptDisconnect(); return;}
+		//var ip = req.header('x-forwarded-for') || req.connection.remoteAddress; when using reverse proxy
+	
 		//Max IP connected to this worker logic
 		if (iptable[ip] != undefined)
         {
@@ -299,4 +301,26 @@ if (cluster.isMaster) {
 			}
 		});
 	});
+}
+else{
+	//Just some reverse proxy stuff we experimented with. Works breddy good.
+	var http = require('http');
+	var httpProxy = require('http-proxy');
+	var server = cluster.fork();
+	var proxy = new httpProxy.createProxyServer({
+		  target: {
+			host: 'localhost',
+			port: 38888,
+			ws: true
+		  }
+	});
+	var proxyServer = http.createServer(function (req, res) {
+		//console.log(req.headers);
+		req.headers['x-forwarded-for'] = req.connection.remoteAddress
+		proxy.web(req, res);
+	});	
+	proxyServer.on('upgrade', function (req, socket, head) {
+		proxy.ws(req, socket, head);
+	});
+	proxyServer.listen(38000);
 }
