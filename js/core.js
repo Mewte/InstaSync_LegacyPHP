@@ -188,6 +188,11 @@ function loadRoom() {
         $('#resynch').click(function () {
             room.sendcmd('resynch', null);
         });
+		$("#toggleYTcontrols").click(function(){
+			showYTcontrols = !showYTcontrols;
+            video.destroy();
+            room.sendcmd('reload', null);			
+		});
         $('#reload').click(function () {
             video.destroy();
             room.sendcmd('reload', null);
@@ -531,6 +536,12 @@ function loadRoom() {
                     $("#video-list").sortable( "enable" );
                     $("#lead").hide();
                     $("#unlead").show();
+					/*
+					 * Make sure to show YouTube control bar for leader
+					 */
+					if (video.video != null){
+						video.video.controls(true);
+					}
                 }
                 else
                 {
@@ -545,6 +556,12 @@ function loadRoom() {
                             $("#lead").show();
                         }
                     }
+					/*
+					 * Disable video.js for youtube if the user has yt controls on
+					 */
+					if (video.video != null && video.loadedVideo.provider == "youtube"){
+						video.video.controls(!showYTcontrols);
+					}
                 }
             }
         });
@@ -711,19 +728,27 @@ function loadRoom() {
 }
 });
 
-	//Moved all these down here so they can be exposed for userscripts
-	var users = new Array();
-	var playlist = new Array();
-	playlist.move = function (old_index, new_index) //Code is property of Reid from stackoverflow
-	{ 
-		if (new_index >= this.length) {
-			var k = new_index - this.length;
-			while ((k--) + 1) {
-				this.push(undefined);
-			}
+/* ------------------------------
+ *  [GLOBAL SCOPE] 
+ *  Most of these get reset during a partial page reload
+ *  Todo: Declare these elsewhere so they can get redeclared
+ *  and reset on reload
+ * ------------------------------
+ */
+
+//Moved all these down here so they can be exposed for userscripts
+var users = new Array();
+var playlist = new Array();
+playlist.move = function (old_index, new_index) //Code is property of Reid from stackoverflow
+{ 
+	if (new_index >= this.length) {
+		var k = new_index - this.length;
+		while ((k--) + 1) {
+			this.push(undefined);
 		}
-		this.splice(new_index, 0, this.splice(old_index, 1)[0]);
-	};
+	}
+	this.splice(new_index, 0, this.splice(old_index, 1)[0]);
+};
 var totalTime = 0;
 var messages = 0;
 var MAXMESSAGES = 175;
@@ -736,6 +761,7 @@ var userInfo = null;
 var newMsg = false;
 var filterGreyname = false;
 var autosynch = true;
+var showYTcontrols = false;
 //var video = null;
 //video = new player("media", global.sendcmd);
 //detectIE();

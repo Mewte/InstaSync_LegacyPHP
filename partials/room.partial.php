@@ -168,6 +168,7 @@
 							<ul id="playlist-settings-menu" class="menu noselect">
 								<li id="resynch" title="Resynchs the video to the correct position">Resynch</li>
 								<li id="reload" title="Reloads the video if video failed to load or an error occured.">Reload</li>
+								<li id="toggleYTcontrols" title="Enable/disabe YouTube controls on video player. (YouTube only)">Toggle YT Controls</li>
 								<li title="Enable or disable video autosynch"><label for="autosynch">Autosynch</label><input id="autosynch" type="checkbox" value="Autosynch" checked/></li>
 							</ul>
 						</div>

@@ -87,9 +87,13 @@ function player(containerID){
 			player.video = videojs("youtube", {
 					"techOrder": ["youtube"], 
 					"src": src,
-					"blockClick":isLeader //temporary
+					"blockClick":isLeader, //temporary
+					ytcontrols: showYTcontrols
 				}).ready(function(){
 					var p = this;
+					if (isLeader){ //be sure video.js controls are on if leader
+						p.controls(true);
+					}
 					attachGenericEvents(p);
 					this.one('playing', function(){
 						p.currentTime(time);
