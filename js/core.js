@@ -326,13 +326,14 @@ function loadRoom() {
 		var delay = 0;
         socket = io.connect(server + ":" + port, 
         {
+			query: "room="+ROOMNAME,
             reconnect: true,
             "force new connection": true,
             "try multiple transports": false,
             "reconnection delay": 1000,
             "max reconnection attempts": 5,
             "auto connect": false,
-			"sync disconnect on unload": true
+			"sync disconnect on unload": true,
 			//transports: ['jsonp-polling'] //testing
         });
         this.sendmsg = function (message) {

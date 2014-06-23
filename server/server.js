@@ -8,13 +8,13 @@ if (cluster.isMaster) {
 	var commands = require("./commands");
 	var parser = require("./parsers");
 	var crypto = require('crypto');
-
+	var port = process.env.port;
 	process.on('uncaughtException', function (error) {
 		console.log("UNHANDLED ERROR! Logged to file.");
 		fs.appendFile("crashlog.txt", error.stack + "---END OF ERROR----", function(){});
 	});
 	var connect = require('connect');
-	var app = connect(function(req, res) {res.writeHead(404); res.end("No resource found.");}).listen(38000);
+	var app = connect(function(req, res) {res.writeHead(404); res.end("No resource found.");}).listen(port);
 	global.chat_room = require('socket.io').listen(app, {"log level": 2, "heartbeat timeout": 20, "heartbeat interval": 5, "close timeout": 20, "transports": ['websocket','htmlfile', 'xhr-polling', 'jsonp-polling'], 'polling duration': 10});
 
 	//global.phploc = "http://127.0.0.1/";
@@ -175,6 +175,7 @@ if (cluster.isMaster) {
 	}
 	var iptable = new Object();
 	chat_room.sockets.on('connection', function(socket) {
+		console.log('connection from server listening on: '+ port);
 		socket.attemptDisconnect = function(){
 			if (socket.joined)
 			{
@@ -306,21 +307,55 @@ else{
 	//Just some reverse proxy stuff we experimented with. Works breddy good.
 	var http = require('http');
 	var httpProxy = require('http-proxy');
-	var server = cluster.fork();
-	var proxy = new httpProxy.createProxyServer({
-		  target: {
-			host: 'localhost',
-			port: 38888,
-			ws: true
-		  }
+	var crypto = require('crypto'); 
+	var url  = require('url');
+	
+	var server1 = cluster.fork({port: 38001});
+	var server2 = cluster.fork({port: 38002});
+	
+	var servers = [
+		38001, 38002
+	];
+	
+	var proxy = new httpProxy.createProxyServer();
+	proxy.on('error', function(){
+		console.log('error');
 	});
+	proxy.on('proxyRes', function (res) {
+	  console.log('RAW Response from the target', JSON.stringify(res.headers, true, 2));
+	});	
 	var proxyServer = http.createServer(function (req, res) {
-		//console.log(req.headers);
-		req.headers['x-forwarded-for'] = req.connection.remoteAddress
-		proxy.web(req, res);
+		var url_parts = url.parse(req.url, true);
+		var room = url_parts.query['room'];
+		if (room === undefined){
+			res.writeHead(404); 
+			res.end("Missing room parameter.");
+		}
+		else{
+			req.headers['x-forwarded-for'] = req.connection.remoteAddress;
+			var serverNumber = parseInt(crypto.createHash('md5').update(room).digest("hex").substring(1, 10),16) % 2;
+			console.log(serverNumber);
+			proxy.web(req, res, {target: {
+									host: 'localhost',
+									port: servers[serverNumber]
+									}});			
+		}
 	});	
 	proxyServer.on('upgrade', function (req, socket, head) {
-		proxy.ws(req, socket, head);
+		var url_parts = url.parse(req.url, true);
+		var room = url_parts.query['room'];
+		if (room === undefined){
+			//socket.close();
+		}
+		else{
+			req.headers['x-forwarded-for'] = req.connection.remoteAddress;
+			var serverNumber = parseInt(crypto.createHash('md5').update(room).digest("hex").substring(1, 10),16) % 2;
+			console.log(serverNumber);
+			proxy.ws(req, socket, head, {target: {
+									host: 'localhost',
+									port: servers[serverNumber],
+									ws: true}});			
+		}
 	});
 	proxyServer.listen(38000);
 }
