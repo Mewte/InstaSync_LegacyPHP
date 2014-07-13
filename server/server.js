@@ -8,7 +8,8 @@ if (cluster.isMaster) {
 	var commands = require("./commands");
 	var parser = require("./parsers");
 	var crypto = require('crypto');
-	var port = process.env.port;
+	//var port = process.env.port;
+	var port = 38000;
 	process.on('uncaughtException', function (error) {
 		console.log("UNHANDLED ERROR! Logged to file.");
 		fs.appendFile("crashlog.txt", error.stack + "---END OF ERROR----", function(){});
