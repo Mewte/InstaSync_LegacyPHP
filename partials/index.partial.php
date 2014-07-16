@@ -11,6 +11,7 @@
     require  dirname(__FILE__) . '/../includes/data.php';
     $title = "InstaSynch - Watch videos with friends!";
     $description = "Watch synchronized videos with friends and strangers!";
+	$data = new instasynch_data(createDb(), createMc());
 ?>
 <script>
 	global.page.url = "/";
@@ -41,23 +42,23 @@
 				Check out the <a href="help.php" onclick='global.requestPartialPage("help"); return false;'>Help</a> page!<br />
 				Questions/Comments? Email me at: admin@instasynch.com
 			</p>
-	<div class="social">                        
-		<span class="media" style="font-size: 11px; width: 85px; padding-top: 10px;">
-			Supported Media: 
-		</span>		
-		<span class="media">
-			  <a target="_blank" href="http://youtube.com"><img width="32" border="0" height="32" alt="youtube" src="/images/youtube.png"></img></a>                          
-		</span>
-		<span class="media">
-			<a target="_blank" href="http://vimeo.com"><img width="32" border="0" height="32" alt="vimeo" src="/images/vimeo.png"></img></a>                            
-		</span>
-		<span class="media">
-			<a target="_blank" href="http://dailymotion.com"><img width="32" border="0" height="32" alt="dailymotion" src="/images/dailymotion.png"></img></a>                            
-		</span>		
-		<span class="media">
-			<a target="_blank" href="http://twitch.tv"><img width="32" border="0" height="32" alt="twitch" src="/images/twitch.png"></img></a>                            
-		</span>	
-	</div>				
+			<div class="social">                        
+				<span class="media" style="font-size: 11px; width: 85px; padding-top: 10px;">
+					Supported Media: 
+				</span>		
+				<span class="media">
+					  <a target="_blank" href="http://youtube.com"><img width="32" border="0" height="32" alt="youtube" src="/images/youtube.png"></img></a>                          
+				</span>
+				<span class="media">
+					<a target="_blank" href="http://vimeo.com"><img width="32" border="0" height="32" alt="vimeo" src="/images/vimeo.png"></img></a>                            
+				</span>
+				<span class="media">
+					<a target="_blank" href="http://dailymotion.com"><img width="32" border="0" height="32" alt="dailymotion" src="/images/dailymotion.png"></img></a>                            
+				</span>		
+				<span class="media">
+					<a target="_blank" href="http://twitch.tv"><img width="32" border="0" height="32" alt="twitch" src="/images/twitch.png"></img></a>                            
+				</span>	
+			</div>				
 		</div>
 		<div class="right">
 			<div>
@@ -66,11 +67,22 @@
 			</div>
 		</div>
 	</div>
+	<div class="viewers-online">
+		<?php
+			if ($data->load("OnlineCount")){
+				$onlineCount = $data->getData();
+				echo $onlineCount['users'] . " Users Online in " . $onlineCount['rooms'] . " Rooms";
+			}
+			else{
+				//some sort of data error
+			}
+		?>
+	</div>
 	<div class="content-body">
 		<?php
-			$is_data = new instasynch_data(createDb(), createMc());
-			if ($is_data->load("Roomlist")){
-				foreach ($is_data->getData() as $room)
+			if ($data->load("Roomlist")){
+				$roomlist = $data->getData();
+				foreach ($roomlist as $room)
 				{
 					echo "<div class='room'>";
 						echo "<div class='left'>";

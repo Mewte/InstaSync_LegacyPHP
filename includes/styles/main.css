@@ -64,8 +64,10 @@ em{
     float: left;
     margin: 2px;
 }
+.index-content .viewers-online{
+	padding: 15px 15px 0px 15px;
+}
 .index-content .content-body{
-    margin-top: 20px;
     padding: 15px;
 }
 .index-content .content-body .room{

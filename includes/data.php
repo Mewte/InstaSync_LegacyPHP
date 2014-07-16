@@ -38,6 +38,19 @@
 			}
 			return true;
 		}
+		private function loadOnlineCount($parameters){ //Load total users online and total rooms
+			if ($this->mc){ //if memcache driver installed
+				$this->data = $this->mc->get("online_count");
+				if ($this->data == null){
+					$this->data = Queries::online_count($this->db);
+					$this->mc->set("online_count", $this->data, 10);
+				}
+			}
+			else{ //no memcache support (i.e. dev server)
+				$this->data = Queries::online_count($this->db);
+			}
+			return true;			
+		}
 	}
 	/*
 	 * Just a static class of reusable queries
@@ -53,5 +66,11 @@
 						order by result desc limit 24";
 			$query = $db->query($sql);
 			return $query->fetchAll(PDO::FETCH_ASSOC);	
+		}
+		static function online_count($db){
+			$sql = "select sum(users) as users, rooms.sum as rooms from rooms
+					join (select count(*) as sum from rooms where users > 0) as rooms";
+			$query = $db->query($sql);
+			return $query->fetch(PDO::FETCH_ASSOC);				
 		}
 	}
