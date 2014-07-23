@@ -71,4 +71,5 @@ table {
 	include($location . "playlist.css");
     include($location . "perfect-scrollbar/perfect-scrollbar-0.4.8.min.css");
 	include($location . "jscrollpane/jquery.jscrollpane.css");
+	include($location . "video-search.css");
 ?>

@@ -107,6 +107,15 @@
 	opacity: 0.4;
 
 }
+#playlist .playlist-controls .controls .toggle-search{
+	cursor: pointer;
+	background-image: url('/images/magnifier.png');
+	background-size: 18px 18px;
+	background-repeat:no-repeat;
+	height: 18px;
+	width: 18px;
+	margin: 6px 0px 0px 0px;
+}
 #playlist .controls .settings{
 	float: right !important; /* Only way to override > div*/
 }
@@ -158,6 +167,17 @@
 }
 #playlist .playlist{
 	position: relative;
+}
+#playlist .playlist .drop-video{
+	position: absolute;
+	color: rgb(34,34,34);
+	background-color: rgba(206,206,206, 0.9);
+	width: 540px;
+	margin: 0px 5px;
+	height: 90px;
+	text-align: center;
+	padding-top:35px;
+	top: 0px;
 }
 #playlist .playlist .videos{
 	height: 225px;

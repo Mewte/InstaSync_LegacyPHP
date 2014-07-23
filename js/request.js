@@ -87,6 +87,9 @@ function setUserInfo(avatar, bio, social, callback)
         callback(result.error);
     });
 }
+/*
+ * first parameter of callback is.. error.. it makes sense to have that actually be success
+ */
 function getVideoInfo(video, callback){
 	if (video.provider == "youtube"){
 		$.get("http://gdata.youtube.com/feeds/api/videos/" + video.id + "?v=2&alt=json").done(function(data){
@@ -102,6 +105,21 @@ function getVideoInfo(video, callback){
 			callback(true);
 		});		
 	}
+}
+/*
+ * first parameter of callback is success or nonsuccess
+ */
+function getYoutubeSearch(parameters, callback){
+	var url = "http://gdata.youtube.com/feeds/api/videos?alt=json&v=2&q="
+				+encodeURIComponent(parameters.query)
+				+"&start-index="+parameters.startIndex
+				+"&max-results="+parameters.maxResults
+				+"&fields=entry(title,author,yt:statistics,yt:rating,media:group(yt:duration,yt:videoid))";
+	$.get(url).done(function(data){
+		callback(true, data.feed.entry);
+	}).fail(function(){
+		callback(false);
+	});
 }
 function getComments(video, startIndex, endIndex){
 	

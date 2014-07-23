@@ -1,0 +1,93 @@
+#playlist .video-search{
+	border: 2px solid rgba(213, 213, 213, 0.8);
+	border-bottom: none;
+	margin: 0px 5px 0px 5px;
+	min-height: 45px;
+	padding: 4px;	
+}
+#playlist .video-search .search-bar{
+	width: 50%; 
+	margin: 5px auto;
+	text-align: center;
+}
+#playlist .video-search .results{
+}
+#playlist .video-search .results .loading{
+}
+#playlist .video-search .results{
+}
+#playlist .video-search .results .videos{
+}
+#playlist .video-search .results .videos .noresults{
+	color: tomato;
+	text-align: center;
+}
+#playlist .video-search .results .videos .video{
+	padding: 4px;
+	background-color: white;
+	display: inline-block;
+	border-radius: 4px;	
+	cursor: move;
+	width: 128px;
+	margin: 2px;
+}
+#playlist .video-search .results .videos .video:hover{
+	padding: 4px;
+	background-color: white;
+	display: inline-block;
+	border-radius: 4px;	
+	background-color: rgb(206,232,240);
+}
+#playlist .video-search .results .videos .video .thumbnail{
+	position: relative;
+	display: inline-box;
+	width: 120px;
+	height: 90px;	
+}
+#playlist .video-search .results .videos .video .thumbnail img{
+	width: 120px;
+	height: 90px;
+	border-radius: 2px;
+}
+#playlist .video-search .results .videos .video .thumbnail .duration{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+    color: white;
+    background-color: rgba(0,0,0,0.7);
+    text-align: center;
+    font-size: 12px;
+	padding: 2px;
+}
+#playlist .video-search .results .videos .video .thumbnail .title{
+	position: absolute;
+	text-overflow:ellipsis;
+    width: 120px;
+    bottom: 5px;
+    max-height: 48px;
+    color: white;
+    background-color: rgba(0,0,0,0.6);
+    text-align: center;
+    font-size: 12px;
+    overflow: hidden;
+}
+#playlist .video-search .results .videos .video .author, #playlist .video-search .results .videos .video .views{
+	color: rgb(94,94,94);
+	padding: 2px;
+	text-align: center;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	font-size: 11px;
+	font-style: italic;
+}
+#playlist .video-search .results .navigation{
+	width: 50%;
+	margin: 5px auto;
+	text-align: center;
+	color: white;
+	cursor: pointer;
+}
+#playlist .video-search .results .navigation span:hover{
+	color: silver;
+}

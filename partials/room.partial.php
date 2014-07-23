@@ -162,6 +162,7 @@
 						<div class="add-vid" id="addVid">
 							<input id="URLinput" title="Add YouTube/Vimeo/Twitch URL" type="text" placeholder="Video URL"/><div id="addUrl" title="Add Video" class="plus"></div>
 						</div>
+						<div id="toggle-search" class="toggle-search" title="Toggle Video Search"></div>						
 						<div id="toggleplaylistlock" class="playlistlock" title="Playlist lock"></div>
 						<div class="settings">
 							<div class="open"></div>
@@ -172,20 +173,29 @@
 								<li title="Enable or disable video autosynch"><label for="autosynch">Autosynch</label><input id="autosynch" type="checkbox" value="Autosynch" checked/></li>
 							</ul>
 						</div>
-						<!-- search
-						<div class="search">
-							<div class="open"></div>
-							<div class="search-box">
-								
-							</div>
+					</div>
+				</div>
+				<div id='video-search' class="video-search noselect" style="display: none;">
+					<div class="search-bar">
+						<input id="video-search-query" type="text" placeholder="Search YouTube.."/>
+						<button id="video-search-submit">Search</button>
+					</div>
+					<div class="results">		
+						<div class="loading"></div>
+						<div class="videos"></div>
+						<div class="navigation">
+							<span id="video-search-previous">Previous</span>
+							<span id="video-search-next">Next</span>
 						</div>
-						-->
 					</div>
 				</div>
 				<div class="playlist">
 					<ul id="videos" class="videos">
 						<div id="video-list"></div>
 					</ul>
+					<div class="drop-video" style="display: none;">
+						Drop video here to add to playlist
+					</div>					
 					<script>
 						$(document).ready(function()
 						{

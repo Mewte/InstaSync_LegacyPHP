@@ -173,6 +173,49 @@ function loadRoom() {
             }
             $('#URLinput').val('');
         });
+		
+		$("#toggle-search").click(function(){
+			$("#video-search").fadeToggle();
+		});
+		$("#video-search-query").keypress(function(e){
+			if (e.which == 13){
+				$("#video-search").data("page", 0);				
+				videoSearch($(this).val(), 0);
+			}
+		});
+		$("#video-search-submit").click(function(){
+			$("#video-search").data("page", 0);
+			videoSearch($("#video-search-query").val(), 0);
+		});
+		$("#video-search-previous").click(function(){
+			var videoSearchEl = $("#video-search");
+			var previousPage = Math.max(0, videoSearchEl.data("page") - 1);
+			videoSearchEl.data("page", previousPage);
+			videoSearch($("#video-search-query").val(), previousPage);			
+		});
+		$("#video-search-next").click(function(){
+			var videoSearchEl = $("#video-search");
+			var nextPage = videoSearchEl.data("page") + 1;
+			videoSearchEl.data("page", nextPage);
+			videoSearch($("#video-search-query").val(), nextPage);				
+		});		
+		/*
+		 * setup droppable for video-search into playlist
+		 * (drop into .playlist as that is the specific playlist part with videos)
+		 */
+		$("#playlist .playlist").droppable({
+			accept:"#video-search .videos .video",
+			activate: function(event, ui){
+				console.log('activate');
+				$("#playlist .playlist .drop-video").stop().fadeIn();
+			},
+			deactivate: function(event, ui){
+				$("#playlist .playlist .drop-video").stop().fadeOut();
+			},
+			drop: function(event, ui){
+				room.sendcmd('add', {URL: "http://youtube.com/v/"+ui.draggable.data("videoID")});
+			}
+		});		
         $('#toggleplaylistlock').click(function () {
             room.sendcmd('toggleplaylistlock', null);
         });
@@ -1389,6 +1432,70 @@ function hideConnectionBox(callback){
 				callback();
 		});
 	}
+}
+function videoSearch(query, startIndex){
+	var maxResults = 4;
+	startIndex = Math.max(1, (startIndex*maxResults)+1); //startIndex has to be 1 or greater
+	getYoutubeSearch({query: query, startIndex: startIndex, maxResults: maxResults}, function(success, data){
+		if (success){
+			var videosEl = $("#video-search .results .videos");
+			videosEl.empty();
+			if (data != undefined){
+				for (var i = 0; i < data.length; i++){
+					var title = data[i].title.$t;
+					var duration = secondsToTime(data[i].media$group.yt$duration.seconds);
+					var author = data[i].author[0].name.$t;
+					if (data[i].yt$statistics == undefined)
+						var views = 0;
+					else
+						var views = commaSeparateNumber(data[i].yt$statistics.viewCount);
+					var videoID = data[i].media$group.yt$videoid.$t;
+					//var thumbnail = 
+					
+					var videoEl = $("<div/>", {
+						class:"video"
+					});
+					var thumbnailEl = $("<div/>",{
+						class:"thumbnail"
+						}).append($("<img/>", {
+							src:"http://i.ytimg.com/vi/"+videoID+"/1.jpg"
+						})).append($("<div/>",{
+							class:"duration",
+							text:duration
+						})).append($("<div/>", {
+							class:"title",
+							title: title,
+							text: title
+						})
+					);
+					var authorEl = $("<div/>",{
+						class:"author",
+						title:author,
+						text:"by "+author
+					});
+					var viewsEl = $("<div/>",{
+						class:"views",
+						title:views,
+						text:views+" Views"
+					});
+					videoEl.append(thumbnailEl).append(authorEl).append(viewsEl);
+					videoEl.data("videoID", videoID);
+					videoEl.draggable({
+						revert: true,
+						stack: "#video-search .videos .video"
+					});
+					videosEl.append(videoEl);
+				}
+			}
+			else{
+				videosEl.html("<div class='noresults'>No Results</div>");
+				
+			}
+		}
+	});
+}
+function createDomElement(tag, data){
+	
 }
 function mute(ip)
 {
