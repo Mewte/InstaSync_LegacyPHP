@@ -88,6 +88,7 @@ function player(containerID){
 					"techOrder": ["youtube"], 
 					"src": src,
 					"blockClick":isLeader, //temporary
+					"forceHTML5":true,
 					ytcontrols: showYTcontrols
 				}).ready(function(){
 					var p = this;
