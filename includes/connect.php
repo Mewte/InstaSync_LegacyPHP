@@ -2,7 +2,9 @@
     define("SERVER_ADD", "127.0.0.1");
     define("SERVER_USER", "root");
     define("SERVER_PASS", "");
+	define("DEFAULT_DB", "instasynch");
     
+	//I think this is a custom error function so you can parse specific error info
 	set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext){
 		//echo $errstr;
 		//return true;
@@ -15,6 +17,7 @@
 			echo "i made a srs error D: plz dnt tell any1 ok? dnt let mewte reformat me again i will b bttr next time.......";
 		} 
 	});
+	//There are times when we want to enableErrors, if were trying to catch when errors occur such as duplicate records, we need to enable these errors
     function createDb($enableErrors = false)
     {
 		//Todo: Create a throw 503 function for when database is down
@@ -33,6 +36,15 @@
 			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT); //production
         return $db;
     }
+	function createLegacyMySQLconn(){
+		return mysqli_connect(SERVER_ADD, SERVER_USER, SERVER_PASS, DEFAULT_DB);
+	}
+	//loads zebra session for database based session storage
+	function loadZebraSession(){
+		require dirname(__FILE__) . "/Zebra_Session/Zebra_Session.php";
+		$dbconn = createLegacyMySQLconn(); //we need to call because zebra session uses mysqli
+		new Zebra_Session($dbconn, 'dqwk21OWke0');
+	}
 	function createMc(){
 		if (function_exists("memcache_connect")){
 			$memcached = new Memcached;
