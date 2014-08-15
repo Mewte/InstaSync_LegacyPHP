@@ -135,6 +135,7 @@ function player(containerID){
 					});
 					if (playing)
 						p.play();
+					this.progressTips();
 			});
 			player.video.logobrand().initialize({
 				"image":"/images/videojs/icons/youtube.png",
@@ -190,6 +191,7 @@ function player(containerID){
 					if (playing){
 						p.play();
 					}
+					this.progressTips();
 			});
 			player.video.logobrand().initialize({
 				"image":"/images/videojs/icons/dailymotion.png",
@@ -252,6 +254,7 @@ function player(containerID){
 					});
 					if (playing)
 						p.play();
+					this.progressTips();
 			});
 			player.video.logobrand().initialize({
 				"image": brand,

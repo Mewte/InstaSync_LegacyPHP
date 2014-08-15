@@ -25,6 +25,8 @@
 			<script type='text/javascript' src="/js/videojs/video-js/video.js.php"></script>
 				<!-- Video.js plugins -->
 				<script type='text/javascript' src="/js/videojs/plugins/videojs.logobrand.js"></script>
+				<script src="/js/videojs/plugins/videojs.progressTips.min.js"></script>
+					<link rel="stylesheet" href="/js/videojs/plugins/videojs.progressTips.min.css" type="text/css" />				
 				<script type='text/javascript' src="/js/videojs/plugins/youtube.js"></script>
 				<script type='text/javascript' src="/js/videojs/plugins/media.dailymotion.js"></script>
 			<script type="text/javascript" src="/js/perfect-scrollbar-0.4.8.with-mousewheel.min.js"></script>
