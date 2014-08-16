@@ -18,14 +18,17 @@
                     </div>
                     <ul class="footerNav">
                         <li>
-                            <a href="/tos.html">Terms Of Service</a>
+                            <a href="/tos.html" target="_blank">Terms Of Service</a>
                         </li>
                         <li>
-                            <a href="/privacy.html">Privacy Policy</a>
+                            <a href="/privacy.html" target="_blank">Privacy Policy</a>
                         </li>
                         <li>
-                            <a href="/help.php">Help</a>
+                            <a href="/help.php" target="_blank">Help</a>
                         </li>
+						<li>
+							<a href="/dmca.html" target="_blank">DMCA</a>
+						</li>
                     </ul>
                 </div>
             </div>
