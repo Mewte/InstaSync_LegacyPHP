@@ -8,9 +8,12 @@ function player(containerID){
 	//var triggeredByAPI = true; //all calls are assumed to be triggered by the user unless set to false by API action
 	this.video = null;
 	this.loadedVideo = null;
-	
-	var volume = 0.1;
-	var muted = false;
+	if (localStorage.volume === undefined){
+		localStorage.volume = 0.1;
+	}
+	if (localStorage.muted === undefined){
+		localStorage.muted = false;
+	}
 	
 	this.on = {};
 	this.on["userSeeked"] = function(){
@@ -67,7 +70,6 @@ function player(containerID){
 		
 	};
 	this.seekTo = function(time){
-		console.log(time + 1);
 		if (player.video != null){
 			//triggeredByAPI = true;
 			player.video.currentTime(time + 0.5);//compensate for buffer time
@@ -100,19 +102,22 @@ function player(containerID){
 						p.currentTime(time);
 					});
 					this.on('play', function(){
-						console.log('play');						
+						
 					});
 					this.on('pause', function(){
 						//resynchNeeded = true;
 					});
 					this.on('playing', function(){
-						console.log('playing');
+
 						//todo: add a buffer bool in case were playing after pausing to buffer
 						if (p.firstPlay){
-							if (muted)
+							if (localStorage.muted == "true"){ //localStorage stores booleans as strings -_-
 								p.muted(true);
-							else
-								p.volume(volume);							
+							}
+							else{
+								p.volume(localStorage.volume);
+							}
+							
 							player.on['resynchNeeded'](); //resynch after loading
 							p.firstPlay = false;
 						}
@@ -122,16 +127,15 @@ function player(containerID){
 					});
 					this.on('loadstart', function(){
 						p.trigger('play');
-						console.log('load start');
 					});
 					this.on('timeupdate', function(){
 						
 					});
 					this.on('stalled', function(){
-						console.log('stalled');
+
 					});
 					this.on('ready', function(){
-						p.volume(volume);
+						p.volume(localStorage.volume);
 					});
 					if (playing)
 						p.play();
@@ -169,10 +173,10 @@ function player(containerID){
 					this.on('pause', function(){});
 					this.on('playing', function(){
 						if (p.firstPlay){
-							if (muted)
+							if (localStorage.muted == "true")//localStorage stores booleans as strings -_-
 								p.muted(true);
 							else
-								p.volume(volume);
+								p.volume(localStorage.volume);
 							player.on['resynchNeeded'](); //resynch after loading
 							p.firstPlay = false;
 						}
@@ -228,29 +232,29 @@ function player(containerID){
 					});
 					this.on('playing', function(){
 						if (p.firstPlay){ //resynch after loading
-							if (muted)
+							if (localStorage.muted == "true")//localStorage stores booleans as strings -_-
 								p.muted(true);
 							else
-								p.volume(volume);							
+								p.volume(localStorage.volume);							
 							player.on['resynchNeeded'](); //resynch after loading
 							p.firstPlay = false;
 						}				
 					});
 					this.on('pause', function(){
-						console.log('paused');						
+						
 					});
 					this.on('error', function(event){
 						//alert('error');
 					});
 					this.on('loadstart', function(){
 						p.trigger('play');
-						console.log('load start');
+
 					});
 					this.on('timeupdate', function(){
 						
 					});
 					this.on('stalled', function(){
-						console.log('stalled');
+
 					});
 					if (playing)
 						p.play();
@@ -301,12 +305,14 @@ function player(containerID){
 			player.on["userSeeked"](time);	
 		});
 		video.on("volumechange", function(){
-			if (video.muted()){
-				muted = video.muted();				
-			}
-			else{
-				volume = video.volume();
-				muted = false;
+			if (!player.video.firstPlay){//first play adjusts volume and triggers this event which resets the volume/muted
+				if (video.muted()){
+					localStorage.muted = true;
+				}
+				else{
+					localStorage.volume = video.volume();
+					localStorage.muted = false;
+				}
 			}
 		});
 		video.on("userPlayed", function(){
