@@ -82,6 +82,12 @@
 		<?php
 			if ($data->load("Roomlist")){
 				$roomlist = $data->getData();
+				if (isset($_GET['roomlist_json'])){ //quick, dirty, easy way to output json of room list
+					ob_clean();
+					header('Content-Type: application/json');
+					echo json_encode($roomlist);
+					exit();
+				}
 				foreach ($roomlist as $room)
 				{
 					echo "<div class='room'>";
