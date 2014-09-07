@@ -19,9 +19,8 @@
     require dirname(__FILE__) . "/../includes/connect.php";
     //GET AND INCRIMENT VISITORS
 	$db = createDb();
-    $query = $db->prepare("select *, user.username as roomname from rooms as room
-				JOIN users as user ON room.room_id = user.id 
-				where user.username = :roomname");
+    $query = $db->prepare("select room.* from rooms as room
+				where room.room_name = :roomname");
 	$query->execute(array("roomname"=>$roomname));
     $result = $query->fetch(PDO::FETCH_ASSOC);
     if ($result)
@@ -42,6 +41,12 @@
     $query = $db->prepare("UPDATE rooms as room SET visits = :visits 
 							WHERE room_id = :room_id");
 	$query->execute(array("visits"=>$visits, "room_id"=>$room_id));
+	if (isset($_GET['room_json'])){ //quick, dirty, easy way to output json of room list
+		ob_clean();
+		header('Content-Type: application/json');
+		echo json_encode($result);
+		exit();
+	}	
     //-----------
 ?>
 
