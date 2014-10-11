@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.1
+-- version 3.4.10.1deb1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 11, 2014 at 03:32 PM
--- Server version: 5.5.24-log
--- PHP Version: 5.3.13
+-- Generation Time: Oct 11, 2014 at 04:54 PM
+-- Server version: 5.5.35
+-- PHP Version: 5.3.10-1ubuntu3.11
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `bans` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `room_name` (`room_name`,`user_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9027 ;
 
 -- --------------------------------------------------------
 
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `friends_list` (
   UNIQUE KEY `userA` (`userA`,`userB`),
   KEY `sentBy` (`sentBy`),
   KEY `userB` (`userB`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4012 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9704 ;
 
 -- --------------------------------------------------------
 
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `friend_requests` (
   UNIQUE KEY `userA` (`userA`,`userB`),
   KEY `sentBy` (`sentBy`),
   KEY `userB` (`userB`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13590 ;
 
 -- --------------------------------------------------------
 
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `mods` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `room` (`room_name`,`username`),
   KEY `user_id` (`username`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4845 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6930 ;
 
 -- --------------------------------------------------------
 
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `resets` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `token` (`token`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1188 ;
 
 -- --------------------------------------------------------
 
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   `users` int(11) NOT NULL,
   `thumbnail` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
   `visits` int(11) NOT NULL,
-  `title` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `title` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `listing` enum('public','private') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'public',
   `info` varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
   `NSFW` int(1) NOT NULL DEFAULT '0',
@@ -151,11 +151,12 @@ CREATE TABLE IF NOT EXISTS `users` (
   `cookie` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
   `avatar` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'YfyWjq4',
-  `bio` varchar(140) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'No Bio',
+  `bio` varchar(1024) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'No Bio',
   `social` tinyint(1) NOT NULL DEFAULT '1',
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=35478 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=65130 ;
 
 --
 -- Constraints for dumped tables
